@@ -16,8 +16,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run:
-          - name: Run Test Suite
-          - command: yarn test:coverage
+          name: Run Test Suite
+          command: yarn test:coverage
       - run:
-          - name: Build Application
-          - command: yarn build
+          name: Build Application
+          command: yarn build

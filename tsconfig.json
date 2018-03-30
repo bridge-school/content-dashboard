@@ -15,7 +15,12 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "baseUrl": "src",
+    "paths": {
+      "@components": ["components"],
+      "@scenes": ["scenes"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": [

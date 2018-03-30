@@ -1,5 +1,20 @@
-body {
+@import '../node_modules/tachyons/css/tachyons.min.css';
+
+html, body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: hidden;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu;
+}
+
+div#root {
+  height: inherit;
+}
+
+.background-gradient_blue {
+  background: linear-gradient(135deg, #4e57ca 32%,#0f68ad
+   89%);
 }

@@ -3,11 +3,7 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-    "lib": [
-      "es6",
-      "es7",
-      "dom"
-    ],
+    "lib": ["es6", "es7", "dom"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -17,6 +13,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
+    "noImplicitAny": true,
     "strictNullChecks": false,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,

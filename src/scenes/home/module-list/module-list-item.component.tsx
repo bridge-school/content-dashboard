@@ -10,6 +10,8 @@ import {
 
 import { ItemTypes } from '../../../constants';
 
+import { DROP_MODULE } from '../../../state/actions/dropModule';
+
 const complexityColors = {
   [1]: 'green',
   [2]: 'gold',
@@ -22,6 +24,7 @@ interface Props {
   name: string;
   complexity: 1 | 2 | 3 | 4;
 
+  dispatch?: any;
   connectDragSource?: ConnectDragSource;
   isDragging?: boolean;
 }
@@ -51,11 +54,6 @@ const moduleListItemCollect: DragSourceCollector = function (connect: DragSource
 };
 
 const moduleListItemSource: DragSourceSpec<Props> = {
-    /*canDrag(props: Props) {
-        // You can disallow drag based on props
-        return true;
-    },*/
-
     isDragging(props: Props, monitor: DragSourceMonitor) {
         // If your component gets unmounted while dragged
         // (like a card in Kanban board dragged between lists)
@@ -77,9 +75,12 @@ const moduleListItemSource: DragSourceSpec<Props> = {
 
         // const dropResult = monitor.getDropResult();
         // console.log(dropResult);
-        // let droppedItem = monitor.getItem();
 
-        // CardActions.moveCardToList(item.id, dropResult.listId);
+        let droppedItem = monitor.getItem();
+
+        if (props.dispatch) {
+            props.dispatch(DROP_MODULE.createAction(droppedItem as any));
+        }
     }
 };
 

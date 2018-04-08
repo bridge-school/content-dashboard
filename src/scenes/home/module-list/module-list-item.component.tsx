@@ -1,4 +1,14 @@
 import * as React from 'react';
+import {
+    DragSource,
+    DragSourceSpec,
+    DragSourceConnector,
+    DragSourceMonitor,
+    DragSourceCollector,
+    ConnectDragSource
+} from 'react-dnd';
+
+import { ItemTypes } from '../../../constants';
 
 const complexityColors = {
   [1]: 'green',
@@ -11,11 +21,17 @@ interface Props {
   id: string;
   name: string;
   complexity: 1 | 2 | 3 | 4;
+
+  connectDragSource?: ConnectDragSource;
+  isDragging?: boolean;
 }
 
-export const ModuleListItem: React.SFC<Props> = ({ id, name, complexity }: Props) => {
+type ListItemDragDescriptor = Pick<Props, 'id'>;
+
+const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, connectDragSource }: Props) => {
   const complexityClass = `bg-${complexityColors[complexity]}`;
-  return (
+
+  return connectDragSource(
     <div key={id} className="flex items-center justify-between ph4 bb bw1 b--moon-gray">
       <h3>{name}</h3>
       <div
@@ -25,4 +41,55 @@ export const ModuleListItem: React.SFC<Props> = ({ id, name, complexity }: Props
       </div>
     </div>
   );
+};
+
+const moduleListItemCollect: DragSourceCollector = function (connect: DragSourceConnector, monitor: DragSourceMonitor) {
+    return {
+        connectDragSource: connect.dragSource(),
+        isDragging: monitor.isDragging()
+    };
+};
+
+const moduleListItemSource: DragSourceSpec<Props> = {
+    /*canDrag(props: Props) {
+        // You can disallow drag based on props
+        return true;
+    },*/
+
+    isDragging(props: Props, monitor: DragSourceMonitor) {
+        // If your component gets unmounted while dragged
+        // (like a card in Kanban board dragged between lists)
+        // you can implement something like this to keep its
+        // appearance dragged:
+        return (monitor.getItem() as ListItemDragDescriptor).id === props.id;
+    },
+
+    beginDrag(props: Props, monitor: DragSourceMonitor): ListItemDragDescriptor {
+        return { id: props.id };
+    },
+
+    endDrag(props: Props, monitor: DragSourceMonitor) {
+        if (!monitor.didDrop()) {
+            // You can check whether the drop was successful
+            // or if the drag ended but nobody handled the drop
+            return;
+        }
+
+        // const dropResult = monitor.getDropResult();
+        // console.log(dropResult);
+        // let droppedItem = monitor.getItem();
+
+        // CardActions.moveCardToList(item.id, dropResult.listId);
+    }
+};
+
+const DraggableModuleListItem = DragSource(
+    ItemTypes.Module,
+    moduleListItemSource,
+    moduleListItemCollect
+)(ModuleListItem);
+
+export {
+    DraggableModuleListItem as ModuleListItem,
+    Props as ListItemProps
 };

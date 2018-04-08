@@ -6,6 +6,7 @@ import createHistory from 'history/createBrowserHistory';
 import configureStore from './store';
 import { Routes } from './routes';
 import registerServiceWorker from './registerServiceWorker';
+
 import './index.css';
 
 const history: History = createHistory();

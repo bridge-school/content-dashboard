@@ -1,15 +1,24 @@
 import * as React from 'react';
+
 import { SceneContainer } from '@components';
+
+import HTML5Backend from 'react-dnd-html5-backend';
+import { DragDropContextProvider } from 'react-dnd';
+
 import { ModuleList } from './module-list/module-list.component';
+import { Timeline } from './timeline/timeline.component';
 import { classModules } from './home.content';
 
 interface Props {}
 
 export const Home: React.SFC<Props> = () => (
-  <SceneContainer className="flex-row">
-    <ModuleList modules={classModules} />
-    <div className="flex-auto pv3 ph4">
-      <h2 className="f1 lh-title mt0 dark-gray">Create a Lesson</h2>
-    </div>
-  </SceneContainer>
+  <DragDropContextProvider backend={HTML5Backend}>
+    <SceneContainer className="flex-row">
+      <ModuleList modules={classModules} />
+      <div className="flex-auto pv3 ph4 h-inherit">
+        <h2 className="f1 lh-title mt0 dark-gray">Create a Lesson</h2>
+        <Timeline/>
+      </div>
+    </SceneContainer>
+  </DragDropContextProvider>
 );

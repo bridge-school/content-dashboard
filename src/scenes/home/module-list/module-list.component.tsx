@@ -2,13 +2,20 @@ import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+<<<<<<< HEAD
 import { get } from 'lodash';
 
+=======
+>>>>>>> feat(drag-and-drop): hooks up drag and drop functionality to store
 import { RootReducerState } from '../../../state/reducers';
 import { Action } from '../../../state/actions';
 
 import { ClassModule, classModules } from '../home.content';
+<<<<<<< HEAD
 import { ModuleListItem } from './module-list-item/module-list-item.component';
+=======
+import { ModuleListItem } from './module-list-item.component';
+>>>>>>> feat(drag-and-drop): hooks up drag and drop functionality to store
 
 interface Props {
     modules?: Array<ClassModule>;

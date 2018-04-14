@@ -30,7 +30,7 @@ const ModuleList: React.SFC<Props> = ({
   className = '',
   dispatch
 }: Props) => (
-    <div className={`bg-near-white overflow-y-scroll ${className}`}>
+    <div className={`bg-near-white overflow-y-scroll ${className}`} style={{minWidth: '24rem'}}>
         {
             modules.map((module: ClassModule, index: number) => (
                 <ModuleListItem

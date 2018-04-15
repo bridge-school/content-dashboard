@@ -12,12 +12,19 @@ import './index.css';
 const history: History = createHistory();
 const store = configureStore(history);
 
-ReactDOM.render(
-  (
+const AppComponent = (
     <Provider store={store}>
-      <Routes history={history} />
+        <Routes history={history} />
     </Provider>
-  ),
-  document.getElementById('root') as HTMLElement
 );
-registerServiceWorker();
+
+if (!module.parent) { // if this file is imported directly
+    ReactDOM.render(
+        AppComponent,
+        document.getElementById('root') as HTMLElement
+    );
+
+    registerServiceWorker();
+}
+
+export default AppComponent;

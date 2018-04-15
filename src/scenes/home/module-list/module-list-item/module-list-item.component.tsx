@@ -8,9 +8,9 @@ import {
     ConnectDragSource
 } from 'react-dnd';
 
-import { ItemTypes } from '../../../constants';
+import { ItemTypes } from '../../../../constants';
 
-import { DROP_MODULE } from '../../../state/actions/dropModule';
+import { DROP_MODULE } from '../../../../state/actions/dropModule';
 
 const complexityColors = {
   [1]: 'green',
@@ -72,10 +72,7 @@ const moduleListItemSource: DragSourceSpec<Props> = {
             // or if the drag ended but nobody handled the drop
             return;
         }
-
-        // const dropResult = monitor.getDropResult();
-        // console.log(dropResult);
-
+        
         let droppedItem = monitor.getItem();
 
         if (props.dispatch) {

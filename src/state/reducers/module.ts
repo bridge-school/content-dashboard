@@ -8,6 +8,9 @@ import DragModuleAction = DRAG_MODULE.DragModuleAction;
 import { DROP_MODULE } from '../actions/dropModule';
 import DropModuleAction = DROP_MODULE.DropModuleAction;
 
+import { GET_MODULES } from '../actions/getModules';
+import GetModuleAction = GET_MODULES.GetModuleAction;
+
 import { ClassModule } from '../../scenes/home/home.content';
 
 export interface ModuleState {
@@ -18,6 +21,9 @@ export interface ModuleState {
 export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
 
 const ModuleReducerMap: ModuleReducerMap = {
+    [TypeKeys.GET_MODULES]: (state: ModuleState, action: GetModuleAction): ModuleState => {
+        return { ...state, modules: action.payload };
+    },
     [TypeKeys.DRAG_MODULE]: (state: ModuleState, action: DragModuleAction): ModuleState => {
         return state;
     },

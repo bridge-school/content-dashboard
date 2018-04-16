@@ -8,6 +8,7 @@ import { routerMiddleware } from 'react-router-redux';
 import { rootReducer } from './reducers';
 import { classModules } from '../scenes/home/home.content';
 import { ModuleState } from './reducers/module';
+import { epicMiddleware } from './epics';
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
@@ -21,6 +22,7 @@ const configureStore = (routerHistory: History) => {
 
     const middlewares: Array<Middleware> = [
         routerMiddleware(routerHistory),
+        epicMiddleware,
     ];
 
     if (isDevelopment) {

@@ -2,13 +2,15 @@ import * as firebase from 'firebase';
 import { fromEvent } from 'rxjs/index';
 import { filter, map } from 'rxjs/internal/operators';
 
+// after reading a bit about this, makes the most sense to keep this in the client side code, and will just eventually
+// create a whitelist of domains
 const config = {
-  apiKey: process.env.REACT_APP_firebase_api,
-  authDomain: process.env.REACT_APP_firebase_auth_domain,
-  databaseURL: process.env.REACT_APP_firebbase_database_url,
-  projectId: process.env.REACT_APP_firebase_project_id,
-  storageBucket: process.env.REACT_APP_storage_bucket,
-  messagingSenderId: process.env.REACT_APP_firebase_messenger_send_id,
+  apiKey: 'AIzaSyDARrkRl7MEYc2sXJ3aSYx59zOyApL9x5g',
+  authDomain: 'bridge-content-dashboard.firebaseapp.com',
+  databaseURL: 'https://bridge-content-dashboard.firebaseio.com',
+  projectId: 'bridge-content-dashboard',
+  storageBucket: 'bridge-content-dashboard.appspot.com',
+  messagingSenderId: '636794336898',
 };
 
 (firebase as any).initializeApp(config);

@@ -10,15 +10,8 @@ import {
 } from 'react-dnd';
 
 import { RootReducerState } from '../../../state/reducers';
-import { ItemTypes } from '../../../constants';
+import { ItemTypes, complexityColors } from '../../../constants';
 import { ClassModule } from '../home.content';
-
-const complexityColors = {
-  [1]: 'green',
-  [2]: 'gold',
-  [3]: 'orange',
-  [4]: 'dark-red',
-};
 
 interface Props {
     connectDropTarget?: ConnectDropTarget;

@@ -18,3 +18,19 @@ div#root {
   background: linear-gradient(135deg, #4e57ca 32%,#0f68ad
    89%);
 }
+
+.lesson-plan-listing-item {
+  min-height: 100px;
+  cursor: pointer;
+  -webkit-transition: background-color 0.15s ease-in;
+  transition: background-color 0.15s ease-in;
+  border-bottom: 2px solid rgba(94, 55, 195, 1);
+}
+
+.lesson-plan-listing-item h2 {
+  color: rgba(94, 55, 195, 1);
+}
+
+.lesson-plan-listing-item:hover {
+  background-color: rgba(94, 55, 195, 0.3);
+}

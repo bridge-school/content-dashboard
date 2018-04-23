@@ -10,7 +10,8 @@ import {
 } from 'react-dnd';
 
 import { RootReducerState } from '../../../state/reducers';
-import { ItemTypes, complexityColors } from '../../../constants';
+import { ItemTypes } from '../../../constants';
+import { getComplexityColor } from '../../../utils';
 import { ClassModule } from '../home.content';
 
 interface Props {
@@ -40,7 +41,7 @@ const Timeline: React.SFC<Props> = ({ connectDropTarget, timeline }: Props) => c
                     timeline.map((module: ClassModule, index: number) => (
                         <div 
                             key={index} 
-                            className={`flex ba white ph2 bg-${complexityColors[module.complexity]} items-center`} 
+                            className={`flex ba white ph2 bg-${getComplexityColor(module.complexity)} items-center`} 
                             style={{flex: module.complexity}}
                         >
                             {module.name}

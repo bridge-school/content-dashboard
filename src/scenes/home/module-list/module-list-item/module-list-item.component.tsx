@@ -9,20 +9,14 @@ import {
 } from 'react-dnd';
 
 import { ItemTypes } from '../../../../constants';
+import { getComplexityColor } from '../../../../utils';
 
 import { DROP_MODULE } from '../../../../state/actions/dropModule';
-
-const complexityColors = {
-  [1]: 'green',
-  [2]: 'gold',
-  [3]: 'orange',
-  [4]: 'dark-red',
-};
 
 interface Props {
   id: string;
   name: string;
-  complexity: 1 | 2 | 3 | 4;
+  complexity: 1 | 2 | 3 | 4 | 5;
 
   dispatch?: any;
   connectDragSource?: ConnectDragSource;
@@ -32,7 +26,7 @@ interface Props {
 type ListItemDragDescriptor = Pick<Props, 'id'>;
 
 const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, connectDragSource }: Props) => {
-  const complexityClass = `bg-${complexityColors[complexity]}`;
+  const complexityClass = `bg-${getComplexityColor(complexity)}`;
 
   return connectDragSource(
     <div key={id} className="flex items-center justify-between ph4 bb bw1 b--moon-gray">

@@ -1,7 +1,7 @@
 export interface ClassModule {
   id: string;
   name: string;
-  complexity: 1 | 2 | 3 | 4;
+  complexity: 1 | 2 | 3 | 4 | 5;
 }
 
 export const classModules: Array<ClassModule> = [

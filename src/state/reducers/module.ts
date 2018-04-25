@@ -14,6 +14,7 @@ import GetModuleAction = GET_MODULES.GetModuleAction;
 import { ClassModule } from '../../scenes/home/home.content';
 
 export interface ModuleState {
+    allModules: ClassModule[];
     modules: ClassModule[];
     timeline: ClassModule[];
 }
@@ -22,7 +23,7 @@ export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
 
 const ModuleReducerMap: ModuleReducerMap = {
     [TypeKeys.GET_MODULES]: (state: ModuleState, action: GetModuleAction): ModuleState => {
-        return { ...state, modules: action.payload };
+        return { ...state, modules: action.payload, allModules: action.payload };
     },
     [TypeKeys.DRAG_MODULE]: (state: ModuleState, action: DragModuleAction): ModuleState => {
         return state;

@@ -13,6 +13,7 @@ import { epicMiddleware } from './epics';
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 export const INITIAL_MODULE_STATE: ModuleState = {
+    allModules: classModules,
     modules: classModules,
     timeline: []
 };

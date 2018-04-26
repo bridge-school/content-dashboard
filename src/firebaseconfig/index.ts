@@ -6,7 +6,7 @@ import { filter, map } from 'rxjs/internal/operators';
 // create a whitelist of domains
 const config = {
   apiKey: 'AIzaSyDARrkRl7MEYc2sXJ3aSYx59zOyApL9x5g',
-  authDomain: 'bridge-content-dashboard.firebaseapp.com',
+  authDomain: 'content-dashboard-staging.herokuapp.com',
   databaseURL: 'https://bridge-content-dashboard.firebaseio.com',
   projectId: 'bridge-content-dashboard',
   storageBucket: 'bridge-content-dashboard.appspot.com',
@@ -15,6 +15,15 @@ const config = {
 
 (firebase as any).initializeApp(config);
 
+export const uiConfig = {
+  signInFlow: 'popup',
+  signInSuccessUrl:
+    process.env.NODE_ENV === 'production' ? `https://${config.authDomain}` : 'https://localhost:3000/auth',
+  signInOptions: [
+    firebase.auth.GithubAuthProvider.PROVIDER_ID,
+  ]
+};
+console.log(process.env);
 export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/modules') as any, 'value').pipe(
   filter(Boolean),
   map(snapshot => {

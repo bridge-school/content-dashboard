@@ -17,14 +17,13 @@ const config = {
 
 export const uiConfig = {
   signInFlow: 'popup',
-  callbacks: {
-    signInSuccess: () => false
-  },
+  signInSuccessUrl:
+    process.env.NODE_ENV === 'production' ? `https://${config.authDomain}` : 'https://localhost:3000/auth',
   signInOptions: [
     firebase.auth.GithubAuthProvider.PROVIDER_ID,
   ]
 };
-
+console.log(process.env);
 export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/modules') as any, 'value').pipe(
   filter(Boolean),
   map(snapshot => {

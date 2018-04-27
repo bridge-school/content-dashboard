@@ -43,18 +43,11 @@ const AlertList: React.SFC<Props> = ({
 const selectTimeline = state => get(state, 'module.timeline', []);
 const selectAllModules = state => get(state, 'module.allModules', classModules);
 
-// const selectModulesById = createSelector(
-//     selectModules,
-//     modules => keyBy(modules, 'id')
-// );
-
 const selectAlerts = createSelector(
     selectTimeline,
     selectAllModules,
     (timeline, modules) => {
         const timelineModuleIds = timeline.map(module => module.id);
-        console.log('timelineModuleIds');
-        console.log(timelineModuleIds);
         return timeline.reduce(
             (alerts, module, index) => {
                 if (!module.ins || module.ins.length === 0) { return alerts; }
@@ -67,16 +60,6 @@ const selectAlerts = createSelector(
 
                 const missingPrequisiteModuleIds = difference(prequisiteModuleIds, timelineModuleIds);
                 const followingPrequisiteModuleIds = difference(unmetPrequisites, missingPrequisiteModuleIds);
-                console.log('prequisiteModuleIds');
-                console.log(prequisiteModuleIds);
-                console.log('precedingModuleIds');
-                console.log(precedingModuleIds);
-                console.log('unmetPrequisites');
-                console.log(unmetPrequisites);
-                console.log('missingPrequisiteModuleIds');
-                console.log(missingPrequisiteModuleIds);
-                console.log('followingPrequisiteModuleIds');
-                console.log(followingPrequisiteModuleIds);
                 const newAlert = {
                     id: module.id,
                     module: module,

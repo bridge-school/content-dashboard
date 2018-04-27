@@ -37,7 +37,7 @@ const AlertList: React.SFC<Props> = ({
             }
         </div>
     )
-    : <div> No alerts! </div>
+    : null;
 );
 
 const selectTimeline = state => get(state, 'module.timeline', []);
@@ -60,7 +60,7 @@ const selectAlerts = createSelector(
                 if (!module.ins || module.ins.length === 0) { return alerts; }
 
                 const prequisiteModuleIds = module.ins.split(',');
-                const precedingModuleIds = index > 0 ? timelineModuleIds.slice(0, index - 1) : [];
+                const precedingModuleIds = index > 0 ? timelineModuleIds.slice(0, index) : [];
 
                 const unmetPrequisites = difference(prequisiteModuleIds, precedingModuleIds);
                 if (isEmpty(unmetPrequisites)) { return alerts; }

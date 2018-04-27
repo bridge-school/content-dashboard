@@ -37,7 +37,7 @@ const AlertList: React.SFC<Props> = ({
             }
         </div>
     )
-    : null;
+    : null
 );
 
 const selectTimeline = state => get(state, 'module.timeline', []);

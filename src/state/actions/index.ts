@@ -6,6 +6,7 @@ export enum TypeKeys {
     DRAG_MODULE = 'DRAG_MODULE',
     DROP_MODULE = 'DROP_MODULE',
     GET_MODULES = 'GET_MODULES',
+    SET_CURRENT_MODULE = 'SET_CURRENT_MODULE',
 }
 
 type ActionTypes = {

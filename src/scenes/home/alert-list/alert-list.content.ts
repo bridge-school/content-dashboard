@@ -1,8 +1,8 @@
-import { ClassModule } from '../home.content';
+import { ContentModule } from '../../../constants';
 
 export interface Alert {
     id: string;
-    module: ClassModule;
-    missing?: Array<ClassModule>;
-    following?: Array<ClassModule>;
+    module: ContentModule;
+    missing?: Array<ContentModule>;
+    following?: Array<ContentModule>;
 }

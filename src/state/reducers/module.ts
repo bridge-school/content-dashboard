@@ -11,12 +11,14 @@ import DropModuleAction = DROP_MODULE.DropModuleAction;
 import { GET_MODULES } from '../actions/getModules';
 import GetModuleAction = GET_MODULES.GetModuleAction;
 
-import { ClassModule } from '../../scenes/home/home.content';
+import { ContentModule } from '../../constants';
+import { SetCurrentModuleAction } from '../actions/setCurrentModule';
 
 export interface ModuleState {
-    allModules: ClassModule[];
-    modules: ClassModule[];
-    timeline: ClassModule[];
+    allModules: ContentModule[];
+    modules: ContentModule[];
+    timeline: ContentModule[];
+    currentModuleID: string;
 }
 
 export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
@@ -24,6 +26,9 @@ export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
 const ModuleReducerMap: ModuleReducerMap = {
     [TypeKeys.GET_MODULES]: (state: ModuleState, action: GetModuleAction): ModuleState => {
         return { ...state, modules: action.payload, allModules: action.payload };
+    },
+  [TypeKeys.SET_CURRENT_MODULE]: (state: ModuleState, action: SetCurrentModuleAction): ModuleState => {
+        return { ...state, currentModuleID: action.payload };
     },
     [TypeKeys.DRAG_MODULE]: (state: ModuleState, action: DragModuleAction): ModuleState => {
         return state;

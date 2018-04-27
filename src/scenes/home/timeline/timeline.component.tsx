@@ -11,14 +11,13 @@ import {
 import { AlertList } from '../alert-list/alert-list.component';
 
 import { RootReducerState } from '../../../state/reducers';
-import { ItemTypes } from '../../../constants';
+import { ContentModule, ItemTypes } from '../../../constants';
 import { getComplexityColor } from '../../../utils';
-import { ClassModule } from '../home.content';
 
 interface Props {
     connectDropTarget?: ConnectDropTarget;
     isOver?: boolean;
-    timeline?: Array<ClassModule>;
+    timeline?: Array<ContentModule>;
 }
 
 const timelineCollect: DropTargetCollector = function (connect: DropTargetConnector, monitor: DropTargetMonitor) {
@@ -39,7 +38,7 @@ const Timeline: React.SFC<Props> = ({ connectDropTarget, timeline }: Props) => c
         <div className="flex flex-auto flex-column items-center justify-center">
             <div className="flex flex-row ba b--moon-gray w-100 mw-100 h3 overflow-x-scroll">
                 {
-                    timeline.map((module: ClassModule, index: number) => (
+                    timeline.map((module: ContentModule, index: number) => (
                         <div 
                             key={index} 
                             className={`flex ba white ph2 bg-${getComplexityColor(module.complexity)} items-center`} 

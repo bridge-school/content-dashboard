@@ -2,6 +2,7 @@ export interface ClassModule {
   id: string;
   name: string;
   complexity: 1 | 2 | 3 | 4 | 5;
+  ins?: string;
 }
 
 export const classModules: Array<ClassModule> = [

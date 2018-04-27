@@ -8,6 +8,7 @@ import {
     DropTargetCollector,
     ConnectDropTarget
 } from 'react-dnd';
+import { AlertList } from '../alert-list/alert-list.component';
 
 import { RootReducerState } from '../../../state/reducers';
 import { ItemTypes } from '../../../constants';
@@ -49,6 +50,7 @@ const Timeline: React.SFC<Props> = ({ connectDropTarget, timeline }: Props) => c
                     ))
                 }
             </div>
+            <AlertList />
         </div>
     </div>
 );

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
 
 const ModuleSceneComponent = ({currentModule, currentID}) => (
-  <div>
+  <div className="w-100">
     {currentModule ?
       <ModuleComponent module={currentModule} /> :
       <h1>No module with the id <strong>{currentID}</strong></h1>}

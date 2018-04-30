@@ -2,18 +2,18 @@ import * as React from 'react';
 import { ContentModule } from '../../constants';
 
 export const ModuleComponent = ({module}: {module: ContentModule}) => (
-  <div className="w-100 ph3 pv2 white background-gradient_blue">
-    <div className="w-100 black">
-      <div>{module.name}</div>
-      <div>{module.complexity}</div>
-    </div>
+  <article className="center mw5 mw6-ns br3 hidden ba b--black-10 mv4 tc">
+    <h1 className="f4 bg-near-white br3 br--top black-60 mv0 pv2 ph3">
+      <span>{module.name}</span>
+      <span> - {module.complexity}</span>
+    </h1>
     <div className="w-100 black">
       <h3>Dependencies</h3>
       {module.ins.map(id => <span key={id} className="pv2">{id}</span>)}
     </div>
     <div className="w-100 black">
       <h3>Content</h3>
-      <span>{module.content}</span>
+      <a href={module.content} target="_blank">{module.content}</a>
     </div>
     <div className="w-100 black">
       <h3>In Class Challenges</h3>
@@ -21,15 +21,15 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
     </div>
     <div className="w-100 black">
       <h3>Homework</h3>
-      <span>{module.homework}</span>
+      <a href={module.homework} target="_blank">{module.homework}</a>
     </div>
     <div className="w-100 black">
       <h3>Slides</h3>
-      <span>{module.slides}</span>
+      <a href={module.slides} target="_blank">{module.slides}</a>
     </div>
     <div className="w-100 black">
       <h3>Extras</h3>
-      <span>{module.extras.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}}</span>
+      <span>{module.extras.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}</span>
     </div>
-  </div>
+  </article>
 );

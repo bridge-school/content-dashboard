@@ -36,7 +36,7 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
     return rows.map(row => row.reduce((acc, n, i) => ({...acc, [headers[i].toLowerCase().split(' ')[1]]: n}), {}))
       .map((row): ContentModule => ({
         ...row,
-        ins: row.ins.split(' '),
+        ins: row.ins.split(','),
         challenges: row.challenges.split(' '),
         extras: row.extras.split(' '),
       }));

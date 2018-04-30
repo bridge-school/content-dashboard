@@ -7,7 +7,6 @@ export namespace GET_MODULES {
     type: typeof GET_MODULES_TOKEN,
     payload: GetModulePayload
   };
-
   export const createAction = (payload: GetModulePayload) => ({
     type: GET_MODULES_TOKEN,
     payload

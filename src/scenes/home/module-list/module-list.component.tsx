@@ -7,11 +7,12 @@ import { get } from 'lodash';
 import { RootReducerState } from '../../../state/reducers';
 import { Action } from '../../../state/actions';
 
-import { ClassModule, classModules } from '../home.content';
+import { classModules } from '../home.content';
 import { ModuleListItem } from './module-list-item/module-list-item.component';
+import { ContentModule } from '../../../constants';
 
 interface Props {
-    modules?: Array<ClassModule>;
+    modules?: Array<ContentModule>;
     className?: string;
 
     module?: string;
@@ -25,7 +26,7 @@ const ModuleList: React.SFC<Props> = ({
 }: Props) => (
     <div className={`bg-near-white overflow-y-scroll ${className}`} style={{minWidth: '24rem'}}>
         {
-            modules.map((module: ClassModule, index: number) => (
+            modules.map((module: ContentModule, index: number) => (
                 <ModuleListItem
                     key={index}
                     dispatch={dispatch}

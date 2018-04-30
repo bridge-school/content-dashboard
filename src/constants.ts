@@ -9,3 +9,17 @@ export const complexityColors = {
   [4]: 'red',
   [5]: 'dark-red',
 };
+
+type URL = string;
+
+export interface ContentModule {
+  name: string;
+  id: string;
+  complexity: 1 | 2 | 3 | 4 | 5;
+  ins?: string[];
+  content?: URL;
+  challenges?: URL[];
+  homework?: URL;
+  extras?: URL[];
+  slides?: URL;
+}

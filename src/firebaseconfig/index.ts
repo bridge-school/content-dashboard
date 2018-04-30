@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import { fromEvent } from 'rxjs/index';
 import { filter, map } from 'rxjs/internal/operators';
+import { ContentModule } from '../constants';
 
 // after reading a bit about this, makes the most sense to keep this in the client side code, and will just eventually
 // create a whitelist of domains
@@ -32,6 +33,12 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
     const headers = result[0];
     const rows = result.slice(1);
 
-    return rows.map(row => row.reduce((acc, n, i) => ({...acc, [headers[i].toLowerCase().split(' ')[1]]: n}), {}));
+    return rows.map(row => row.reduce((acc, n, i) => ({...acc, [headers[i].toLowerCase().split(' ')[1]]: n}), {}))
+      .map((row): ContentModule => ({
+        ...row,
+        ins: row.ins.split(','),
+        challenges: row.challenges.split(' '),
+        extras: row.extras.split(' '),
+      }));
   })
 );

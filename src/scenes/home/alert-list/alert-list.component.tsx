@@ -52,13 +52,12 @@ const selectAlerts = createSelector(
             (alerts, module, index) => {
                 if (!module.ins || module.ins.length === 0) { return alerts; }
 
-                const prequisiteModuleIds = module.ins.split(',');
                 const precedingModuleIds = index > 0 ? timelineModuleIds.slice(0, index) : [];
 
-                const unmetPrequisites = difference(prequisiteModuleIds, precedingModuleIds);
+                const unmetPrequisites = difference(module.ins, precedingModuleIds);
                 if (isEmpty(unmetPrequisites)) { return alerts; }
 
-                const missingPrequisiteModuleIds = difference(prequisiteModuleIds, timelineModuleIds);
+                const missingPrequisiteModuleIds = difference(module.ins, timelineModuleIds);
                 const followingPrequisiteModuleIds = difference(unmetPrequisites, missingPrequisiteModuleIds);
                 const newAlert = {
                     id: module.id,

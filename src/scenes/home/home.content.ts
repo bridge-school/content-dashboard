@@ -1,11 +1,6 @@
-export interface ClassModule {
-  id: string;
-  name: string;
-  complexity: 1 | 2 | 3 | 4 | 5;
-  ins?: string;
-}
+import { ContentModule } from '../../constants';
 
-export const classModules: Array<ClassModule> = [
+export const classModules: Array<ContentModule> = [
   { id: '0', name: 'Functions', complexity: 1 },
   { id: '1', name: 'Map', complexity: 2 },
   { id: '2', name: 'Filter', complexity: 1 },

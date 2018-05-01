@@ -37,9 +37,9 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
       .map((row): ContentModule => ({
         ...row,
         // Prevent `ins` from including empty string elements.
-        ins: row.ins.split(',').filter( i => i.length > 0),
-        challenges: row.challenges.split(' '),
-        extras: row.extras.split(' '),
+        ins: row.ins.split(',').filter(Boolean),
+        challenges: row.challenges.split(' ').filter(Boolean),
+        extras: row.extras.split(' ').filter(Boolean),
       }));
   })
 );

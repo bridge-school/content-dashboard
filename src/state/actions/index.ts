@@ -7,9 +7,17 @@ export enum TypeKeys {
     DRAG_MODULE = 'DRAG_MODULE',
     DROP_MODULE = 'DROP_MODULE',
     GET_MODULES = 'GET_MODULES',
+    ROUTE_TO = 'ROUTE_TO',
     SET_CURRENT_MODULE = 'SET_CURRENT_MODULE',
     INSERT_MODULE_IN_TIMELINE = 'INSERT_MODULE_IN_TIMELINE',
+    SET_COHORT_NAME = 'SET_COHORT_NAME',
+    CREATE_COHORT = 'CREATE_COHORT',
+    SET_SELECTED_COHORT = 'SET_SELECTED_COHORT',
+    SET_ALL_COHORTS = 'SET_ALL_COHORTS'
 }
+
+export type StringAction = { type: string, payload: string };
+export type StringActionCreator = (...args: any[]) => StringAction;
 
 type ActionTypes = {
     type: TypeKeys

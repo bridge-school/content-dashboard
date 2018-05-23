@@ -1,6 +1,6 @@
 import { Reducer } from 'redux';
 
-import { Action, TypeKeys } from '../actions';
+import { Action, StringAction, TypeKeys } from '../actions';
 
 import { DRAG_MODULE } from '../actions/dragModule';
 import DragModuleAction = DRAG_MODULE.DragModuleAction;
@@ -22,6 +22,7 @@ export interface ModuleState {
     modules: ContentModule[];
     timeline: ContentModule[];
     currentModuleID: string;
+    newCohortName: string;
 }
 
 export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
@@ -53,6 +54,8 @@ const ModuleReducerMap: ModuleReducerMap = {
 
         return state;
     },
+    [TypeKeys.SET_COHORT_NAME]: (state: ModuleState, action: StringAction) =>
+      ({...state, newCohortName: action.payload}),
     [TypeKeys.INSERT_MODULE_IN_TIMELINE]: (state: ModuleState, action: InsertModuleInTimelineAction): ModuleState => {
         const moduleIndex = state.modules.findIndex(module => module.id === action.payload.id);
 

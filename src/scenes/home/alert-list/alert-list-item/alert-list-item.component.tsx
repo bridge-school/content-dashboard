@@ -38,7 +38,7 @@ const AlertListItem: React.SFC<Props> = ({ alert, dispatch }: Props) => {
                                 onClick={() => addPrerequisiteModule(module.id, alert.targetPosition)}
                             >
                                 Move Module
-                            </span>                            
+                            </span>
                         </div>
                     ))
                 }

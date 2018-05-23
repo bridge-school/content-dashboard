@@ -16,7 +16,8 @@ export const INITIAL_MODULE_STATE: ModuleState = {
     allModules: classModules,
     modules: classModules,
     timeline: [],
-  currentModuleID: ''
+    currentModuleID: '',
+    newCohortName: ''
 };
 
 const configureStore = (routerHistory: History) => {

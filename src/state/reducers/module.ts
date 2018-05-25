@@ -13,12 +13,14 @@ import GetModuleAction = GET_MODULES.GetModuleAction;
 
 import { ContentModule } from '../../constants';
 import { SetCurrentModuleAction } from '../actions/setCurrentModule';
+import { UpdateLessonPlanName } from '../actions/updateLessonPlanName';
 
 export interface ModuleState {
     allModules: ContentModule[];
     modules: ContentModule[];
     timeline: ContentModule[];
     currentModuleID: string;
+    lessonPlanName: string;
 }
 
 export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
@@ -27,8 +29,11 @@ const ModuleReducerMap: ModuleReducerMap = {
     [TypeKeys.GET_MODULES]: (state: ModuleState, action: GetModuleAction): ModuleState => {
         return { ...state, modules: action.payload, allModules: action.payload };
     },
-  [TypeKeys.SET_CURRENT_MODULE]: (state: ModuleState, action: SetCurrentModuleAction): ModuleState => {
+    [TypeKeys.SET_CURRENT_MODULE]: (state: ModuleState, action: SetCurrentModuleAction): ModuleState => {
         return { ...state, currentModuleID: action.payload };
+    },
+    [TypeKeys.UPDATE_LESSON_PLAN_NAME]: (state: ModuleState, action: UpdateLessonPlanName): ModuleState => {
+        return { ...state, lessonPlanName: action.payload };
     },
     [TypeKeys.DRAG_MODULE]: (state: ModuleState, action: DragModuleAction): ModuleState => {
         return state;

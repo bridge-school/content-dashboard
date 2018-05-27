@@ -1,42 +1,32 @@
 import * as React from 'react';
-// import { Dispatch } from 'redux';
+import { Dispatch } from 'redux';
+import { Action } from '../../../state/actions';
+
 import { connect as reduxConnect } from 'react-redux';
 
 import { RootReducerState } from '../../../state/reducers';
 import { TypeKeys } from '../../../state/actions';
 
-interface Props {
-  textValue: string;
-  updateText?: any;
-}
+import { TextField } from '../../../components/text-field/text-field.component';
 
-// a dump component: text field
-const TextField: React.SFC<Props> = ({ textValue, updateText }) => (
-  <input 
-    type="text"
-    value={textValue}
-    onChange={updateText}
+const LessonPlanNameInput = ({ lessonPlanName, updateText }) => (
+  <TextField
+    name="lesson-plan-name"
+    placeholder="Lesson plan name"
+    value={lessonPlanName}
+    handleOnChange={updateText}
   />
 );
 
-const LessonPlanNameField = ({ lessonPlanName, handleOnChange }) => {
-  return (
-    <TextField
-      textValue={lessonPlanName}
-      updateText={handleOnChange}
-    />
-  );
-};
-
-const ConnectedLessonPlanNameField = reduxConnect(
+const ConnectedLessonPlanNameInput = reduxConnect(
   (state: RootReducerState) => ({
     lessonPlanName: state.module.lessonPlanName
   }), 
-  (dispatch) => ({
-    handleOnChange: (e) => dispatch({type: TypeKeys.UPDATE_LESSON_PLAN_NAME, payload: e.target.value}),
+  (dispatch: Dispatch<Action>) => ({
+    updateText: (e) => dispatch({type: TypeKeys.UPDATE_LESSON_PLAN_NAME, payload: e.target.value}),
   })
-)(LessonPlanNameField);
+)(LessonPlanNameInput);
 
 export {
-  ConnectedLessonPlanNameField as LessonPlanNameField
+  ConnectedLessonPlanNameInput as LessonPlanNameInputField
 };

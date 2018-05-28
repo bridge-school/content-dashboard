@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { fromEvent } from 'rxjs/index';
+import { Observable, fromEvent } from 'rxjs/index';
 import { filter, map } from 'rxjs/internal/operators';
 import { ContentModule } from '../constants';
 
@@ -36,9 +36,38 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
     return rows.map(row => row.reduce((acc, n, i) => ({...acc, [headers[i].toLowerCase().split(' ')[1]]: n}), {}))
       .map((row): ContentModule => ({
         ...row,
-        ins: row.ins.split(','),
-        challenges: row.challenges.split(' '),
-        extras: row.extras.split(' '),
+        // Prevent `ins` from including empty string elements.
+        ins: row.ins.split(',').filter(Boolean),
+        challenges: row.challenges.split(' ').filter(Boolean),
+        extras: row.extras.split(' ').filter(Boolean),
       }));
   })
+);
+
+// todo: update to use completion callback
+// https://firebase.google.com/docs/database/web/read-and-write#add_a_completion_callback
+export const setCohort = (cohortName, moduleIds, startDate, endDate) => {
+  return Observable.create(obs => {
+    ((firebase as any).database().ref(`/cohort/${cohortName}`) as any)
+      .set(
+        {
+        cohortName,
+        moduleIds,
+        startDate,
+        endDate,
+        },
+        () => {
+        obs.next({
+          cohortName,
+          moduleIds,
+          startDate,
+          endDate,
+        });
+      });
+  });
+};
+
+export const allCohortsUpdated$ = fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(
+  filter(Boolean),
+  map(cohorts => cohorts.val())
 );

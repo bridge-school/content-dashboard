@@ -18,6 +18,7 @@ export const INITIAL_MODULE_STATE: ModuleState = {
     timeline: [],
     currentModuleID: '',
     lessonPlanName: '',
+    newCohortName: ''
 };
 
 const configureStore = (routerHistory: History) => {

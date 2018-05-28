@@ -34,7 +34,7 @@ const timelineTarget: DropTargetSpec<Props> = {
 };
 
 const Timeline: React.SFC<Props> = ({ connectDropTarget, timeline }: Props) => connectDropTarget(
-    <div className="flex flex-auto flex-row h-100">
+    <div className="flex flex-auto flex-row">
         <div className="flex flex-auto flex-column items-center justify-center">
             <div className="flex flex-row ba b--moon-gray w-100 mw-100 h3 overflow-x-scroll">
                 {

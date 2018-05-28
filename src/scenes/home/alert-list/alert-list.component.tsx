@@ -32,6 +32,7 @@ const AlertList: React.SFC<Props> = ({
                     <AlertListItem
                         key={`ali-${alert.id}`}
                         alert={alert}
+                        dispatch={dispatch}
                     />
                 ))
             }
@@ -61,6 +62,7 @@ const selectAlerts = createSelector(
                 const followingPrequisiteModuleIds = difference(unmetPrequisites, missingPrequisiteModuleIds);
                 const newAlert = {
                     id: module.id,
+                    targetPosition: index,
                     module: module,
                     following: modules.filter(followingModule =>
                         followingPrequisiteModuleIds.includes(followingModule.id)

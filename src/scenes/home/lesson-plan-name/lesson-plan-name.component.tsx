@@ -23,7 +23,7 @@ const ConnectedLessonPlanNameInput = reduxConnect(
     lessonPlanName: state.module.lessonPlanName
   }), 
   (dispatch: Dispatch<Action>) => ({
-    updateText: (e) => dispatch({type: TypeKeys.UPDATE_LESSON_PLAN_NAME, payload: e.target.value}),
+    updateText: (e) => dispatch({type: TypeKeys.SET_LESSON_PLAN_NAME, payload: e.target.value}),
   })
 )(LessonPlanNameInput);
 

@@ -1,5 +1,4 @@
 import { createStore, applyMiddleware, Middleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 
 import { History } from 'history';
 import { createLogger } from 'redux-logger';
@@ -38,9 +37,9 @@ const configureStore = (routerHistory: History) => {
             router: null,
             module: INITIAL_MODULE_STATE
         },
-        composeWithDevTools({})(applyMiddleware(
+        applyMiddleware(
             ...middlewares,
-        ))
+        )
     );
 };
 

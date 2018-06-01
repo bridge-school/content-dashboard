@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+
 import * as moment from 'moment';
 
 import { CohortLessonPlan } from './lesson-plan-listing.content';
@@ -38,12 +40,13 @@ const DateLabel: React.SFC<DateLabelProps> = ({ startDate, endDate }) => {
 export const LessonPlanListItem: React.SFC<Props> = ({ plan }) => (
   <div
     className="flex items-center mb4 lesson-plan-listing-item"
-    onClick={() => { console.log('clicked'); }}
   >
       <div className="w-100 ph2">
-        <h2 className="mb0">
-          {plan.cohortName}
-        </h2>
+        <Link to={`/cohorts/${plan.cohortName}`}>
+          <h2 className="mb0">
+            {plan.cohortName}
+          </h2>
+        </Link>
         <div>
           <DateLabel startDate={plan.startDate} endDate={plan.endDate} />
         </div>

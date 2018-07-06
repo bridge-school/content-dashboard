@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, Middleware } from 'redux';
+import { createStore, applyMiddleware, compose, Middleware } from 'redux';
 
 import { History } from 'history';
 import { createLogger } from 'redux-logger';
@@ -31,14 +31,18 @@ const configureStore = (routerHistory: History) => {
         middlewares.push(logger);
     }
 
+    const composeEnhancers = isDevelopment && (<any> window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
     return createStore(
         rootReducer,
         {
             router: null,
             module: INITIAL_MODULE_STATE
         },
-        applyMiddleware(
+        composeEnhancers(
+            applyMiddleware(
             ...middlewares,
+            )
         )
     );
 };

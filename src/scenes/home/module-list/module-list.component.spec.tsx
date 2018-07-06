@@ -4,17 +4,16 @@ import { createMemoryHistory, History } from 'history';
 import { routerMiddleware } from 'react-router-redux';
 import { Provider } from 'react-redux';
 
-import * as configureMockStore from 'redux-mock-store'
+import configureMockStore from 'redux-mock-store';
 import { wrapComponentInTestDragDropContext } from '../../../../tests/helpers/dnd';
 
 import { INITIAL_MODULE_STATE } from '../../../state/store';
 import { ModuleList } from './module-list.component';
 import { classModules } from '../home.content';
-import * as TestUtils from "react-dom/test-utils";
-import {ContextComponent} from "react-dnd";
+import * as TestUtils from 'react-dom/test-utils';
+import { ContextComponent } from 'react-dnd';
 
-
-const configureStore = (routerHistory: History) => configureMockStore([ routerMiddleware(routerHistory) ]);
+const configureStore = (routerHistory: History) => configureMockStore([routerMiddleware(routerHistory)]);
 const mockStore = configureStore(createMemoryHistory());
 
 const initialState = {
@@ -40,7 +39,7 @@ describe('ModuleList Component', () => {
         Component = (
             <Provider store={store}>
                 <div>
-                    <WrappedModuleList/>
+                    <WrappedModuleList />
                 </div>
             </Provider>
         );

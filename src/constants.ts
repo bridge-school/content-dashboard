@@ -16,7 +16,7 @@ export interface ContentModule {
   name: string;
   id: string;
   complexity: 1 | 2 | 3 | 4 | 5;
-  ins?: string[];
+  dependencies?: string[];
   content?: URL;
   challenges?: URL[];
   homework?: URL;

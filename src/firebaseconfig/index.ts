@@ -28,20 +28,7 @@ export const uiConfig = {
 
 export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/modules') as any, 'value').pipe(
   filter(Boolean),
-  map(snapshot => {
-    const result = snapshot.val();
-    const headers = result[0];
-    const rows = result.slice(1);
-
-    return rows.map(row => row.reduce((acc, n, i) => ({...acc, [headers[i].toLowerCase().split(' ')[1]]: n}), {}))
-      .map((row): ContentModule => ({
-        ...row,
-        // Prevent `ins` from including empty string elements.
-        ins: row.ins.split(',').filter(Boolean),
-        challenges: row.challenges.split(' ').filter(Boolean),
-        extras: row.extras.split(' ').filter(Boolean),
-      }));
-  })
+  map((snapshot): ContentModule =>  snapshot.val())
 );
 
 // todo: update to use completion callback

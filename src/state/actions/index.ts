@@ -12,6 +12,7 @@ export enum TypeKeys {
     SET_LESSON_PLAN_NAME = 'SET_LESSON_PLAN_NAME',
     INSERT_MODULE_IN_TIMELINE = 'INSERT_MODULE_IN_TIMELINE',
     SET_COHORT_NAME = 'SET_COHORT_NAME',
+    SET_COHORT_START_DATE = 'SET_COHORT_START_DATE',
     CREATE_COHORT = 'CREATE_COHORT',
     SET_SELECTED_COHORT = 'SET_SELECTED_COHORT',
     SET_ALL_COHORTS = 'SET_ALL_COHORTS'
@@ -26,9 +27,9 @@ type ActionTypes = {
 
 export type Payload = {
     payload: DRAG_MODULE.DragModulePayload
-        | DROP_MODULE.DropModulePayload
-        | GET_MODULES.GetModulePayload
-        | INSERT_MODULE_IN_TIMELINE.InsertModuleInTimelinePayload
+    | DROP_MODULE.DropModulePayload
+    | GET_MODULES.GetModulePayload
+    | INSERT_MODULE_IN_TIMELINE.InsertModuleInTimelinePayload
 };
 
 export type Action = ActionTypes & Payload;

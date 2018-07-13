@@ -1,5 +1,4 @@
-import { createStore, applyMiddleware, Middleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
+import { createStore, applyMiddleware, compose, Middleware } from 'redux';
 
 import { History } from 'history';
 import { createLogger } from 'redux-logger';
@@ -18,11 +17,13 @@ export const INITIAL_MODULE_STATE: ModuleState = {
     timeline: [],
     currentModuleID: '',
     lessonPlanName: '',
-    newCohortName: ''
+    newCohortName: '',
+    newCohortStartDate: ''
+
 };
 
 const configureStore = (routerHistory: History) => {
-    const logger: Middleware = createLogger({collapsed: true});
+    const logger: Middleware = createLogger({ collapsed: true });
 
     const middlewares: Array<Middleware> = [
         routerMiddleware(routerHistory),
@@ -33,15 +34,19 @@ const configureStore = (routerHistory: History) => {
         middlewares.push(logger);
     }
 
+    const composeEnhancers = isDevelopment && (<any> window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
     return createStore(
         rootReducer,
         {
             router: null,
             module: INITIAL_MODULE_STATE
         },
-        composeWithDevTools({})(applyMiddleware(
+        composeEnhancers(
+            applyMiddleware(
             ...middlewares,
-        ))
+            )
+        )
     );
 };
 

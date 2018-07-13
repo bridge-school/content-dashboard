@@ -9,7 +9,7 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
     </h1>
     <div className="w-100 black">
       <h3>Dependencies</h3>
-      {module.ins.map(id => <span key={id} className="pv2">{id}</span>)}
+      {module.dependencies.map(id => <span key={id} className="pv2">{id}</span>)}
     </div>
     <div className="w-100 black">
       <h3>Content</h3>

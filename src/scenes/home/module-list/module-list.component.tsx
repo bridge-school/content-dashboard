@@ -42,7 +42,7 @@ const ModuleList: React.SFC<Props> = ({
 const ConnectedModuleList = connect(
     (state: RootReducerState, ownProps: Props) => ({
         timeline: get(state, 'module.timeline', []),
-        modules: get(state, 'module.modules', classModules),
+        modules: get(state, 'module.modules', classModules).filter(m => m.challenges && m.challenges.length),
         ...ownProps
     }),
     (dispatch: Dispatch<Action>, ownProps: Props) => {

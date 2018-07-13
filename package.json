@@ -5,6 +5,8 @@
   "dependencies": {
     "dotenv": "^5.0.1",
     "firebase": "^4.12.1",
+    "firebase-admin": "^5.12.1",
+    "firebase-functions": "^1.1.0",
     "history": "^4.7.2",
     "lodash": "^4.17.5",
     "moment": "^2.22.1",
@@ -20,7 +22,7 @@
     "react-scripts-ts": "2.14.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-observable": "^1.0.0-alpha.1",
+    "redux-observable": "1.0.0-alpha.1",
     "reselect": "^3.0.1",
     "rxjs": "^6.0.0-beta.4",
     "tachyons": "^4.9.1"
@@ -52,7 +54,6 @@
     "@types/redux-mock-store": "0.0.13",
     "react-dnd-test-backend": "^2.6.0",
     "react-test-renderer": "^16.3.1",
-    "redux-devtools-extension": "^2.13.2",
     "redux-mock-store": "^1.5.1",
     "typescript": "^2.8.1"
   }

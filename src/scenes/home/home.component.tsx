@@ -11,41 +11,48 @@ import { LessonPlanNameInputField } from './lesson-plan-name/lesson-plan-name.co
 // import { LessonPlanList } from '@scenes';
 import { connect } from 'react-redux';
 import { getIDsFromList } from '../../state/selectors';
-import { createCohort, setCohortName } from '../../state/actions/cohortActions';
+import { createCohort, setCohortName, setCohortStartDate } from '../../state/actions/cohortActions';
 import { StringActionCreator } from '../../state/actions';
 import { RootReducerState } from '../../state/reducers';
 
 interface Props {
   createdTimelineIDs: any;
   newCohortName: string;
+  newCohortStartDate: string;
   setCohortName: StringActionCreator;
+  setCohortStartDate: StringActionCreator;
   createCohort: any;
 }
 
 const HomeApp: React.SFC<Props> = props => (
   <DragDropContextProvider backend={HTML5Backend}>
     <SceneContainer className="flex-row">
-      <ModuleList/>
+      <ModuleList />
       <div className="flex-auto pv3 ph4 h-inherit">
         <h2 className="f1 lh-title mt0 dark-gray">Create a Lesson</h2>
         <LessonPlanNameInputField/>
         <Timeline />
-        {
-          props.createdTimelineIDs.length ?
-          <input
-            type="text"
-            onChange={event => props.setCohortName(event.target.value)}
-            placeholder="Create a new cohort name..."
-          /> : ''
+        {Boolean(props.createdTimelineIDs.length) &&
+          <div>
+            <input
+              type="text"
+              onChange={event => props.setCohortName(event.target.value)}
+              placeholder="Create a new cohort name..."
+            />
+            <input
+              type="date"
+              onChange={event => props.setCohortStartDate(event.target.value)}
+              placeholder="Set new cohort start date..."
+            />
+          </div>
         }
-        {
-          props.createdTimelineIDs.length && props.newCohortName ?
-        <button
-          className="f6 link dim ba ph3 pv2 mb2 dib near-black"
-          onClick={() => props.createCohort(props.newCohortName, props.createdTimelineIDs)}
-        >
-          Save Cohort
-        </button> : ''
+        {Boolean(props.createdTimelineIDs.length && props.newCohortName) &&
+          <button
+            className="f6 link dim ba ph3 pv2 mb2 dib near-black"
+            onClick={() => props.createCohort(props.newCohortName, props.createdTimelineIDs, props.newCohortStartDate)}
+          >
+            Save Cohort
+          </button>
         }
       </div>
     </SceneContainer>
@@ -55,7 +62,8 @@ const HomeApp: React.SFC<Props> = props => (
 export const Home = connect(
   (state: RootReducerState) => ({
     createdTimelineIDs: getIDsFromList(state),
-    newCohortName: state.module.newCohortName
+    newCohortName: state.module.newCohortName,
+    newCohortStartDate: state.module.newCohortStartDate
   }),
-  { setCohortName, createCohort }
-  )(HomeApp);
+  { setCohortName, setCohortStartDate, createCohort }
+)(HomeApp);

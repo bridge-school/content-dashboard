@@ -23,9 +23,10 @@ export interface ModuleState {
     timeline: ContentModule[];
     currentModuleID: string;
     newCohortName: string;
+    newCohortStartDate: string;
 }
 
-export type ModuleReducerMap =  {[action: string]: Reducer<ModuleState>};
+export type ModuleReducerMap = { [action: string]: Reducer<ModuleState> };
 
 const ModuleReducerMap: ModuleReducerMap = {
     [TypeKeys.GET_MODULES]: (state: ModuleState, action: GetModuleAction): ModuleState => {
@@ -55,7 +56,9 @@ const ModuleReducerMap: ModuleReducerMap = {
         return state;
     },
     [TypeKeys.SET_COHORT_NAME]: (state: ModuleState, action: StringAction) =>
-      ({...state, newCohortName: action.payload}),
+        ({ ...state, newCohortName: action.payload }),
+    [TypeKeys.SET_COHORT_START_DATE]: (state: ModuleState, action: StringAction) =>
+        ({ ...state, newCohortStartDate: action.payload }),
     [TypeKeys.INSERT_MODULE_IN_TIMELINE]: (state: ModuleState, action: InsertModuleInTimelineAction): ModuleState => {
         const moduleIndex = state.modules.findIndex(module => module.id === action.payload.id);
 

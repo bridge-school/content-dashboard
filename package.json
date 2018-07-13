@@ -5,6 +5,8 @@
   "dependencies": {
     "dotenv": "^5.0.1",
     "firebase": "^4.12.1",
+    "firebase-admin": "^5.12.1",
+    "firebase-functions": "^1.1.0",
     "history": "^4.7.2",
     "lodash": "^4.17.5",
     "moment": "^2.22.1",

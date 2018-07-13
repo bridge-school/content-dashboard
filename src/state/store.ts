@@ -16,11 +16,12 @@ export const INITIAL_MODULE_STATE: ModuleState = {
     modules: classModules,
     timeline: [],
     currentModuleID: '',
-    newCohortName: ''
+    newCohortName: '',
+    newCohortStartDate: ''
 };
 
 const configureStore = (routerHistory: History) => {
-    const logger: Middleware = createLogger({collapsed: true});
+    const logger: Middleware = createLogger({ collapsed: true });
 
     const middlewares: Array<Middleware> = [
         routerMiddleware(routerHistory),

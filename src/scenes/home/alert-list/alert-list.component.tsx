@@ -51,14 +51,14 @@ const selectAlerts = createSelector(
         const timelineModuleIds = timeline.map(module => module.id);
         return timeline.reduce(
             (alerts, module, index) => {
-                if (!module.ins || module.ins.length === 0) { return alerts; }
+                if (!module.dependencies || module.dependencies.length === 0) { return alerts; }
 
                 const precedingModuleIds = index > 0 ? timelineModuleIds.slice(0, index) : [];
 
-                const unmetPrequisites = difference(module.ins, precedingModuleIds);
+                const unmetPrequisites = difference(module.dependencies, precedingModuleIds);
                 if (isEmpty(unmetPrequisites)) { return alerts; }
 
-                const missingPrequisiteModuleIds = difference(module.ins, timelineModuleIds);
+                const missingPrequisiteModuleIds = difference(module.dependencies, timelineModuleIds);
                 const followingPrequisiteModuleIds = difference(unmetPrequisites, missingPrequisiteModuleIds);
                 const newAlert = {
                     id: module.id,

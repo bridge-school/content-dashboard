@@ -1,6 +1,7 @@
 import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
 import { setCohort, allCohortsUpdated$ } from '../../../firebaseconfig';
+// import { ajax } from 'rxjs/internal/observable/dom/ajax';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(

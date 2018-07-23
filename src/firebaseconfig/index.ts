@@ -31,6 +31,12 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
   map((snapshot): ContentModule =>  snapshot.val())
 );
 
+export const updateModuleFirebase = (moduleID, moduleValue) => 
+Observable.create(obs => {
+  debugger;
+  firebase.database().ref(`/modules/${moduleID}`).set(moduleValue, () => obs.next('Success'));
+});
+
 // todo: update to use completion callback
 // https://firebase.google.com/docs/database/web/read-and-write#add_a_completion_callback
 export const setCohort = (cohortName, moduleIds, startDate, endDate) => {

@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
 import { RootReducerState } from '../../../../../state/reducers';
-import { Action } from '../../../../../state/actions';
-import { TypeKeys } from '../../../../../state/actions';
 import { ContentModule } from '../../../../../constants';
 
 import Button from '@material-ui/core/Button';
@@ -13,6 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { UpdateModule } from '../../../../../state/actions/editModule';
 
 interface Props {
   id: string;
@@ -23,12 +21,14 @@ interface Props {
 interface State {
   open: boolean;
   currentModule: ContentModule;
+  currentModuleIndex: number;
 }
 
 class FormDialog extends React.Component<Props, State> {
   state = {
     open: false,
-    currentModule: this.props.modules.find(mod => mod.id === this.props.id)
+    currentModule: this.props.modules.find(mod => mod.id === this.props.id),
+    currentModuleIndex: this.props.modules.map(mod => mod.id).indexOf(this.props.id)
   };
 
   toggleModal = () => {
@@ -47,7 +47,7 @@ class FormDialog extends React.Component<Props, State> {
 
   handleModuleUpdate = (e) => {
     e.preventDefault();
-    this.props.submitUpdatedModule(this.state.currentModule);
+    this.props.submitUpdatedModule(this.state.currentModule, this.state.currentModuleIndex);
     this.toggleModal();
   }
 
@@ -85,8 +85,10 @@ class FormDialog extends React.Component<Props, State> {
                 margin="dense"
                 id="complexity"
                 label="Complexity"
-                type="text"
-                onChange={(e) => this.updateInputValue(e)}
+                type="number"
+                onChange={(e) => 
+                  this.updateInputValue({target: {id: e.target.id, value: parseInt(e.target.value, 10)}})
+                }
               />
               <TextField
                 autoFocus={true}
@@ -138,9 +140,9 @@ const ConnectedEditForm = connect(
   (state: RootReducerState) => ({
       modules: state.module.allModules,
   }),
-  (dispatch: Dispatch<Action>) => ({
-    submitUpdatedModule: (item) => dispatch({type: TypeKeys.UPDATE_MODULE, payload: item}),
-  })
+  {
+    submitUpdatedModule: UpdateModule,
+  }
 )(FormDialog);
 
 export {

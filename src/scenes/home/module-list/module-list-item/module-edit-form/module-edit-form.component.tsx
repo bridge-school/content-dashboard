@@ -85,11 +85,29 @@ class FormDialog extends React.Component<Props, State> {
                 margin="dense"
                 id="complexity"
                 label="Complexity"
-                type="number"
+                type="text"
                 onChange={(e) => 
                   this.updateInputValue({target: {id: e.target.id, value: parseInt(e.target.value, 10)}})
                 }
               />
+              {
+                !this.state.currentModule.dependencies ? null : 
+                this.state.currentModule.dependencies.map((dependency, index) => {
+                  return (
+                    <TextField
+                        autoFocus={true}
+                        key={index}
+                        defaultValue={dependency}
+                        margin="dense"
+                        id="dependencies"
+                        label="Dependencies"
+                        type="text"
+                        fullWidth={true}
+                        onChange={(e) => this.updateInputValue(e)}
+                    />
+                  );
+                })
+              }
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.content}
@@ -100,6 +118,24 @@ class FormDialog extends React.Component<Props, State> {
                 fullWidth={true}
                 onChange={(e) => this.updateInputValue(e)}
               />
+              {
+                !this.state.currentModule.challenges ? null : 
+                this.state.currentModule.challenges.map((challenge, index) => {
+                  return (
+                    <TextField
+                        autoFocus={true}
+                        key={index}
+                        defaultValue={challenge}
+                        margin="dense"
+                        id="challenges"
+                        label="Challenges"
+                        type="text"
+                        fullWidth={true}
+                        onChange={(e) => this.updateInputValue(e)}
+                    />
+                  );
+                })
+              }
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.homework}
@@ -110,6 +146,24 @@ class FormDialog extends React.Component<Props, State> {
                 fullWidth={true}
                 onChange={(e) => this.updateInputValue(e)}
               />
+              {
+                !this.state.currentModule.extras ? null : 
+                this.state.currentModule.extras.map((extra, index) => {
+                  return (
+                    <TextField
+                        autoFocus={true}
+                        key={index}
+                        defaultValue={extra}
+                        margin="dense"
+                        id="extras"
+                        label="Extras"
+                        type="text"
+                        fullWidth={true}
+                        onChange={(e) => this.updateInputValue(e)}
+                    />
+                  );
+                })
+              }
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.slides}

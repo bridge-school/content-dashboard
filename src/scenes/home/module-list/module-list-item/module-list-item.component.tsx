@@ -33,13 +33,15 @@ const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, co
   return connectDragSource(
     <div key={id} className="flex items-center justify-between ph4 bb bw1 b--moon-gray">
       <h3>{name}</h3>
-      <EditForm 
-        id={id}
-      />
-      <div
-        className={`ml4 br-100 w2 h2 ${complexityClass} flex items-center justify-center`}
-      >
-        <h4 className="ma0 white">{complexity}</h4>
+      <div className="flex">
+        <div
+            className={`ml2 mr4 br-100 w2 h2 ${complexityClass} flex items-center justify-center`}
+        >
+            <h4 className="ma0 white">{complexity}</h4>
+        </div>
+        <EditForm 
+            id={id}
+        />
       </div>
     </div>
   );

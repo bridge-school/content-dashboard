@@ -17,6 +17,8 @@ import InsertModuleInTimelineAction = INSERT_MODULE_IN_TIMELINE.InsertModuleInTi
 import { ContentModule } from '../../constants';
 import { SetCurrentModuleAction } from '../actions/setCurrentModule';
 
+import { UpdateModuleAction } from '../actions/editModule';
+
 export interface ModuleState {
     allModules: ContentModule[];
     modules: ContentModule[];
@@ -88,6 +90,17 @@ const ModuleReducerMap: ModuleReducerMap = {
                     .concat(state.timeline.slice(currentPosition + 1)),
             };
         }
+    },
+    [TypeKeys.UPDATE_MODULE]: (state: ModuleState, action: UpdateModuleAction): ModuleState => {
+        const moduleIndex = state.allModules.findIndex(module => module.id === action.payload.id);
+        return {
+            ...state,
+            allModules: [
+                ...state.allModules.slice(0, moduleIndex),
+                action.payload,
+                ...state.allModules.slice(moduleIndex + 1)
+            ]
+        };
     }
 };
 

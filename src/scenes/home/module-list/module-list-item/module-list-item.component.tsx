@@ -13,7 +13,7 @@ import { getComplexityColor } from '../../../../utils';
 
 import { DROP_MODULE } from '../../../../state/actions/dropModule';
 
-import FormDialog from '../../module-edit-form/module-edit-form.component';
+import { EditForm } from './module-edit-form/module-edit-form.component';
 
 interface Props {
   id: string;
@@ -33,7 +33,9 @@ const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, co
   return connectDragSource(
     <div key={id} className="flex items-center justify-between ph4 bb bw1 b--moon-gray">
       <h3>{name}</h3>
-      <FormDialog />
+      <EditForm 
+        id={id}
+      />
       <div
         className={`ml4 br-100 w2 h2 ${complexityClass} flex items-center justify-center`}
       >

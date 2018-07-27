@@ -35,8 +35,7 @@ class FormDialog extends React.Component<Props, State> {
     this.setState({ open: !this.state.open });
   }
 
-  updateInputValue = (e) => {
-    const {target: {id, value}} = e;
+  updateInputValue = ({target: {id, value}}) => {
     this.setState({
       currentModule: {
         ...this.state.currentModule,
@@ -45,10 +44,35 @@ class FormDialog extends React.Component<Props, State> {
     });
   }
 
+  updateArrayValue = (e) => {
+    const {target: {id, value}} = e;
+    const index = e.target.getAttribute('data-index');
+    this.setState({
+      currentModule: {
+        ...this.state.currentModule,
+        [id]: [
+          ...this.state.currentModule[id].slice(0, index), 
+          value, 
+          ...this.state.currentModule[id].slice(index + 1)
+        ]
+      }
+    });
+    console.log(this.state.currentModule[id]);
+  }
+
   handleModuleUpdate = (e) => {
     e.preventDefault();
     this.props.submitUpdatedModule(this.state.currentModule, this.state.currentModuleIndex);
     this.toggleModal();
+  }
+
+  addNewFormField = () => {
+    this.setState({
+      currentModule: {
+        ...this.state.currentModule,
+        challenges: this.state.currentModule.challenges.concat('') 
+      }
+    });
   }
 
   render() {
@@ -90,24 +114,6 @@ class FormDialog extends React.Component<Props, State> {
                   this.updateInputValue({target: {id: e.target.id, value: parseInt(e.target.value, 10)}})
                 }
               />
-              {
-                !this.state.currentModule.dependencies ? null : 
-                this.state.currentModule.dependencies.map((dependency, index) => {
-                  return (
-                    <TextField
-                        autoFocus={true}
-                        key={index}
-                        defaultValue={dependency}
-                        margin="dense"
-                        id="dependencies"
-                        label="Dependencies"
-                        type="text"
-                        fullWidth={true}
-                        onChange={(e) => this.updateInputValue(e)}
-                    />
-                  );
-                })
-              }
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.content}
@@ -119,23 +125,33 @@ class FormDialog extends React.Component<Props, State> {
                 onChange={(e) => this.updateInputValue(e)}
               />
               {
-                !this.state.currentModule.challenges ? null : 
+                this.state.currentModule.challenges &&
                 this.state.currentModule.challenges.map((challenge, index) => {
                   return (
                     <TextField
                         autoFocus={true}
                         key={index}
+                        data-index={index}
                         defaultValue={challenge}
                         margin="dense"
                         id="challenges"
+                        inputProps={{'data-index': index}}
                         label="Challenges"
                         type="text"
                         fullWidth={true}
-                        onChange={(e) => this.updateInputValue(e)}
+                        onChange={(e) => this.updateArrayValue(e)}
                     />
                   );
                 })
               }
+              <Button
+                variant="contained" 
+                color="primary"
+                size="small"
+                onClick={this.addNewFormField}
+              >
+                Add link
+              </Button>
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.homework}
@@ -147,7 +163,7 @@ class FormDialog extends React.Component<Props, State> {
                 onChange={(e) => this.updateInputValue(e)}
               />
               {
-                !this.state.currentModule.extras ? null : 
+                this.state.currentModule.extras && 
                 this.state.currentModule.extras.map((extra, index) => {
                   return (
                     <TextField
@@ -159,7 +175,7 @@ class FormDialog extends React.Component<Props, State> {
                         label="Extras"
                         type="text"
                         fullWidth={true}
-                        onChange={(e) => this.updateInputValue(e)}
+                        onChange={(e) => this.updateArrayValue(e)}
                     />
                   );
                 })

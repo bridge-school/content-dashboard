@@ -10,6 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { UpdateModule } from '../../../../../state/actions/editModule';
 
 interface Props {
@@ -32,7 +33,9 @@ class FormDialog extends React.Component<Props, State> {
   };
 
   toggleModal = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({ 
+      open: !this.state.open 
+    });
   }
 
   updateInputValue = ({target: {id, value}}) => {
@@ -57,22 +60,55 @@ class FormDialog extends React.Component<Props, State> {
         ]
       }
     });
-    console.log(this.state.currentModule[id]);
+  }
+
+  addNewFormField = (id) => {
+    this.setState({
+      currentModule: {
+        ...this.state.currentModule,
+        [id]: this.state.currentModule[id].concat('') 
+      }
+    });
+  }
+
+  renderList = (label, list) => {
+    return (
+      <div>
+        {
+          list && list.map((item, index) => {
+            return (
+              <TextField
+                autoFocus={true}
+                key={index}
+                data-index={index}
+                defaultValue={item}
+                margin="dense"
+                id={label}
+                inputProps={{'data-index': index}}
+                label={label}
+                type="text"
+                fullWidth={true}
+                onChange={(e) => this.updateArrayValue(e)}
+              />
+            );
+          })
+        }
+        <Button
+          variant="contained" 
+          color="primary"
+          size="small"
+          onClick={() => this.addNewFormField(label)}
+        >
+          Add link
+        </Button>
+      </div>
+    );
   }
 
   handleModuleUpdate = (e) => {
     e.preventDefault();
     this.props.submitUpdatedModule(this.state.currentModule, this.state.currentModuleIndex);
     this.toggleModal();
-  }
-
-  addNewFormField = () => {
-    this.setState({
-      currentModule: {
-        ...this.state.currentModule,
-        challenges: this.state.currentModule.challenges.concat('') 
-      }
-    });
   }
 
   render() {
@@ -125,33 +161,8 @@ class FormDialog extends React.Component<Props, State> {
                 onChange={(e) => this.updateInputValue(e)}
               />
               {
-                this.state.currentModule.challenges &&
-                this.state.currentModule.challenges.map((challenge, index) => {
-                  return (
-                    <TextField
-                        autoFocus={true}
-                        key={index}
-                        data-index={index}
-                        defaultValue={challenge}
-                        margin="dense"
-                        id="challenges"
-                        inputProps={{'data-index': index}}
-                        label="Challenges"
-                        type="text"
-                        fullWidth={true}
-                        onChange={(e) => this.updateArrayValue(e)}
-                    />
-                  );
-                })
+                this.renderList('challenges', this.state.currentModule.challenges)
               }
-              <Button
-                variant="contained" 
-                color="primary"
-                size="small"
-                onClick={this.addNewFormField}
-              >
-                Add link
-              </Button>
               <TextField
                 autoFocus={true}
                 defaultValue={this.state.currentModule.homework}
@@ -163,22 +174,7 @@ class FormDialog extends React.Component<Props, State> {
                 onChange={(e) => this.updateInputValue(e)}
               />
               {
-                this.state.currentModule.extras && 
-                this.state.currentModule.extras.map((extra, index) => {
-                  return (
-                    <TextField
-                        autoFocus={true}
-                        key={index}
-                        defaultValue={extra}
-                        margin="dense"
-                        id="extras"
-                        label="Extras"
-                        type="text"
-                        fullWidth={true}
-                        onChange={(e) => this.updateArrayValue(e)}
-                    />
-                  );
-                })
+                this.renderList('extras', this.state.currentModule.extras)
               }
               <TextField
                 autoFocus={true}

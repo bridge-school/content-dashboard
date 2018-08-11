@@ -13,26 +13,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { UpdateModule } from '../../../../../state/actions/editModule';
 
-const renderTextField = ({
-  input,
-  label,
-  meta: { touched, error },
-}) => (
-  <TextField
-    hintText={label}
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    autoFocus={true}
-    defaultValue={this.state.currentModule.name}
-    margin="dense"
-    id="name"
-    label="Name"
-    type="text"
-    onChange={(e) => this.updateInputValue(e)}
-  />
-);
-
 interface TextFieldGroupInterface {
   fieldName: string; 
   list: string[];
@@ -40,22 +20,22 @@ interface TextFieldGroupInterface {
   onClick: React.MouseEventHandler<HTMLElement>;
 }
 
-const TextFieldGroup = ({fieldName, onChange, onClick, list}: TextFieldGroupInterface) => {
+const TextFieldGroup = ({fieldName, list, onChange, onClick}: TextFieldGroupInterface) => {
   return (
     <div className="textfield-group">
       {
-        list && list.map((item, index) => {
+        list && list.map((value, index) => {
           return (
             <TextField
               autoFocus={true}
               key={index}
               data-index={index}
-              defaultValue={item}
-              margin="dense"
-              name={fieldName}
               id={`${fieldName}-${index}`}
+              name={fieldName}
+              defaultValue={value}
               inputProps={{'data-index': index}}
-              label={fieldName.toUpperCase()}
+              label={fieldName}
+              margin="dense"
               type="text"
               fullWidth={true}
               onChange={onChange}
@@ -105,7 +85,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
     this.setState({
       currentModule: {
         ...this.state.currentModule,
-        [id]: value
+        [id]: value.trim()
       }
     });
   }
@@ -170,7 +150,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
               />
               <TextField
                 autoFocus={true}
-                defaultValue={this.state.currentModule.complexity}
+                defaultValue={this.state.currentModule.complexity.toString()}
                 margin="dense"
                 id="complexity"
                 label="Complexity"

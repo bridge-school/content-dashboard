@@ -33,7 +33,6 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
 
 export const updateModuleFirebase = (moduleID, moduleValue) => 
 Observable.create(obs => {
-  debugger;
   firebase.database().ref(`/modules/${moduleID}`).set(moduleValue, () => obs.next('Success'));
 });
 

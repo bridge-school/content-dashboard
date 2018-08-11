@@ -81,16 +81,17 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
     });
   }
 
-  updateInputValue = ({target: {id, value}}) => {
+  updateTextFieldInputValue = ({target: {id, value}}) => {
+    const textFieldValue = isNaN(value) ? value.trim() : parseInt(value, 10);
     this.setState({
       currentModule: {
         ...this.state.currentModule,
-        [id]: value.trim()
+        [id]: textFieldValue
       }
     });
   }
 
-  updateArrayValue = (e) => {
+  updateTextFieldGroupValue = (e) => {
     const {target: {name, value}} = e;
     const index = e.target.getAttribute('data-index');
     this.setState({
@@ -98,7 +99,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
         ...this.state.currentModule,
         [name]: [
           ...this.state.currentModule[name].slice(0, index), 
-          value, 
+          value.trim(), 
           ...this.state.currentModule[name].slice(index + 1)
         ]
       }
@@ -121,6 +122,8 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
   }
 
   render() {
+    const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
+    const textFieldGroups = ['extras', 'challenges'];
     return (
       <div>
         <Button 
@@ -139,68 +142,36 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
           <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
           <DialogContent>
             <form>
-              <TextField
-                autoFocus={true}
-                defaultValue={this.state.currentModule.name}
-                margin="dense"
-                id="name"
-                label="Name"
-                type="text"
-                onChange={(e) => this.updateInputValue(e)}
-              />
-              <TextField
-                autoFocus={true}
-                defaultValue={this.state.currentModule.complexity.toString()}
-                margin="dense"
-                id="complexity"
-                label="Complexity"
-                type="text"
-                onChange={(e) => 
-                  this.updateInputValue({target: {id: e.target.id, value: parseInt(e.target.value, 10)}})
-                }
-              />
-              <TextField
-                autoFocus={true}
-                defaultValue={this.state.currentModule.content}
-                margin="dense"
-                id="content"
-                label="Content"
-                type="text"
-                fullWidth={true}
-                onChange={(e) => this.updateInputValue(e)}
-              />
-              <TextFieldGroup 
-                fieldName="challenges" 
-                list={this.state.currentModule.challenges} 
-                onChange={(e) => this.updateArrayValue(e)}
-                onClick={(e) => this.addNewFormField('challenges')}
-              />
-              <TextField
-                autoFocus={true}
-                defaultValue={this.state.currentModule.homework}
-                margin="dense"
-                id="homework"
-                label="Homework"
-                type="text"
-                fullWidth={true}
-                onChange={(e) => this.updateInputValue(e)}
-              />
-              <TextFieldGroup 
-                fieldName="extras" 
-                list={this.state.currentModule.extras} 
-                onChange={(e) => this.updateArrayValue(e)}
-                onClick={(e) => this.addNewFormField('extras')}
-              />
-              <TextField
-                autoFocus={true}
-                defaultValue={this.state.currentModule.slides}
-                margin="dense"
-                id="slides"
-                label="Slides"
-                type="text"
-                fullWidth={true}
-                onChange={(e) => this.updateInputValue(e)}
-              />
+              {
+                textFields.map((prop, index) => {
+                  return (
+                    <TextField
+                      key={index}
+                      autoFocus={true}
+                      defaultValue={this.state.currentModule[prop].toString()}
+                      margin="dense"
+                      id={prop}
+                      label={prop}
+                      type="text"
+                      onChange={(e) => this.updateTextFieldInputValue(e)}
+                      fullWidth={true}
+                    />
+                  );
+                })
+              }
+              {
+                textFieldGroups.map((prop, index) => {
+                  return (
+                    <TextFieldGroup 
+                      key={index}
+                      fieldName={prop} 
+                      list={this.state.currentModule[prop]} 
+                      onChange={(e) => this.updateTextFieldGroupValue(e)}
+                      onClick={(e) => this.addNewFormField(prop)}
+                    />
+                  );
+                })
+              }
             </form>
           </DialogContent>
           <DialogActions>

@@ -2,6 +2,9 @@
   "name": "content-dashboard",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "8.x.x"
+  },
   "dependencies": {
     "dotenv": "^5.0.1",
     "firebase": "^4.12.1",

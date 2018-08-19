@@ -13,18 +13,18 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { UpdateModule } from '../../../../../state/actions/editModule';
 
-interface TextFieldGroupInterface {
+interface TextFieldGroupProps {
   fieldName: string; 
-  list: string[];
+  fieldList: string[];
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onClick: React.MouseEventHandler<HTMLElement>;
 }
 
-const TextFieldGroup = ({fieldName, list, onChange, onClick}: TextFieldGroupInterface) => {
+const TextFieldGroup = ({ fieldName, fieldList, onChange, onClick }: TextFieldGroupProps) => {
   return (
-    <div className="textfield-group">
+    <div>
       {
-        list && list.map((value, index) => {
+        fieldList && fieldList.map((value, index) => {
           return (
             <TextField
               autoFocus={true}
@@ -43,14 +43,18 @@ const TextFieldGroup = ({fieldName, list, onChange, onClick}: TextFieldGroupInte
           );
         })
       }
-      <Button
-        variant="contained" 
-        color="primary"
-        size="small"
-        onClick={onClick}
-      >
-        Add link
-      </Button>
+      {
+        fieldList && (
+        <Button
+          variant="contained" 
+          color="primary"
+          size="small"
+          onClick={onClick}
+        >
+          Add link
+        </Button>
+        )
+      }
     </div>
   );
 };
@@ -107,6 +111,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
   }
 
   addNewFormField = (id: string) => {
+    console.log(this.state.currentModule[id]);
     this.setState({
       currentModule: {
         ...this.state.currentModule,
@@ -148,7 +153,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
                     <TextField
                       key={index}
                       autoFocus={true}
-                      defaultValue={this.state.currentModule[prop].toString()}
+                      defaultValue={String(this.state.currentModule[prop])}
                       margin="dense"
                       id={prop}
                       label={prop}
@@ -165,7 +170,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
                     <TextFieldGroup 
                       key={index}
                       fieldName={prop} 
-                      list={this.state.currentModule[prop]} 
+                      fieldList={this.state.currentModule[prop]} 
                       onChange={(e) => this.updateTextFieldGroupValue(e)}
                       onClick={(e) => this.addNewFormField(prop)}
                     />

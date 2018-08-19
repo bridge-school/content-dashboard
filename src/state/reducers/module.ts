@@ -91,17 +91,6 @@ const ModuleReducerMap: ModuleReducerMap = {
             };
         }
     },
-    // [TypeKeys.UPDATE_MODULE]: (state: ModuleState, action: UpdateModuleAction): ModuleState => {
-    //     const moduleIndex = state.allModules.findIndex(module => module.id === action.payload.id);
-    //     return {
-    //         ...state,
-    //         allModules: [
-    //             ...state.allModules.slice(0, moduleIndex),
-    //             action.payload,
-    //             ...state.allModules.slice(moduleIndex + 1)
-    //         ]
-    //     };
-    // }
 };
 
 const moduleReducer = (state: ModuleState = null, action: Action) => {

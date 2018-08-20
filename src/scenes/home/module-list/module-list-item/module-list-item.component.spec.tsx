@@ -12,14 +12,17 @@ import { DROP_MODULE_TOKEN } from '../../../../state/actions/dropModule';
 describe('ModuleListItem', () => {
     it(`should render ModuleListItem with DragDropContext`, () => {
         const ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
-        const root: ContextComponent = TestUtils.renderIntoDocument(<ListItem/>) as ContextComponent;
+        const root: ContextComponent = 
+        TestUtils.renderIntoDocument(<ListItem id={1} modules={[{id: 1, name: 'Foo'}]} />) as ContextComponent;
 
         expect(root).toBeTruthy();
     });
 
     it('should set isDragging to true when item is being dragged', () => {
         const ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
-        const root = TestUtils.renderIntoDocument(<ListItem/>) as ContextComponent;
+        const root = TestUtils.renderIntoDocument(
+        <ListItem id={1} modules={[{id: 1, name: 'Foo'}]} />
+    ) as ContextComponent;
 
 
         const backend: TestBackend = root.getManager().getBackend();
@@ -42,7 +45,9 @@ describe('ModuleListItem', () => {
         beforeEach(() => {
             dispatchSpy = jest.fn();
             ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
-            root = TestUtils.renderIntoDocument(<ListItem dispatch={dispatchSpy}/>) as ContextComponent;
+            root = TestUtils.renderIntoDocument(
+            <ListItem dispatch={dispatchSpy} id={1} modules={[{id: 1, name: 'Foo'}]}  />
+        ) as ContextComponent;
 
             manager = root.getManager();
             backend = manager.getBackend();

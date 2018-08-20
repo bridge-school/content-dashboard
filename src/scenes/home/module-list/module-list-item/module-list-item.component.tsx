@@ -19,7 +19,8 @@ interface Props {
   id: string;
   name: string;
   complexity: 1 | 2 | 3 | 4 | 5;
-
+  onEdit: Function;
+  modules: any;
   dispatch?: any;
   connectDragSource?: ConnectDragSource;
   isDragging?: boolean;
@@ -27,7 +28,7 @@ interface Props {
 
 type ListItemDragDescriptor = Pick<Props, 'id'>;
 
-const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, connectDragSource }: Props) => {
+const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSource, onEdit, modules }: Props) => {
   const complexityClass = `bg-${getComplexityColor(complexity)}`;
 
   return connectDragSource(
@@ -41,6 +42,8 @@ const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, co
         </div>
         <EditForm 
             id={id}
+            onEdit={onEdit}
+            modules={modules}
         />
       </div>
     </div>

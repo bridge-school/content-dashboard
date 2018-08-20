@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-
-import { RootReducerState } from '../../../../../state/reducers';
 import { ContentModule } from '../../../../../constants';
 
 import Button from '@material-ui/core/Button';
@@ -10,8 +7,6 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-import { UpdateModule } from '../../../../../state/actions/editModule';
 
 interface TextFieldGroupProps {
   fieldName: string; 
@@ -62,7 +57,7 @@ const TextFieldGroup = ({ fieldName, fieldList, onChange, onClick }: TextFieldGr
 interface FormDialogProps {
   id: string;
   modules: ContentModule[];
-  submitUpdatedModule: any;
+  onEdit: any;
 }
 
 interface FormDialogState {
@@ -72,7 +67,7 @@ interface FormDialogState {
 }
 
 // todo: update to use redux form
-class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
+export class EditForm extends React.Component<FormDialogProps, FormDialogState> {
   state = {
     open: false,
     currentModule: this.props.modules.find(mod => mod.id === this.props.id),
@@ -122,7 +117,7 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
 
   handleModuleUpdate = (e) => {
     e.preventDefault();
-    this.props.submitUpdatedModule(this.state.currentModule, this.state.currentModuleIndex);
+    this.props.onEdit(this.state.currentModule, this.state.currentModuleIndex);
     this.toggleModal();
   }
 
@@ -192,16 +187,3 @@ class FormDialog extends React.Component<FormDialogProps, FormDialogState> {
     );
   }
 }
-
-const ConnectedEditForm = connect(
-  (state: RootReducerState) => ({
-      modules: state.module.allModules,
-  }),
-  {
-    submitUpdatedModule: UpdateModule,
-  }
-)(FormDialog);
-
-export {
-  ConnectedEditForm as EditForm
-};

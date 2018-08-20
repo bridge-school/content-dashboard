@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
 import { RouteComponentProps } from 'react-router';
+import { CalendarComponent } from '../../components/calendar/calendar';
 
 const CohortSceneComponent = ({selectedCohort, selectedModuleList}) => (
   <div className="w-100 overflow-y-auto">
     <h2>{selectedCohort && selectedCohort.cohortName}</h2>
+    <CalendarComponent/>
     {selectedModuleList.map(mod => <ModuleComponent key={mod.id} module={mod} />)}
   </div>);
 

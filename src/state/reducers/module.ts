@@ -17,8 +17,6 @@ import InsertModuleInTimelineAction = INSERT_MODULE_IN_TIMELINE.InsertModuleInTi
 import { ContentModule } from '../../constants';
 import { SetCurrentModuleAction } from '../actions/setCurrentModule';
 
-// import { UpdateModuleAction } from '../actions/editModule';
-
 export interface ModuleState {
     allModules: ContentModule[];
     modules: ContentModule[];

@@ -106,7 +106,6 @@ export class EditForm extends React.Component<FormDialogProps, FormDialogState> 
   }
 
   addNewFormField = (id: string) => {
-    console.log(this.state.currentModule[id]);
     this.setState({
       currentModule: {
         ...this.state.currentModule,

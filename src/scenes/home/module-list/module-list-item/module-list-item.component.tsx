@@ -1,17 +1,15 @@
 import * as React from 'react';
 import {
-    DragSource,
-    DragSourceSpec,
-    DragSourceConnector,
-    DragSourceMonitor,
-    DragSourceCollector,
-    ConnectDragSource
+  ConnectDragSource,
+  DragSource,
+  DragSourceCollector,
+  DragSourceConnector,
+  DragSourceMonitor,
+  DragSourceSpec
 } from 'react-dnd';
 
 import { ItemTypes } from '../../../../constants';
 import { getComplexityColor } from '../../../../utils';
-
-import { DROP_MODULE } from '../../../../state/actions/dropModule';
 
 import { EditForm } from './module-edit-form/module-edit-form.component';
 
@@ -22,6 +20,7 @@ interface Props {
   onEdit: Function;
   modules: any;
   dispatch?: any;
+  onDrop?: any;
   connectDragSource?: ConnectDragSource;
   isDragging?: boolean;
 }
@@ -40,7 +39,7 @@ const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSou
         >
             <h4 className="ma0 white">{complexity}</h4>
         </div>
-        <EditForm 
+        <EditForm
             id={id}
             onEdit={onEdit}
             modules={modules}
@@ -79,19 +78,18 @@ const moduleListItemSource: DragSourceSpec<Props> = {
         
         let droppedItem = monitor.getItem();
 
-        if (props.dispatch) {
-            props.dispatch(DROP_MODULE.createAction(droppedItem as any));
+        if (props.onDrop) {
+            props.onDrop(droppedItem as any);
         }
     }
 };
 
-const DraggableModuleListItem = DragSource(
+export const DraggableElement = ({component: Comp, ...restProps}: any) => {
+  const ComponentWithDrag = DragSource(
     ItemTypes.Module,
     moduleListItemSource,
     moduleListItemCollect
-)(ModuleListItem);
+  )(({connectDragSource, ...dragMarkedUpProps}) => connectDragSource(<div><Comp {...dragMarkedUpProps} /></div>));
 
-export {
-    DraggableModuleListItem as ModuleListItem,
-    Props as ListItemProps
+  return <ComponentWithDrag {...restProps} />;
 };

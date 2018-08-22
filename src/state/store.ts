@@ -1,6 +1,7 @@
 import { createStore, applyMiddleware, compose, Middleware } from 'redux';
 
 import { History } from 'history';
+import createHistory from 'history/createBrowserHistory';
 import { createLogger } from 'redux-logger';
 import { routerMiddleware } from 'react-router-redux';
 
@@ -48,4 +49,5 @@ const configureStore = (routerHistory: History) => {
     );
 };
 
-export default configureStore;
+export const appHistory: History = createHistory();
+export const reduxStoreInstance = configureStore(appHistory);

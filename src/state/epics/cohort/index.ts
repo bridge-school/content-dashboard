@@ -24,6 +24,13 @@ export const setCohortDataByRouteEpic = ($action) =>
       map((action: any) => ({ type: TypeKeys.SET_SELECTED_COHORT, payload: action.payload.pathname.split('/')[2] })),
   );
 
+export const setLocalstorageToken = ($action) =>
+  $action.ofType('SIGNIN_SUCCESS_WITH_CREDENTIALS')
+    .pipe(
+      filter((action: any) => Boolean(action.payload)),
+      map((action: any) => ({type: 'SET_SIGNIN_USER', payload: action.payload.user.toJSON()}))
+  );
+
 export const setAllCohorts = () =>
   allCohortsUpdated$.pipe(
     map(cohorts => ({ type: TypeKeys.SET_ALL_COHORTS, payload: cohorts }))

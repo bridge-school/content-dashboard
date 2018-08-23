@@ -84,12 +84,14 @@ const moduleListItemSource: DragSourceSpec<Props> = {
     }
 };
 
-export const DraggableElement = ({component: Comp, ...restProps}: any) => {
+export const DraggableElement = ({component: Comp, id, ...restProps}: any) => {
   const ComponentWithDrag = DragSource(
     ItemTypes.Module,
     moduleListItemSource,
     moduleListItemCollect
-  )(({connectDragSource, ...dragMarkedUpProps}) => connectDragSource(<div><Comp {...dragMarkedUpProps} /></div>));
+  )(({connectDragSource, isDragging, ...dragMarkedUpProps}) => {
+    return connectDragSource(<div><Comp {...dragMarkedUpProps} /></div>)
+  });
 
-  return <ComponentWithDrag {...restProps} />;
+  return <ComponentWithDrag {...restProps} id={id} />;
 };

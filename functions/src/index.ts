@@ -17,18 +17,31 @@ export const createNewClassroom = functions.database.ref('/cohort/{cohortID}').o
     resolveWithFullResponse: true
   })
     .then(loginResponse => {
-      return Promise.all([replRequest('POST', loginResponse.headers['set-cookie'], 'https://repl.it/data/classrooms/create', {
-        name: cohortSnapshot.val().cohortName,
-        language_key: 'babel',
-        description: '',
-        isPublic: false,
-        image: '',
-      }), getAllAssignmentIdsForListOfModules(cohortSnapshot.val().moduleIds, loginResponse.headers['set-cookie'])])
-        .then(([classroomCreateResponse, allIds]) => {
-            return updateClassroomWithAssignments(classroomCreateResponse.id, allIds, loginResponse.headers['set-cookie'])
-              .then(() => admin.database().ref(`/cohort/${params.cohortID}`).update({replClassroomID: classroomCreateResponse.id}))
-          }
-        )
+      // todo: get all classrooms from account, and update firebase classroom references
+      return Promise.all([
+          replRequest('GET', loginResponse.headers['set-cookie'], 'https://repl.it/data/teacher/classrooms'),
+          getAllCurrentModules(),
+        ]).then(([replClassrooms, firebaseModules]: [any[], any[]]) => {
+        updateModules(firebaseModules.map(module => {
+            const replData = replClassrooms.find((classroom) => {
+              return classroom.name.toLowerCase() === module.name.toLowerCase().replace(/[a-z]+: /, '');
+            });
+            return replData ? {...module, challenges: [].concat( module.challenges[0] ? module.challenges[0].replace(/[0-9]+/, replData.id) : []) } : module;
+          }));
+      })
+        .then(() => Promise.all([
+          replRequest('POST', loginResponse.headers['set-cookie'], 'https://repl.it/data/classrooms/create', {
+            name: cohortSnapshot.val().cohortName,
+            language_key: 'babel',
+            description: '',
+            isPublic: false,
+            image: '',
+          }), getAllAssignmentIdsForListOfModules(cohortSnapshot.val().moduleIds, loginResponse.headers['set-cookie'])])
+          .then(([classroomCreateResponse, allIds]) => {
+              return updateClassroomWithAssignments(classroomCreateResponse.id, allIds, loginResponse.headers['set-cookie'])
+                .then(() => admin.database().ref(`/cohort/${params.cohortID}`).update({replClassroomID: classroomCreateResponse.id}))
+            }
+          ))
     });
 });
 
@@ -55,6 +68,7 @@ function getAllAssignmentIdsForListOfModules(moduleIds, cookie) {
         return Promise.all(
           modSnapshot.val().filter(mod => moduleIds.includes(mod.id)).map(mod => mod.challenges || []).reduce((a, b) => [...a, ...b], [])
             .map(url => /[^/]*$/.exec(url)[0])
+            .filter(Boolean)
             .map(id => replRequest('GET', cookie, `https://repl.it/data/classrooms/${id}/assignments`))
         ).then((res: any) => {
           resolve(res.reduce((a, b) => [...a, ...b], []).map(assignment => assignment.id));
@@ -62,4 +76,21 @@ function getAllAssignmentIdsForListOfModules(moduleIds, cookie) {
       }
     );
   })
+}
+
+function getAllCurrentModules() {
+  return new Promise(function (resolve) {
+    admin.database().ref('/modules').once('value', (modSnapshot) => {
+      resolve(modSnapshot.val());
+      }
+    );
+  })
+}
+
+
+function updateModules(updatedModules) {
+  return new Promise(function (resolve) {
+    admin.database().ref('/modules').set(updatedModules, resolve);
+      }
+    );
 }

@@ -2,12 +2,6 @@ import { Reducer } from 'redux';
 
 import { Action, StringAction, TypeKeys } from '../actions';
 
-import { DRAG_MODULE } from '../actions/dragModule';
-import DragModuleAction = DRAG_MODULE.DragModuleAction;
-
-import { DROP_MODULE } from '../actions/dropModule';
-import DropModuleAction = DROP_MODULE.DropModuleAction;
-
 import { GET_MODULES } from '../actions/getModules';
 import GetModuleAction = GET_MODULES.GetModuleAction;
 
@@ -35,26 +29,9 @@ const ModuleReducerMap: ModuleReducerMap = {
     [TypeKeys.SET_CURRENT_MODULE]: (state: ModuleState, action: SetCurrentModuleAction): ModuleState => {
         return { ...state, currentModuleID: action.payload };
     },
-    [TypeKeys.DRAG_MODULE]: (state: ModuleState, action: DragModuleAction): ModuleState => {
-        return state;
-    },
-    [TypeKeys.DROP_MODULE]: (state: ModuleState, action: DropModuleAction): ModuleState => {
-        const moduleIndex = state.modules.findIndex(module => module.id === action.payload.id);
+    UPDATE_MODULE_LIST: (state: ModuleState, action: any) => ({ ...state, modules: action.payload }),
+    UPDATE_TIMELINE: (state: ModuleState, action: any) => ({ ...state, timeline: action.payload }),
 
-        if (moduleIndex > -1) {
-            return {
-                ...state,
-                modules: state.modules.slice(0, moduleIndex)
-                    .concat(
-                        state.modules.slice(moduleIndex + 1)
-                    ),
-
-                timeline: (state.timeline || []).concat([state.modules[moduleIndex]])
-            };
-        }
-
-        return state;
-    },
     [TypeKeys.SET_COHORT_NAME]: (state: ModuleState, action: StringAction) =>
         ({ ...state, newCohortName: action.payload }),
     [TypeKeys.SET_COHORT_START_DATE]: (state: ModuleState, action: StringAction) =>

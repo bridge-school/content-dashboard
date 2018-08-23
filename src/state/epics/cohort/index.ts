@@ -35,3 +35,26 @@ export const setAllCohorts = () =>
   allCohortsUpdated$.pipe(
     map(cohorts => ({ type: TypeKeys.SET_ALL_COHORTS, payload: cohorts }))
   );
+
+export const addModuleToNewCohort = ($action) =>
+  $action.ofType('ADD_MODULE_TO_NEW_COHORT')
+    .pipe(
+      filter(({payload: {modules, selectedModuleID}}) => modules.find(module => module.id === selectedModuleID)),
+      filter(Boolean),
+      map(({payload}) => ({type: 'CAN_ADD_MODULE', payload}))
+    );
+
+export const removeModuleFromModuleList = ($action) =>
+  $action.ofType('CAN_ADD_MODULE')
+    .pipe(
+      map(({payload: {modules, selectedModuleID}}) => modules.filter(module => module.id !== selectedModuleID)),
+      map((modules) => ({type: 'UPDATE_MODULE_LIST', payload: modules}))
+    );
+
+export const addModuleToTimeline = ($action) =>
+  $action.ofType('CAN_ADD_MODULE')
+    .pipe(
+      map(({payload: {timeline, modules, selectedModuleID}}) =>
+        timeline.concat(modules.find(module => module.id === selectedModuleID))),
+      map((timeline) => ({type: 'UPDATE_TIMELINE', payload: timeline}))
+    );

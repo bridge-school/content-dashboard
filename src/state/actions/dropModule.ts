@@ -1,19 +1,17 @@
-export const ADD_MODULE_TO_NEW_COHORT = 'ADD_MODULE_TO_NEW_COHORT';
+export const DROP_MODULE_TOKEN = 'DROP_MODULE';
 
 export namespace DROP_MODULE {
-    export type DropModulePayload = {
-        selectedModuleID: string;
-        modules: any;
-        timeline: any;
-    };
+  export type DropModulePayload = {
+    id: string;
+  };
 
-    export type DropModuleAction = {
-        type: typeof ADD_MODULE_TO_NEW_COHORT,
-        payload: DropModulePayload
-    };
+  export type DropModuleAction = {
+    type: typeof DROP_MODULE_TOKEN,
+    payload: DropModulePayload
+  };
 
-    export const createAction = (payload: DropModulePayload) => ({
-        type: ADD_MODULE_TO_NEW_COHORT,
-        payload
-    });
+  export const createAction = (payload: DropModulePayload) => ({
+    type: DROP_MODULE_TOKEN,
+    payload
+  });
 }

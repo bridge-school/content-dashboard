@@ -55,7 +55,8 @@ const ConnectedModuleList = connect(
         return {
             ...ownProps,
             dispatch,
-            submitUpdatedModule: UpdateModule,
+            submitUpdatedModule: (module: ContentModule, moduleIndex: number) => 
+            dispatch(UpdateModule(module, moduleIndex)),
         };
     }
 )(ModuleList);

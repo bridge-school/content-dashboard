@@ -2,24 +2,18 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as rp from 'request-promise';
 
+const cors = require('cors')({
+  origin: true,
+});
+
 admin.initializeApp();
 
 export const createNewClassroom = functions.database.ref('/cohort/{cohortID}').onCreate((cohortSnapshot, {params}) => {
-  return rp({
-    method: 'POST',
-    uri: 'https://repl.it/login',
-    body: {
-      username: functions.config().replit.username,
-      password: functions.config().replit.password,
-      teacher: false
-    },
-    json: true,
-    resolveWithFullResponse: true
-  })
-    .then(loginResponse => {
+  return replLogin(functions.config().replit.username, functions.config().replit.password)
+    .then(cookie => {
       // todo: get all classrooms from account, and update firebase classroom references
       return Promise.all([
-          replRequest('GET', loginResponse.headers['set-cookie'], 'https://repl.it/data/teacher/classrooms'),
+          replRequest('GET', cookie, 'https://repl.it/data/teacher/classrooms'),
           getAllCurrentModules(),
         ]).then(([replClassrooms, firebaseModules]: [any[], any[]]) => {
         updateModules(firebaseModules.map(module => {
@@ -30,15 +24,15 @@ export const createNewClassroom = functions.database.ref('/cohort/{cohortID}').o
           }));
       })
         .then(() => Promise.all([
-          replRequest('POST', loginResponse.headers['set-cookie'], 'https://repl.it/data/classrooms/create', {
+          replRequest('POST', cookie, 'https://repl.it/data/classrooms/create', {
             name: cohortSnapshot.val().cohortName,
             language_key: 'babel',
             description: '',
             isPublic: false,
             image: '',
-          }), getAllAssignmentIdsForListOfModules(cohortSnapshot.val().moduleIds, loginResponse.headers['set-cookie'])])
+          }), getAllAssignmentIdsForListOfModules(cohortSnapshot.val().moduleIds, cookie)])
           .then(([classroomCreateResponse, allIds]) => {
-              return updateClassroomWithAssignments(classroomCreateResponse.id, allIds, loginResponse.headers['set-cookie'])
+              return updateClassroomWithAssignments(classroomCreateResponse.id, allIds, cookie)
                 .then(() => admin.database().ref(`/cohort/${params.cohortID}`).update({replClassroomID: classroomCreateResponse.id}))
             }
           ))
@@ -93,4 +87,27 @@ function updateModules(updatedModules) {
     admin.database().ref('/modules').set(updatedModules, resolve);
       }
     );
+}
+
+exports.getReplCohortData = functions.https.onRequest(() => {
+    return cors((req, res) => req.method === 'GET' && req.query.id ?
+      replLogin(functions.config().replit.username, functions.config().replit.password)
+        .then(cookie => replRequest('GET', cookie, `https://repl.it/data/classrooms/${req.query.id}`))
+        .then((res) => res.status(200).send(res))
+      : res.status(403).send('Forbidden!'));
+});
+
+
+function replLogin(username, password) {
+  return rp({
+    method: 'POST',
+    uri: 'https://repl.it/login',
+    body: {
+      username,
+      password,
+      teacher: true
+    },
+    json: true,
+    resolveWithFullResponse: true
+  }).then((loginResponse) => loginResponse.headers['set-cookie'])
 }

@@ -1,7 +1,7 @@
 import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
 import { setCohort, allCohortsUpdated$ } from '../../../firebaseconfig';
-// import { ajax } from 'rxjs/internal/observable/dom/ajax';
+import { ajax } from 'rxjs/internal/observable/dom/ajax';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(
@@ -20,7 +20,7 @@ export const addCohortEpic = $action =>
 export const setCohortDataByRouteEpic = ($action) =>
   $action.ofType('@@router/LOCATION_CHANGE')
     .pipe(
-      filter((action: any) => action.payload.pathname.includes('/cohort/')),
+      filter((action: any) => action.payload.pathname.includes('/cohorts/')),
       map((action: any) => ({ type: TypeKeys.SET_SELECTED_COHORT, payload: action.payload.pathname.split('/')[2] })),
   );
 
@@ -57,4 +57,17 @@ export const addModuleToTimeline = ($action) =>
       map(({payload: {timeline, modules, selectedModuleID}}) =>
         timeline.concat(modules.find(module => module.id === selectedModuleID))),
       map((timeline) => ({type: 'UPDATE_TIMELINE', payload: timeline}))
+    );
+
+export const getReplCohortData = ($action) =>
+  $action.ofType('@@router/LOCATION_CHANGE')
+    .pipe(
+      filter((action: any) => action.payload.pathname.includes('/cohorts/')),
+      map((action: any) => action.payload.pathname.split('/')[2]),
+      mergeMap((id: string) =>
+        ajax({
+          method: 'GET',
+          url: `https://us-central1-bridge-content-dashboard.cloudfunctions.net/getReplCohortData?id=${id}`
+        })),
+      map((data) => ({type: 'test', payload: data}))
     );

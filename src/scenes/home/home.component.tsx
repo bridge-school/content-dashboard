@@ -28,7 +28,7 @@ const HomeApp: React.SFC<Props> = props => (
     <SceneContainer className="flex-row">
       <ModuleList />
       {props.user ? <div className="flex-auto pv3 ph4 h-inherit">
-        <h2 className="f1 lh-title mt0 dark-gray">Create a Lesson</h2>
+        <h2 className="f1 lh-title mt0 dark-gray">Create a Cohort</h2>
         <Timeline />
         {Boolean(props.createdTimelineIDs.length) &&
           <div>

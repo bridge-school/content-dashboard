@@ -14,6 +14,7 @@ import * as TestUtils from "react-dom/test-utils";
 import {ContextComponent} from "react-dnd";
 
 
+// @ts-ignore
 const configureStore = (routerHistory: History) => configureMockStore([ routerMiddleware(routerHistory) ]);
 const mockStore = configureStore(createMemoryHistory());
 

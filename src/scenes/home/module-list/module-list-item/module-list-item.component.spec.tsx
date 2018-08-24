@@ -12,7 +12,9 @@ import { DROP_MODULE_TOKEN } from '../../../../state/actions/dropModule';
 describe('ModuleListItem', () => {
   it(`should render ModuleListItem with DragDropContext`, () => {
     const ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
+    // @ts-ignore
     const root: ContextComponent =
+      // @ts-ignore
       TestUtils.renderIntoDocument(<ListItem id={1} modules={[{id: 1, name: 'Foo'}]} />) as ContextComponent;
 
     expect(root).toBeTruthy();
@@ -22,6 +24,7 @@ describe('ModuleListItem', () => {
     const ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
     const root = TestUtils.renderIntoDocument(
       <ListItem id={1} modules={[{id: 1, name: 'Foo'}]} />
+      // @ts-ignore
     ) as ContextComponent;
 
 
@@ -29,13 +32,16 @@ describe('ModuleListItem', () => {
 
     const item = TestUtils.findRenderedComponentWithType(root as any, ModuleListItem);
 
+    // @ts-ignore
     backend.simulateBeginDrag([item.getHandlerId()]);
 
+    // @ts-ignore
     expect(item.state.isDragging).toBe(true);
   });
 
   describe('Dragging and dropping', () => {
     let ListItem;
+    // @ts-ignore
     let root: ContextComponent;
     let backend: TestBackend;
     let manager: any & {monitor: DragSourceMonitor};
@@ -47,6 +53,7 @@ describe('ModuleListItem', () => {
       ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
       root = TestUtils.renderIntoDocument(
         <ListItem dispatch={dispatchSpy} id={1} modules={[{id: 1, name: 'Foo'}]}  />
+        // @ts-ignore
       ) as ContextComponent;
 
       manager = root.getManager();
@@ -62,6 +69,7 @@ describe('ModuleListItem', () => {
     it('should result in dispatching drop action (given the target was valid for dropping)', () => {
       const item = TestUtils.findRenderedComponentWithType(root as any, ModuleListItem);
 
+      // @ts-ignore
       backend.simulateBeginDrag([item.getHandlerId()]);
 
       manager.monitor.didDrop = jest.fn(() => true);
@@ -78,6 +86,7 @@ describe('ModuleListItem', () => {
     it('should not result in dispatching drop action (given the drop was not successful)', () => {
       const item = TestUtils.findRenderedComponentWithType(root as any, ModuleListItem);
 
+      // @ts-ignore
       backend.simulateBeginDrag([item.getHandlerId()]);
 
 

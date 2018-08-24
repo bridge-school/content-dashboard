@@ -1,2 +1,2 @@
 export * from './home';
-export * from './lesson-plans';
+export * from './cohort-list';

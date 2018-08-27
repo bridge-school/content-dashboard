@@ -47,8 +47,8 @@ Observable.create(obs => {
 // https://firebase.google.com/docs/database/web/read-and-write#add_a_completion_callback
 export const setCohort = (cohortName, moduleIds, startDate, endDate) => {
   return Observable.create(obs => {
-    ((firebase as any).database().ref(`/cohort/${cohortName}`) as any)
-      .set(
+    ((firebase as any).database().ref(`/cohort`) as any)
+      .push(
         {
         cohortName,
         moduleIds,

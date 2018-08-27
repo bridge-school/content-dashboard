@@ -14,7 +14,8 @@ export enum TypeKeys {
     SET_COHORT_START_DATE = 'SET_COHORT_START_DATE',
     CREATE_COHORT = 'CREATE_COHORT',
     SET_SELECTED_COHORT = 'SET_SELECTED_COHORT',
-    SET_ALL_COHORTS = 'SET_ALL_COHORTS'
+    SET_ALL_COHORTS = 'SET_ALL_COHORTS',
+    UPDATE_MODULE = 'UPDATE_MODULE',
 }
 
 export type StringAction = { type: string, payload: string };

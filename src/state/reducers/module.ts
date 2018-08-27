@@ -88,7 +88,7 @@ const ModuleReducerMap: ModuleReducerMap = {
                     .concat(state.timeline.slice(currentPosition + 1)),
             };
         }
-    }
+    },
 };
 
 const moduleReducer = (state: ModuleState = null, action: Action) => {

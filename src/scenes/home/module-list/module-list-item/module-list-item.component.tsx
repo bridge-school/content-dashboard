@@ -13,11 +13,14 @@ import { getComplexityColor } from '../../../../utils';
 
 import { DROP_MODULE } from '../../../../state/actions/dropModule';
 
+import { EditForm } from './module-edit-form/module-edit-form.component';
+
 interface Props {
   id: string;
   name: string;
   complexity: 1 | 2 | 3 | 4 | 5;
-
+  onEdit: Function;
+  modules: any;
   dispatch?: any;
   connectDragSource?: ConnectDragSource;
   isDragging?: boolean;
@@ -25,16 +28,23 @@ interface Props {
 
 type ListItemDragDescriptor = Pick<Props, 'id'>;
 
-const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, isDragging, connectDragSource }: Props) => {
+const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSource, onEdit, modules }: Props) => {
   const complexityClass = `bg-${getComplexityColor(complexity)}`;
 
   return connectDragSource(
     <div key={id} className="flex items-center justify-between ph4 bb bw1 b--moon-gray">
       <h3>{name}</h3>
-      <div
-        className={`ml4 br-100 w2 h2 ${complexityClass} flex items-center justify-center`}
-      >
-        <h4 className="ma0 white">{complexity}</h4>
+      <div className="flex">
+        <div
+            className={`ml2 mr4 br-100 w2 h2 ${complexityClass} flex items-center justify-center`}
+        >
+            <h4 className="ma0 white">{complexity}</h4>
+        </div>
+        <EditForm 
+            id={id}
+            onEdit={onEdit}
+            modules={modules}
+        />
       </div>
     </div>
   );

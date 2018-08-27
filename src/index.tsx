@@ -10,7 +10,7 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
 const history: History = createHistory();
-const store = configureStore(history);
+export const store = configureStore(history);
 
 const AppComponent = (
     <Provider store={store}>

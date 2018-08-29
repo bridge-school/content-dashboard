@@ -1,4 +1,4 @@
-import { StringAction, TypeKeys } from './index';
+import { StringAction, TypeKeys, ActionWithPayload } from './index';
 
 export const createCohort = (
   cohortName,
@@ -17,4 +17,9 @@ export const setCohortName = (payload: string): StringAction => ({
 export const setCohortStartDate = (payload: string): StringAction => ({
   type: TypeKeys.SET_COHORT_START_DATE,
   payload,
+});
+
+export const toggleCohortClassroomDialog = (payload: boolean): ActionWithPayload<boolean> => ({
+  type: TypeKeys.TOGGLE_COHORT_CLASSROOM_DIALOG,
+  payload
 });

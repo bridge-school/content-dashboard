@@ -70,3 +70,16 @@ export const allCohortsUpdated$ = fromEvent((firebase as any).database().ref(`/c
   filter(Boolean),
   map(cohorts => cohorts.val()),
 );
+
+export const addClassroomToCohort = (cohortId, classroom) => {
+
+  // debugger;
+  return Observable.create(obs => {
+    ((firebase as any).database().ref(`/cohort/${cohortId}/classrooms`) as any)
+      .push(
+        classroom,
+        () => {
+        obs.next('success!');
+      });
+  });
+};

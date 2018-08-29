@@ -1,6 +1,6 @@
 import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
-import { setCohort, allCohortsUpdated$ } from '../../../firebaseconfig';
+import { setCohort, allCohortsUpdated$, addClassroomToCohort } from '../../../firebaseconfig';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(
@@ -58,3 +58,10 @@ export const addModuleToTimeline = ($action) =>
         timeline.concat(modules.find(module => module.id === selectedModuleID))),
       map((timeline) => ({type: 'UPDATE_TIMELINE', payload: timeline}))
     );
+
+export const saveClassroomToCohort = ($action) => 
+    $action.ofType(TypeKeys.SAVE_CLASSROOM_TO_COHORT)
+      .pipe(
+        mergeMap((action: any) => addClassroomToCohort(action.payload.cohortId, action.payload.classroom)),
+        map(() => ({type: 'FAKE_SUCCESS_ADD_CLASSROOM'}))
+      )

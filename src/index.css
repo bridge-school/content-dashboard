@@ -34,3 +34,23 @@ div#root {
 .lesson-plan-listing-item:hover {
   background-color: rgba(94, 55, 195, 0.3);
 }
+
+/* module chips section in the add classroom form dialog */
+.modules-select-menu > div {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.modules-select-menu .chip {
+  margin: 0 8px 8px 0;
+}
+
+/* add classroom dialog text */
+.add-classroom-dialog .add-classroom-text {
+  color: black;
+  margin-bottom: 15px;
+}
+
+.add-classroom-dialog .classroom-date {
+  font-weight: bold;
+}

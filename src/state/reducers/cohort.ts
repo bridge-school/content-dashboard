@@ -1,12 +1,10 @@
 import { Action, TypeKeys } from '../actions';
 
-
-
 interface CohortState {
-  selectedDates: Date[];
   allCohorts: any;
   selectedCohort: any;
   classroomDialogIsOpen: boolean;
+  classroomInEdit: any;
 }
 
 export interface CohortReducerState {
@@ -23,13 +21,16 @@ const CohortReducerMap = {
   [TypeKeys.TOGGLE_COHORT_CLASSROOM_DIALOG]: (state, action) => {
     return { ...state, classroomDialogIsOpen: action.payload };
   },
+  [TypeKeys.UPDATE_EDIT_CLASSROOM]: (state, action) => {
+    return { ...state, classroomInEdit: action.payload };
+  },
 };
 
 const cohortDefaultState = { 
   allCohorts: {}, 
   classroomDialogIsOpen: false,
   selectedCohort: null,
-  selectedDates: [new Date("August 15 2018"), new Date('August 10 2018'), new Date('August 30 2018')]
+  classroomInEdit: null,
 }
 
 const cohortReducer = (state = cohortDefaultState, action: Action) => {

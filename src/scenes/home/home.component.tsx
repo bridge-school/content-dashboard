@@ -20,14 +20,15 @@ interface Props {
   setCohortName: StringActionCreator;
   setCohortStartDate: StringActionCreator;
   createCohort: any;
+  user: any;
 }
 
 const HomeApp: React.SFC<Props> = props => (
   <DragDropContextProvider backend={HTML5Backend}>
     <SceneContainer className="flex-row">
       <ModuleList />
-      <div className="flex-auto pv3 ph4 h-inherit">
-        <h2 className="f1 lh-title mt0 dark-gray">Create a Lesson</h2>
+      {props.user ? <div className="flex-auto pv3 ph4 h-inherit">
+        <h2 className="f1 lh-title mt0 dark-gray">Create a Cohort</h2>
         <Timeline />
         {Boolean(props.createdTimelineIDs.length) &&
           <div>
@@ -51,7 +52,7 @@ const HomeApp: React.SFC<Props> = props => (
             Save Cohort
           </button>
         }
-      </div>
+      </div> : <h2>Cannot create cohort until signed in</h2>}
     </SceneContainer>
   </DragDropContextProvider>
 );
@@ -60,7 +61,8 @@ export const Home = connect(
   (state: RootReducerState) => ({
     createdTimelineIDs: getIDsFromList(state),
     newCohortName: state.module.newCohortName,
-    newCohortStartDate: state.module.newCohortStartDate
+    newCohortStartDate: state.module.newCohortStartDate,
+    user: state.auth.loggedInUser
   }),
   { setCohortName, setCohortStartDate, createCohort }
 )(HomeApp);

@@ -1,6 +1,14 @@
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import { getModulesEpic, setSelectedModuleFromRoute, editModuleEpic } from './modules';
-import { addCohortEpic, setCohortDataByRouteEpic, setAllCohorts } from './cohort';
+import {
+  addCohortEpic,
+  setCohortDataByRouteEpic,
+  setAllCohorts,
+  setLocalstorageToken,
+  addModuleToNewCohort,
+  removeModuleFromModuleList,
+  addModuleToTimeline,
+} from './cohort';
 
 const rootEpic = combineEpics(
   getModulesEpic,
@@ -8,7 +16,11 @@ const rootEpic = combineEpics(
   setSelectedModuleFromRoute,
   setCohortDataByRouteEpic,
   setAllCohorts,
-  editModuleEpic
+  editModuleEpic,
+  setLocalstorageToken,
+  addModuleToNewCohort,
+  removeModuleFromModuleList,
+  addModuleToTimeline,
 );
 
 export const epicMiddleware = createEpicMiddleware(rootEpic);

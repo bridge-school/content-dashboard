@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ContentModule } from '../../constants';
 
 export const ModuleComponent = ({module}: {module: ContentModule}) => (
-  
+
     <article className="center mw5 mw6-ns br3 hidden ba b--black-10 mv4 tc">
     <h1 className="f4 bg-near-white br3 br--top black-60 mv0 pv2 ph3">
       <span>{module.name}</span>
@@ -12,7 +12,7 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
     {(module.dependencies && module.dependencies.length > 0) &&
       <div className="w-100 black">
         <h3>Dependencies</h3>
-        {module.dependencies.map(id => <span key={id} className="pv2">{id}</span>)}
+        {module.dependencies ? module.dependencies.map(id => <span key={id} className="pv2">{id}</span>) : 'No Dependencies'}
       </div>
     }
     <div className="w-100 black">
@@ -23,7 +23,7 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
     {(module.challenges && module.challenges.length > 0) &&
       <div className="w-100 black">
         <h3>In Class Challenges</h3>
-        <span>{module.challenges.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}</span>
+        <span>{module.challenges ? module.challenges.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>) : 'None'}</span>
       </div>
     }
     <div className="w-100 black">
@@ -38,7 +38,7 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
     {(module.extras && module.extras.length > 0) &&
       <div className="w-100 black">
         <h3>Extras</h3>
-        <span>{module.extras.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}</span>
+        {module.extras ? <span>{module.extras.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}</span> : 'None'}
       </div>
     }
   </article>

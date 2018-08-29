@@ -11,17 +11,15 @@ import {
 import { ItemTypes } from '../../../../constants';
 import { getComplexityColor } from '../../../../utils';
 
-import { DROP_MODULE } from '../../../../state/actions/dropModule';
-
 import { EditForm } from './module-edit-form/module-edit-form.component';
 
 interface Props {
   id: string;
   name: string;
   complexity: 1 | 2 | 3 | 4 | 5;
-  onEdit: Function;
-  modules: any;
-  dispatch?: any;
+  onEdit?: Function;
+  modules?: any;
+  onDrop?: any;
   connectDragSource?: ConnectDragSource;
   isDragging?: boolean;
 }
@@ -79,8 +77,8 @@ const moduleListItemSource: DragSourceSpec<Props> = {
 
     let droppedItem = monitor.getItem();
 
-    if (props.dispatch) {
-      props.dispatch(DROP_MODULE.createAction(droppedItem as any));
+    if (props.onDrop) {
+      props.onDrop(droppedItem);
     }
   }
 };

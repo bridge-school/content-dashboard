@@ -14,7 +14,7 @@ interface Props extends RouteComponentProps<any> {
 const LessonPlans: React.SFC<Props> = ({cohorts}) => (
   <List>
     {cohorts.map(cohort => (
-      <Link to={`cohorts/${cohort.cohortName}`} style={{ textDecoration: 'none' }}>
+      <Link to={`cohorts/${cohort.id}`} style={{ textDecoration: 'none' }}>
         <ListItem button={true}>
           <ListItemText primary={cohort.cohortName} />
         </ListItem>

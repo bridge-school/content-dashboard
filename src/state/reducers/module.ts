@@ -10,6 +10,8 @@ import InsertModuleInTimelineAction = INSERT_MODULE_IN_TIMELINE.InsertModuleInTi
 
 import { ContentModule } from '../../constants';
 import { SetCurrentModuleAction } from '../actions/setCurrentModule';
+import { DROP_MODULE } from '../actions/dropModule';
+import DropModuleAction = DROP_MODULE.DropModuleAction;
 
 export interface ModuleState {
   allModules: ContentModule[];
@@ -36,6 +38,23 @@ const ModuleReducerMap: ModuleReducerMap = {
     ({ ...state, newCohortName: action.payload }),
   [TypeKeys.SET_COHORT_START_DATE]: (state: ModuleState, action: StringAction) =>
     ({ ...state, newCohortStartDate: action.payload }),
+  [TypeKeys.DROP_MODULE]: (state: ModuleState, action: DropModuleAction): ModuleState => {
+    const moduleIndex = state.modules.findIndex(module => module.id === action.payload.id);
+
+    if (moduleIndex > -1) {
+      return {
+        ...state,
+        modules: state.modules.slice(0, moduleIndex)
+          .concat(
+            state.modules.slice(moduleIndex + 1)
+          ),
+
+        timeline: (state.timeline || []).concat([state.modules[moduleIndex]])
+      };
+    }
+
+    return state;
+  },
   [TypeKeys.INSERT_MODULE_IN_TIMELINE]: (state: ModuleState, action: InsertModuleInTimelineAction): ModuleState => {
     const moduleIndex = state.modules.findIndex(module => module.id === action.payload.id);
 

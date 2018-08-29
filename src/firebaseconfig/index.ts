@@ -68,5 +68,5 @@ export const setCohort = (cohortName, moduleIds, startDate, endDate) => {
 
 export const allCohortsUpdated$ = fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(
   filter(Boolean),
-  map(cohorts => cohorts.val())
+  map(cohorts => cohorts.val()),
 );

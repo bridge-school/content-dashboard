@@ -7,7 +7,7 @@ import {
   setLocalstorageToken,
   addModuleToNewCohort,
   removeModuleFromModuleList,
-  addModuleToTimeline, getReplCohortData
+  addModuleToTimeline,
 } from './cohort';
 
 const rootEpic = combineEpics(
@@ -21,7 +21,6 @@ const rootEpic = combineEpics(
   addModuleToNewCohort,
   removeModuleFromModuleList,
   addModuleToTimeline,
-  getReplCohortData,
 );
 
 export const epicMiddleware = createEpicMiddleware(rootEpic);

@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom';
 
 import * as moment from 'moment';
 
-import { CohortLessonPlan } from './lesson-plan-listing.content';
 
 interface LessonPlanSelectedFunc {
-  (event: Event, plan: CohortLessonPlan): any;
+  (event: Event, plan: any): any;
 }
 
 interface Props {
-  plan: CohortLessonPlan;
+  plan: any;
   onClick?: LessonPlanSelectedFunc;
 }
 

@@ -46,13 +46,13 @@ describe('ModuleListItem', () => {
     let backend: TestBackend;
     let manager: any & {monitor: DragSourceMonitor};
     let oldMonitor: DragSourceMonitor;
-    let dispatchSpy;
+    let dropSpy;
 
     beforeEach(() => {
-      dispatchSpy = jest.fn();
+      dropSpy = jest.fn();
       ListItem = wrapComponentInTestDragDropContext(ModuleListItem);
       root = TestUtils.renderIntoDocument(
-        <ListItem dispatch={dispatchSpy} id={1} modules={[{id: 1, name: 'Foo'}]}  />
+        <ListItem onDrop={dropSpy} id={1} modules={[{id: 1, name: 'Foo'}]}  />
         // @ts-ignore
       ) as ContextComponent;
 
@@ -66,7 +66,7 @@ describe('ModuleListItem', () => {
       jest.clearAllMocks();
     });
 
-    it('should result in dispatching drop action (given the target was valid for dropping)', () => {
+    it('should result in onDrop callback (given the target was valid for dropping)', () => {
       const item = TestUtils.findRenderedComponentWithType(root as any, ModuleListItem);
 
       // @ts-ignore
@@ -75,7 +75,7 @@ describe('ModuleListItem', () => {
       manager.monitor.didDrop = jest.fn(() => true);
       backend.simulateEndDrag();
 
-      expect(dispatchSpy).toBeCalledWith(
+      expect(dropSpy).toBeCalledWith(
         expect.objectContaining({
             type: DROP_MODULE_TOKEN
           }
@@ -83,7 +83,7 @@ describe('ModuleListItem', () => {
       );
     });
 
-    it('should not result in dispatching drop action (given the drop was not successful)', () => {
+    it('should not result in onDrop callback (given the drop was not successful)', () => {
       const item = TestUtils.findRenderedComponentWithType(root as any, ModuleListItem);
 
       // @ts-ignore
@@ -93,7 +93,7 @@ describe('ModuleListItem', () => {
       manager.monitor.didDrop = jest.fn(() => false);
       backend.simulateEndDrag();
 
-      expect(dispatchSpy).not.toBeCalled();
+      expect(dropSpy).not.toBeCalled();
     });
   });
 });

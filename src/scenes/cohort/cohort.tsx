@@ -17,9 +17,7 @@ const CohortSceneComponent = ({
   classroomInEdit,
   updateClassroom,
   saveClassroom
-}) => {
-  
-  return (
+}) => (
   <div className="w-100 overflow-y-auto">
     <h2>{selectedCohort && selectedCohort.cohortName}</h2>
     <CalendarComponent 
@@ -44,7 +42,7 @@ const CohortSceneComponent = ({
     />
     {selectedModuleList.map(mod => <ModuleComponent key={mod.id} module={mod} />)}
   </div>
-  )};
+);
 
 export const CohortScene = connect((state: RootReducerState, ownProps: RouteComponentProps<any>) => {
   return {

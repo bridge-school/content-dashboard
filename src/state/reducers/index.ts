@@ -2,10 +2,14 @@ import { combineReducers, Reducer } from 'redux';
 
 import { RouterReducer, RouterReducerState } from './router';
 import { ModuleReducer, ModuleReducerState } from './module';
-import { CohortReducer } from './cohort';
 import { authReducer } from './auth';
+import { CohortReducer, CohortReducerState } from './cohort';
 
-export type RootReducerState = RouterReducerState & ModuleReducerState & { cohort: any, auth: {loggedInUser: any} };
+export type RootReducerState = 
+    RouterReducerState 
+    & ModuleReducerState 
+    & CohortReducerState
+    & { auth: {loggedInUser: any} };
 
 export const rootReducer: Reducer<RootReducerState> = combineReducers({
     ...RouterReducer,

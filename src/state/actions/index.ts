@@ -16,10 +16,16 @@ export enum TypeKeys {
     SET_SELECTED_COHORT = 'SET_SELECTED_COHORT',
     SET_ALL_COHORTS = 'SET_ALL_COHORTS',
     UPDATE_MODULE = 'UPDATE_MODULE',
+    TOGGLE_COHORT_CLASSROOM_DIALOG = 'TOGGLE_COHORT_CLASSROOM_DIALOG',
+    UPDATE_EDIT_CLASSROOM = 'UPDATE_EDIT_CLASSROOM',
+    SAVE_CLASSROOM_TO_COHORT = 'SAVE_CLASSROOM_TO_COHORT',
 }
 
 export type StringAction = { type: string, payload: string };
+export type BooleanAction = { type: string, payload: boolean };
 export type StringActionCreator = (...args: any[]) => StringAction;
+
+export type ActionWithPayload<T> = {type: TypeKeys, payload: T};
 
 type ActionTypes = {
     type: TypeKeys

@@ -1,0 +1,20 @@
+import * as React from 'react';
+import DayPicker from 'react-day-picker';
+import 'react-day-picker/lib/style.css';
+
+export const CalendarComponent = ({handleDayClick, selectedDates}) => {
+
+    const highlightStyle = `.DayPicker-Day--selected:not(.DayPicker-Day--disabled):not(.DayPicker-Day--outside) {
+        background-color: orange;
+        color: white;
+    }`;
+
+    return (
+        <div className="calendar-root flex justify-center">
+            <div className="calendar flex ba bw3 b--light-gray">
+                <style>{highlightStyle}</style>
+                <DayPicker onDayClick={handleDayClick} selectedDays={selectedDates}/>
+            </div>
+        </div>
+    );
+};

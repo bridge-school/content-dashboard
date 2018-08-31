@@ -51,7 +51,7 @@ const CohortSceneComponent =
         cohort={selectedCohort}
         handleDayClick={(day) => {
           toggleDialog(true);
-          updateClassroom({day: day.toUTCString()});
+          updateClassroom({day: day.toUTCString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
         }}
       /> : '...loading' }
       <AddClassroomFormModal

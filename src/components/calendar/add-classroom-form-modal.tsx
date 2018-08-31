@@ -14,7 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import { formatDateStringWithoutTime } from '../../helpers';
 
-export const AddClassroomForm = ({
+export const AddClassroomFormModal = ({
         isOpen, 
         onClose, 
         availableModules, 

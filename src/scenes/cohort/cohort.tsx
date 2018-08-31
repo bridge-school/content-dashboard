@@ -2,54 +2,87 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
-import { RouteComponentProps } from 'react-router';
+import { Route, RouteComponentProps, Switch } from 'react-router';
 import { CalendarComponent } from '../../components/calendar/calendar';
-import { AddClassroomForm } from '../../components/calendar/add-classroom-form';
-import { toggleCohortClassroomDialog, updateClassroomInEdit, saveClassroomToCohort } from '../../state/actions/cohortActions';
+import { AddClassroomFormModal } from '../../components/calendar/add-classroom-form-modal';
+import {
+  toggleCohortClassroomDialog,
+  updateClassroomInEdit,
+  saveClassroomToCohort
+} from '../../state/actions/cohortActions';
 import { convertObjectToValuesArray } from '../../helpers';
+import { Card, CardContent, Typography } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
-const CohortSceneComponent = ({
-  selectedCohort, 
-  selectedModuleList, 
-  selectedCohortClassroomDates, 
-  classroomDialogIsOpen, 
-  toggleDialog, 
-  classroomInEdit,
-  updateClassroom,
-  saveClassroom
-}) => (
-  <div className="w-100 overflow-y-auto">
-    <h2>{selectedCohort && selectedCohort.cohortName}</h2>
-    <CalendarComponent 
-      handleDayClick={(day) => {
+
+const CohortCalendar = ({cohort, handleDayClick}) => (
+  <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
+    <CardContent className="flex-grow-1 h-100">
+      <Typography variant="title"> {cohort && cohort.cohortName} </Typography>
+      <Typography variant="caption"> Upcoming classes </Typography>
+      <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
+        {convertObjectToValuesArray(cohort.classrooms || {}).map(classroom =>
+          (<Link key={classroom.id} to={`/cohort/${cohort.id}/classrooms/${classroom.id}`}>{classroom.day}</Link>))}
+      </Typography>
+    </CardContent>
+    <CardContent className="flex-grow-1">
+      <CalendarComponent
+        handleDayClick={handleDayClick}
+        selectedDates={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
+      />
+    </CardContent>
+</Card>);
+
+
+const CohortSceneComponent =
+  ({
+     selectedCohort,
+     selectedModuleList,
+     classroomDialogIsOpen,
+     toggleDialog,
+     classroomInEdit,
+     updateClassroom,
+     saveClassroom
+   }) => (
+    <React.Fragment>
+      { selectedCohort ? <CohortCalendar
+        cohort={selectedCohort}
+        handleDayClick={(day) => {
           toggleDialog(true);
           updateClassroom({day: day.toUTCString()});
-        }
-      } 
-      selectedDates={selectedCohortClassroomDates}
-    />
-    <AddClassroomForm 
-      isOpen={classroomDialogIsOpen} 
-      onClose={() => {
+        }}
+      /> : '...loading' }
+      <AddClassroomFormModal
+        isOpen={classroomDialogIsOpen}
+        onClose={() => {
           toggleDialog(false);
           updateClassroom(null);
         }
-      } 
-      onSave={(classroom) => saveClassroom(selectedCohort.id, classroom)}
-      availableModules={selectedModuleList}
-      classroom={classroomInEdit}
-      updateClassroom={updateClassroom}
-    />
-    {selectedModuleList.map(mod => <ModuleComponent key={mod.id} module={mod} />)}
-  </div>
+        }
+        onSave={(classroom) => saveClassroom(selectedCohort.id, classroom)}
+        availableModules={selectedModuleList}
+        classroom={classroomInEdit}
+        updateClassroom={updateClassroom}
+      />
+      <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
+        {selectedModuleList.map(mod => <ModuleComponent key={mod.id} module={mod}/>)}
+      </div>
+    </React.Fragment>
+  );
+
+const CohortWithRoutes = ({match, ...restProps}) => (
+  <Switch>
+    <Route exact={true} path={`${match.path}`} component={(routerProps) => <CohortSceneComponent {...routerProps} {...restProps} />} />
+    <Route path={`${match.path}classrooms`} exact={true} component={({match}) => <h2>Todo: {match}</h2>} />
+  </Switch>
 );
 
 export const CohortScene = connect((state: RootReducerState, ownProps: RouteComponentProps<any>) => {
   return {
+    ...ownProps,
     classroomDialogIsOpen: state.cohort.classroomDialogIsOpen,
     classroomInEdit: state.cohort.classroomInEdit || {},
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
-    selectedCohortClassroomDates: (state.cohort.allCohorts[ownProps.match.params.name] && state.cohort.allCohorts[ownProps.match.params.name].classrooms) ? convertObjectToValuesArray(state.cohort.allCohorts[ownProps.match.params.name].classrooms).map((classroom) => new Date(classroom.day)) : [],
     selectedModuleList: (state.cohort.allCohorts[ownProps.match.params.name] || {moduleIds: []})
       .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean)
   };
@@ -57,4 +90,4 @@ export const CohortScene = connect((state: RootReducerState, ownProps: RouteComp
   toggleDialog: toggleCohortClassroomDialog,
   updateClassroom: updateClassroomInEdit,
   saveClassroom: saveClassroomToCohort
-})(CohortSceneComponent);
+})(CohortWithRoutes);

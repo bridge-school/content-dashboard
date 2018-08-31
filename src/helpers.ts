@@ -1,7 +1,7 @@
 import { daysOfWeek, monthsOfYear } from './constants';
 
 export const convertObjectToValuesArray = (object) => {
-    return Object.keys(object).map(property => object[property]);
+    return Object.keys(object).map(id => ({...object[id], id}));
 }
 
 export const formatDateStringWithoutTime = (date) => {

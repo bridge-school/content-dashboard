@@ -10,7 +10,7 @@ export const CalendarComponent = ({handleDayClick, selectedDates}) => {
     }`;
 
     return (
-        <div className="calendar-root flex justify-center">
+        <div className="calendar-root flex justify-center" style={{minHeight: '300px'}}>
             <div className="calendar flex ba bw3 b--light-gray">
                 <style>{highlightStyle}</style>
                 <DayPicker onDayClick={handleDayClick} selectedDays={selectedDates}/>

@@ -1,45 +1,41 @@
 import * as React from 'react';
 import { ContentModule } from '../../constants';
+import { Card, CardContent, Typography } from '@material-ui/core';
+
+
+const SubSection = ({label, data, shouldLink = false}: {label: string, data: string | any[], shouldLink?: boolean}) => (
+  <div>
+    <Typography variant="subheading">{label}</Typography>
+    <Typography variant="body1" className="truncate">
+      {
+        !Boolean(data) ?
+        'Unavailable' :
+        Array.isArray(data) && data.length ?
+          data.map((item, i) =>
+            shouldLink ?
+              <a key={item + i} href={item} target="_blank">{item}</a> :
+              <span key={item + i}>{item}</span>) :
+          shouldLink ?
+            <a href={data as string} target="_blank">{data}</a> :
+            data
+      }
+      </Typography>
+  </div>
+);
 
 export const ModuleComponent = ({module}: {module: ContentModule}) => (
+  <Card style={{width: '300px', height: '400px', margin: '15px'}}>
+      <CardContent className="flex-grow-1">
+        <div style={{marginBottom: '10px'}} >
+          <Typography variant="title"> {module.name} </Typography>
+          <Typography variant="caption"> Complexity: {module.complexity} </Typography>
+        </div>
 
-    <article className="center mw5 mw6-ns br3 hidden ba b--black-10 mv4 tc">
-    <h1 className="f4 bg-near-white br3 br--top black-60 mv0 pv2 ph3">
-      <span>{module.name}</span>
-      <span> - {module.complexity}</span>
-    </h1>
-
-    {(module.dependencies && module.dependencies.length > 0) &&
-      <div className="w-100 black">
-        <h3>Dependencies</h3>
-        {module.dependencies ? module.dependencies.map(id => <span key={id} className="pv2">{id}</span>) : 'No Dependencies'}
-      </div>
-    }
-    <div className="w-100 black">
-      <h3>Content</h3>
-      <a href={module.content} target="_blank">{module.content}</a>
-    </div>
-
-    {(module.challenges && module.challenges.length > 0) &&
-      <div className="w-100 black">
-        <h3>In Class Challenges</h3>
-        <span>{module.challenges ? module.challenges.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>) : 'None'}</span>
-      </div>
-    }
-    <div className="w-100 black">
-      <h3>Homework</h3>
-      <a href={module.homework} target="_blank">{module.homework}</a>
-    </div>
-    <div className="w-100 black">
-      <h3>Slides</h3>
-      <a href={module.slides} target="_blank">{module.slides}</a>
-    </div>
-
-    {(module.extras && module.extras.length > 0) &&
-      <div className="w-100 black">
-        <h3>Extras</h3>
-        {module.extras ? <span>{module.extras.map(url => <a key={url} className="pv2" href={url} target="_blank">{url}</a>)}</span> : 'None'}
-      </div>
-    }
-  </article>
-);
+        <SubSection label="Dependencies" data={module.dependencies ? module.dependencies : []} />
+        <SubSection label="Content" data={module.content} shouldLink={true} />
+        <SubSection label="Challenges" shouldLink={true} data={module.challenges ? module.challenges : []} />
+        <SubSection label="Homework" data={module.homework} shouldLink={true} />
+        <SubSection label="Slides" data={module.slides} shouldLink={true} />
+        <SubSection label="Extras" shouldLink={true} data={module.extras ? module.extras : []} />
+      </CardContent>
+  </Card>);

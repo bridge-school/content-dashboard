@@ -5,6 +5,8 @@ interface CohortState {
   selectedCohort: any;
   classroomDialogIsOpen: boolean;
   classroomInEdit: any;
+  defaultClassStartTime: string;
+  defaultClassEndTime: string;
 }
 
 export interface CohortReducerState {
@@ -31,6 +33,8 @@ const cohortDefaultState = {
   classroomDialogIsOpen: false,
   selectedCohort: null,
   classroomInEdit: null,
+  defaultClassStartTime: '18:30',
+  defaultClassEndTime: '21:30',
 }
 
 const cohortReducer = (state = cohortDefaultState, action: Action) => {

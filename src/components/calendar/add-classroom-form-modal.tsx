@@ -20,7 +20,9 @@ export const AddClassroomFormModal = ({
         availableModules, 
         classroom, 
         updateClassroom,
-        onSave
+        onSave,
+        defaultStartTime,
+        defaultEndTime
     }) => {
     return (
         <Dialog
@@ -56,7 +58,7 @@ export const AddClassroomFormModal = ({
                         id="start-time"
                         label="Class Start Time"
                         type="time"
-                        defaultValue="18:30"
+                        defaultValue={defaultStartTime}
                         onChange={(event: any) => updateClassroom({...classroom, startTime: event.target.value || ""})}
                         InputLabelProps={{
                             shrink: true,
@@ -73,7 +75,7 @@ export const AddClassroomFormModal = ({
                         id="end-time"
                         label="Class End Time"
                         type="time"
-                        defaultValue="21:30"
+                        defaultValue={defaultEndTime}
                         onChange={(event: any) => updateClassroom({...classroom, endTime: event.target.value || ""})}
                         InputLabelProps={{
                             shrink: true,

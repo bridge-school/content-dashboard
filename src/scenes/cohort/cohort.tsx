@@ -22,7 +22,7 @@ const CohortCalendar = ({cohort, handleDayClick}) => (
       <Typography variant="caption"> Upcoming classes </Typography>
       <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
         {convertObjectToValuesArray(cohort.classrooms || {}).map(classroom =>
-          (<Link key={classroom.id} to={`/cohort/${cohort.id}/classrooms/${classroom.id}`}>{classroom.day}</Link>))}
+          (<Link key={classroom.id} to={`/cohorts/${cohort.id}/classrooms/${classroom.id}`}>{classroom.day}</Link>))}
       </Typography>
     </CardContent>
     <CardContent className="flex-grow-1">
@@ -42,7 +42,7 @@ const CohortSceneComponent =
      toggleDialog,
      classroomInEdit,
      updateClassroom,
-     saveClassroom
+     saveClassroom,
    }) => (
     <React.Fragment>
       { selectedCohort ? <CohortCalendar
@@ -65,19 +65,17 @@ const CohortSceneComponent =
         updateClassroom={updateClassroom}
       />
       <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
-        {selectedModuleList.map(mod => <ModuleComponent key={mod.id} module={mod}/>)}
+        {selectedModuleList.map(mod => (
+          <ModuleComponent
+            key={mod.id}
+            module={mod}
+            cohortAssignments={selectedCohort.assignmentsGroupedByModule && selectedCohort.assignmentsGroupedByModule[mod.id]} />
+        ))}
       </div>
     </React.Fragment>
   );
 
-const CohortWithRoutes = ({match, ...restProps}) => (
-  <Switch>
-    <Route exact={true} path={`${match.path}`} component={(routerProps) => <CohortSceneComponent {...routerProps} {...restProps} />} />
-    <Route path={`${match.path}classrooms`} exact={true} component={({match}) => <h2>Todo: {match}</h2>} />
-  </Switch>
-);
-
-export const CohortScene = connect((state: RootReducerState, ownProps: RouteComponentProps<any>) => {
+export const CohortStateful = connect((state: RootReducerState, ownProps: RouteComponentProps<any>) => {
   return {
     ...ownProps,
     classroomDialogIsOpen: state.cohort.classroomDialogIsOpen,
@@ -90,4 +88,11 @@ export const CohortScene = connect((state: RootReducerState, ownProps: RouteComp
   toggleDialog: toggleCohortClassroomDialog,
   updateClassroom: updateClassroomInEdit,
   saveClassroom: saveClassroomToCohort
-})(CohortWithRoutes);
+})(CohortSceneComponent);
+
+export const CohortScene = ({match}) => (
+  <Switch>
+    <Route exact={true} path={`${match.path}`} component={CohortStateful} />
+    <Route path={`${match.path}/classrooms/:id`} component={({match}) => <h2>Todo: {match.params.id}</h2>} />
+  </Switch>
+);

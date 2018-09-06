@@ -1,6 +1,7 @@
 import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
-import { setCohort, allCohortsUpdated$, addClassroomToCohort } from '../../../firebaseconfig';
+import { setCohort, addClassroomToCohort } from '../../../firebaseconfig';
+import { groupBy } from 'lodash';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(
@@ -30,9 +31,15 @@ export const setLocalstorageToken = ($action) =>
       map((action: any) => ({type: 'SET_SIGNIN_USER', payload: action.payload.user.toJSON()}))
   );
 
-export const setAllCohorts = () =>
-  allCohortsUpdated$.pipe(
+export const setAllCohorts = ($action) =>
+  $action.ofType('COHORTS_UPDATED').pipe(
+    map((action: {type: string, payload: any[]}) => action.payload),
+    filter(Boolean),
     map(cohorts => Object.keys(cohorts).reduce((acc, next) => ({...acc, [next]: {...cohorts[next], id: next}}) , {})),
+    map(cohorts => Object.keys(cohorts).reduce((acc, next) => (
+      {...acc,
+        [next]: {...cohorts[next], assignmentsGroupedByModule: groupBy(cohorts[next].savedAssignments, 'moduleKey')}
+      }) , {})),
     map(cohorts => ({ type: TypeKeys.SET_ALL_COHORTS, payload: cohorts }))
   );
 
@@ -64,4 +71,4 @@ export const saveClassroomToCohort = ($action) =>
       .pipe(
         mergeMap((action: any) => addClassroomToCohort(action.payload.cohortId, action.payload.classroom)),
         map(() => ({type: 'FAKE_SUCCESS_ADD_CLASSROOM'}))
-      )
+      );

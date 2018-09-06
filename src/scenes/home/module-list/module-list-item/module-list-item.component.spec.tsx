@@ -7,7 +7,6 @@ import TestBackend from 'react-dnd-test-backend';
 import { wrapComponentInTestDragDropContext } from '../../../../../tests/helpers/dnd';
 
 import { ModuleListItem } from './module-list-item.component';
-import { DROP_MODULE_TOKEN } from '../../../../state/actions/dropModule';
 
 describe('ModuleListItem', () => {
   it(`should render ModuleListItem with DragDropContext`, () => {
@@ -76,10 +75,7 @@ describe('ModuleListItem', () => {
       backend.simulateEndDrag();
 
       expect(dropSpy).toBeCalledWith(
-        expect.objectContaining({
-            type: DROP_MODULE_TOKEN
-          }
-        )
+        expect.objectContaining({"id": 1})
       );
     });
 

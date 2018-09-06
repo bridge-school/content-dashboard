@@ -23,7 +23,7 @@ const SubSection = ({label, data, shouldLink = false}: {label: string, data: str
   </div>
 );
 
-export const ModuleComponent = ({module}: {module: ContentModule}) => (
+export const ModuleComponent = ({module, cohortAssignments}: {module: ContentModule, cohortAssignments?: any[]}) => (
   <Card style={{width: '300px', height: '400px', margin: '15px'}}>
       <CardContent className="flex-grow-1">
         <div style={{marginBottom: '10px'}} >
@@ -33,9 +33,19 @@ export const ModuleComponent = ({module}: {module: ContentModule}) => (
 
         <SubSection label="Dependencies" data={module.dependencies ? module.dependencies : []} />
         <SubSection label="Content" data={module.content} shouldLink={true} />
-        <SubSection label="Challenges" shouldLink={true} data={module.challenges ? module.challenges : []} />
-        <SubSection label="Homework" data={module.homework} shouldLink={true} />
-        <SubSection label="Slides" data={module.slides} shouldLink={true} />
-        <SubSection label="Extras" shouldLink={true} data={module.extras ? module.extras : []} />
+        <SubSection label="Challenges"
+                    shouldLink={true}
+                    data={cohortAssignments ? cohortAssignments.map(assignment => `https://repl.it/teacher/assignments/${assignment.id}`) : module.challenges ? module.challenges : []}
+        />
+        {/*<SubSection label="Homework"*/}
+                    {/*data={*/}
+                      {/*cohortAssignments ?*/}
+                      {/*splitHomeworkFromChallenges(cohortAssignments, [].concat(module.homework).filter(Boolean).map(url => /[^/]*$/.exec(url)[0])) :*/}
+                        {/*module.homework || []*/}
+                    {/*}*/}
+                    {/*shouldLink={true} />*/}
+        <SubSection label="Slides" data={module.slides} shouldLink={true}
+        />
+        <SubSection label="Extras" shouldLink={true}  data={module.extras ? module.extras : []} />
       </CardContent>
   </Card>);

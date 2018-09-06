@@ -29,16 +29,19 @@ exports.createNewClassroom = functions.database.ref('/cohort/{cohortID}').onCrea
                 description: '',
                 isPublic: false,
                 image: '',
-            }), getAllAssignmentIdsForListOfModules(cohortSnapshot.val().moduleIds, cookie)
+            }), getAllAssignmentsForListOfModules(cohortSnapshot.val().moduleIds, cookie)
         ])
-            .then(([classroomCreateResponse, allIds]) => {
-            return updateClassroomWithAssignments(classroomCreateResponse.id, allIds, cookie)
-                .then(() => admin.database().ref(`/cohort/${params.cohortID}`).update({ replClassroomID: classroomCreateResponse.id }));
+            .then(([classroomCreateResponse, moduleObjWithAssignments]) => {
+            return updateClassroomWithAssignments(classroomCreateResponse.id, moduleObjWithAssignments, cookie)
+                .then((savedAssignments) => admin.database().ref(`/cohort/${params.cohortID}`)
+                .update({ replClassroomID: classroomCreateResponse.id, savedAssignments }));
         }));
     });
 });
-function updateClassroomWithAssignments(classroomId, assignmentIDs, cookie) {
-    return Promise.all(assignmentIDs.map((id) => replRequest('POST', cookie, `https://repl.it/data/assignments/${id}/clone`, { classroomId })));
+function updateClassroomWithAssignments(classroomId, modulesWithAssignments, cookie) {
+    const assignments = Object.keys(modulesWithAssignments).reduce((acc, moduleKey) => [...acc, ...modulesWithAssignments[moduleKey].moduleAssignments.map(assignment => (Object.assign({ moduleKey }, assignment)))], []);
+    return Promise.all(assignments.map((assignment) => replRequest('POST', cookie, `https://repl.it/data/assignments/${assignment.id}/clone`, { classroomId })
+        .then((savedAssignment) => (Object.assign({}, savedAssignment, { moduleKey: assignment.moduleKey, originalID: assignment.id })))));
 }
 function replRequest(method, cookie, uri, formData) {
     return rp(Object.assign({ method, headers: {
@@ -46,16 +49,20 @@ function replRequest(method, cookie, uri, formData) {
             'Cookie': cookie,
         }, json: true, uri }, ({ form: formData } || {})));
 }
-function getAllAssignmentIdsForListOfModules(moduleIds, cookie) {
-    return new Promise(function (resolve) {
-        admin.database().ref('/modules').once('value', (modSnapshot) => {
-            return Promise.all(modSnapshot.val().filter(mod => moduleIds.includes(mod.id)).map(mod => mod.challenges || []).reduce((a, b) => [...a, ...b], [])
-                .map(url => /[^/]*$/.exec(url)[0])
-                .filter(Boolean)
-                .map(id => replRequest('GET', cookie, `https://repl.it/data/classrooms/${id}/assignments`))).then((res) => {
-                resolve(res.reduce((a, b) => [...a, ...b], []).map(assignment => assignment.id));
-            });
-        });
+function getAllAssignmentsForListOfModules(moduleIds, cookie) {
+    return new Promise(resolve => {
+        admin.database().ref('/modules').once('value', (modSnapshot) => Promise.all(modSnapshot.val()
+            .filter(mod => moduleIds.includes(mod.id))
+            .map(mod => (Object.assign({}, mod, { challenges: mod.challenges && mod.challenges.length ? mod.challenges.map(url => /[^/]*$/.exec(url)[0]) : [] })))
+            .filter((module) => module.challenges.length)
+            .map(module => Promise.all(module.challenges.filter(Boolean).map(id => replRequest('GET', cookie, `https://repl.it/data/classrooms/${id}/assignments`)
+            .then((moduleAssignments) => (Object.assign({}, module, { moduleAssignments }))))))).then((res) => {
+            resolve(res.reduce((acc, next) => [...acc, ...next], []).reduce((acc, modData) => (Object.assign({}, acc, (acc[modData.id] ?
+                {
+                    [modData.id]: Object.assign({}, acc[modData.id], { moduleAssignments: [...acc[modData.id].moduleAssignments, ...modData.moduleAssignments] })
+                } :
+                { [modData.id]: modData }))), {}));
+        }));
     });
 }
 function getAllCurrentModules() {

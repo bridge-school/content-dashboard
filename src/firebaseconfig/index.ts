@@ -66,10 +66,12 @@ export const setCohort = (cohortName, moduleIds, startDate, endDate) => {
   });
 };
 
-export const allCohortsUpdated$ = fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(
+fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(
   filter(Boolean),
   map(cohorts => cohorts.val()),
-);
+).subscribe((cohorts) => {
+  reduxStoreInstance.dispatch({type: 'COHORTS_UPDATED', payload: cohorts})
+});
 
 export const addClassroomToCohort = (cohortId, classroom) => {
 

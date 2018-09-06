@@ -19,7 +19,7 @@ export interface ContentModule {
   dependencies?: string[];
   content?: URL;
   challenges?: URL[];
-  homework?: URL;
+  homework?: URL[];
   extras?: URL[];
   slides?: URL;
 }

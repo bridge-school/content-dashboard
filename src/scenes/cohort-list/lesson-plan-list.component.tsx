@@ -5,14 +5,13 @@ import { RootReducerState } from '../../state/reducers';
 import { CohortScene } from '../cohort/cohort';
 import { Route, RouteComponentProps, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
-import { List} from '@material-ui/core';
 
 interface Props extends RouteComponentProps<any> {
   cohorts: any[];
 }
 
 const LessonPlans: React.SFC<Props> = ({cohorts}) => (
-  <List>
+  <section>
     {cohorts.map(cohort => (
       <section className="ph3 ph5-ns pv4" key={cohort.id}>
         <article className="mw8 center br2 ba b--dark-blue bg-white">
@@ -36,7 +35,7 @@ const LessonPlans: React.SFC<Props> = ({cohorts}) => (
         </article>
       </section>
     ))}
-  </List>
+  </section>
   );
 
 const LessonPlanList = connect(

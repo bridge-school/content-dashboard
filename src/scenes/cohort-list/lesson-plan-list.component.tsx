@@ -27,7 +27,9 @@ const LessonPlans: React.SFC<Props> = ({cohorts}) => (
               <p>{ cohort.startDate } - { cohort.endDate }</p>
             </div>
             <div className="pa3 pa4-ns dtc-ns v-mid">
-              <Link to={`cohorts/${cohort.id}`} className="no-underline f6 tc db w-100 pv3 bg-animate bg-blue hover-bg-dark-blue white br2">
+              <Link to={`cohorts/${cohort.id}`} 
+                className="no-underline f8 tc db w-100 pv3 ba bg-animate fw6 bg-white dark-blue hover-bg-dark-blue hover-white br2"
+              >
                 Edit
               </Link>
             </div>

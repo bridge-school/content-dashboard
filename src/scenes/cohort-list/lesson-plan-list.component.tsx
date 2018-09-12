@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 
 import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
@@ -9,6 +10,8 @@ import { Link } from 'react-router-dom';
 interface Props extends RouteComponentProps<any> {
   cohorts: any[];
 }
+
+const isoStringToDate = str => moment(str, moment.ISO_8601).format("MMMM DD, YYYY");
 
 const LessonPlans: React.SFC<Props> = ({cohorts}) => (
   <section>
@@ -24,7 +27,7 @@ const LessonPlans: React.SFC<Props> = ({cohorts}) => (
             </div>
             <div className="pa3 pa4-ns dtc-ns v-top">
               <h2 className="fw4 dark-blue mt0 mb3">Dates</h2>
-              <p>{ cohort.startDate } - { cohort.endDate }</p>
+              <p>{ isoStringToDate(cohort.startDate) } - { isoStringToDate(cohort.endDate) }</p>
             </div>
             <div className="pa3 pa4-ns dtc-ns v-mid">
               <Link to={`cohorts/${cohort.id}`} 

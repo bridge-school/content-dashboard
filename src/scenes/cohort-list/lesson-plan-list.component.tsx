@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<any> {
   cohorts: any[];
 }
 
-const isoStringToDate = str => moment(str, moment.ISO_8601).format("MMMM DD, YYYY");
+const isoStringToDate = str => moment(str).format("MMMM DD, YYYY");
 
 const LessonPlans: React.SFC<Props> = ({cohorts}) => (
   <section>

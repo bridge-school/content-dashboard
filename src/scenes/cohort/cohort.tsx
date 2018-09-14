@@ -4,6 +4,7 @@ import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
 import { Route, RouteComponentProps, Switch } from 'react-router';
 import { CalendarComponent } from '../../components/calendar/calendar';
+import { ClassroomScene } from './classroom-detail';
 import { AddClassroomFormModal } from '../../components/calendar/add-classroom-form-modal';
 import {
   toggleCohortClassroomDialog,
@@ -99,6 +100,6 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
 export const CohortScene = ({match}) => (
   <Switch>
     <Route exact={true} path={`${match.path}`} component={CohortStateful} />
-    <Route path={`${match.path}/classrooms/:id`} component={({match}) => <h2>Todo: {match.params.id}</h2>} />
+    <Route path={`${match.path}/classrooms/:id`} component={ClassroomScene} />
   </Switch>
 );

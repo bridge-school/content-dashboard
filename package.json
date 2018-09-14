@@ -2,6 +2,9 @@
   "name": "content-dashboard",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "8.x.x"
+  },
   "dependencies": {
     "@material-ui/core": "^1.5.1",
     "dotenv": "^5.0.1",

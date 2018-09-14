@@ -43,13 +43,15 @@ const CohortSceneComponent =
      classroomInEdit,
      updateClassroom,
      saveClassroom,
+     defaultClassStartTime,
+     defaultClassEndTime,
    }) => (
     <React.Fragment>
       { selectedCohort ? <CohortCalendar
         cohort={selectedCohort}
         handleDayClick={(day) => {
           toggleDialog(true);
-          updateClassroom({day: day.toUTCString()});
+          updateClassroom({day: day.toUTCString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
         }}
       /> : '...loading' }
       <AddClassroomFormModal
@@ -63,6 +65,8 @@ const CohortSceneComponent =
         availableModules={selectedModuleList}
         classroom={classroomInEdit}
         updateClassroom={updateClassroom}
+        defaultStartTime={defaultClassStartTime}
+        defaultEndTime={defaultClassEndTime}
       />
       <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
         {selectedModuleList.map(mod => (
@@ -82,7 +86,9 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
     classroomInEdit: state.cohort.classroomInEdit || {},
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
     selectedModuleList: (state.cohort.allCohorts[ownProps.match.params.name] || {moduleIds: []})
-      .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean)
+      .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean),
+    defaultClassStartTime: state.cohort.defaultClassStartTime || "",
+    defaultClassEndTime: state.cohort.defaultClassEndTime || "",
   };
 }, {
   toggleDialog: toggleCohortClassroomDialog,

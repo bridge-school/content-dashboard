@@ -75,7 +75,6 @@ fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(
 
 export const addClassroomToCohort = (cohortId, classroom) => {
 
-  // debugger;
   return Observable.create(obs => {
     ((firebase as any).database().ref(`/cohort/${cohortId}/classrooms`) as any)
       .push(

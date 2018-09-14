@@ -11,19 +11,23 @@ import {
   updateClassroomInEdit,
   saveClassroomToCohort
 } from '../../state/actions/cohortActions';
-import { convertObjectToValuesArray } from '../../helpers';
+import { 
+  convertObjectToValuesArray, 
+  sortClassroomsByDate,
+  formatISOStringDate,  
+} from '../../helpers';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
 
-const CohortCalendar = ({cohort, handleDayClick}) => (
+const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
   <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
     <CardContent className="flex-grow-1 h-100">
       <Typography variant="title"> {cohort && cohort.cohortName} </Typography>
       <Typography variant="caption"> Upcoming classes </Typography>
       <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
-        {convertObjectToValuesArray(cohort.classrooms || {}).map(classroom =>
-          (<Link key={classroom.id} to={`/cohorts/${cohort.id}/classrooms/${classroom.id}`}>{classroom.day}</Link>))}
+        {classrooms.map(classroom =>
+          (<Link key={classroom.id} to={`/cohorts/${cohort.id}/classrooms/${classroom.id}`}>{formatISOStringDate(classroom.day)}</Link>))}
       </Typography>
     </CardContent>
     <CardContent className="flex-grow-1">
@@ -46,13 +50,15 @@ const CohortSceneComponent =
      saveClassroom,
      defaultClassStartTime,
      defaultClassEndTime,
+     cohortClassrooms
    }) => (
     <React.Fragment>
       { selectedCohort ? <CohortCalendar
+        classrooms={cohortClassrooms}
         cohort={selectedCohort}
         handleDayClick={(day) => {
           toggleDialog(true);
-          updateClassroom({day: day.toUTCString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
+          updateClassroom({day: day.toISOString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
         }}
       /> : '...loading' }
       <AddClassroomFormModal
@@ -86,6 +92,7 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
     classroomDialogIsOpen: state.cohort.classroomDialogIsOpen,
     classroomInEdit: state.cohort.classroomInEdit || {},
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
+    cohortClassrooms: (state.cohort.allCohorts[ownProps.match.params.name] && state.cohort.allCohorts[ownProps.match.params.name].classrooms) ? convertObjectToValuesArray(state.cohort.allCohorts[ownProps.match.params.name].classrooms).filter(Boolean).sort(sortClassroomsByDate) : [],
     selectedModuleList: (state.cohort.allCohorts[ownProps.match.params.name] || {moduleIds: []})
       .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean),
     defaultClassStartTime: state.cohort.defaultClassStartTime || "",

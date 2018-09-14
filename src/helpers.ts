@@ -1,4 +1,5 @@
 import { daysOfWeek, monthsOfYear } from './constants';
+import * as moment from 'moment';
 
 export const convertObjectToValuesArray = (object) => {
     return Object.keys(object).map(id => ({...object[id], id}));
@@ -29,3 +30,7 @@ export const formatAmPmTime = (timeString) => {
 
     return `${modifiedHours}:${minutes} ${amPm}`;
 }
+
+export const sortClassroomsByDate = (classroomA, classroomB) => (classroomA.day < classroomB.day) ? -1 : ((classroomA.day > classroomB.day) ? 1 : 0);
+
+export const formatISOStringDate = (isoString) => moment(isoString).format("dddd, MMMM Do, YYYY");

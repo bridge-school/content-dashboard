@@ -4,7 +4,7 @@ import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
 import { Route, RouteComponentProps, Switch } from 'react-router';
 import { CalendarComponent } from '../../components/calendar/calendar';
-import { ClassroomScene } from './classroom-detail';
+import { ClassroomScene } from './classroom/classroom-detail';
 import { AddClassroomFormModal } from '../../components/calendar/add-classroom-form-modal';
 import {
   toggleCohortClassroomDialog,

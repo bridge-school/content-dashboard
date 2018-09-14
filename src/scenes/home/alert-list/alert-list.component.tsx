@@ -19,7 +19,8 @@ interface Props {
     dispatch?: Dispatch<Action>;
 }
 
-const AlertList: React.SFC<Props> = ({
+// Note: removed React Stateless Component type here temporarily to avoid ts lint error
+const AlertList = ({
   alerts,
   className = '',
   dispatch

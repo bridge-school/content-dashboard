@@ -12,36 +12,77 @@ import {
   saveClassroomToCohort,
   saveUpdatedClassroomToCohort
 } from '../../state/actions/cohortActions';
-import { 
-  convertObjectToValuesArray, 
+import {
+  convertObjectToValuesArray,
   sortClassroomsByDate,
   formatISOStringDate,
   getSelectedClassroom
 } from '../../helpers';
-import { Card, CardContent, Typography } from '@material-ui/core';
+import { Card, CardContent, Typography, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { formatModuleObjects } from '../../state/selectors';
 import { ReplCohortCard } from './replCohort.component';
 
-const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
-  <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
-    <CardContent className="flex-grow-1 h-100">
-      <Typography variant="title"> {cohort && cohort.cohortName} </Typography>
-      <Typography variant="caption"> Upcoming classes </Typography>
-      <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
-        {classrooms.map(classroom =>
-          (<Link key={classroom.id} to={`/cohorts/${cohort.id}/classrooms/${classroom.id}`}>{formatISOStringDate(classroom.day)}</Link>))}
-      </Typography>
-    </CardContent>
-    <CardContent className="flex-grow-1">
-      <CalendarComponent
-        onDayClick={handleDayClick}
-        disabledDays={{before: new Date(cohort.startDate)}}
-        initialMonth={new Date(cohort.startDate)}
-        selectedDays={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
-      />
-    </CardContent>
-</Card>);
+interface CohortCalendarProps {
+  cohort: any,
+  classrooms: any[],
+  handleDayClick: (day: any) => void
+}
+
+interface CohortCalendarState {
+  slackChannel: string
+}
+
+class CohortCalendar extends React.Component<CohortCalendarProps, CohortCalendarState> {
+  state = {
+    slackChannel: ''
+  }
+
+  onSlackChannelChange = ({target: {value}}: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      slackChannel: value
+    });
+  }
+
+  render() {
+    const {cohort, classrooms, handleDayClick} = this.props;
+
+    return (
+      <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
+        <CardContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}} className="flex-grow-1 h-100">
+          <div>
+            <Typography variant="title"> {cohort && cohort.cohortName} </Typography>
+            <Typography variant="caption"> Upcoming classes </Typography>
+            <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
+              {classrooms.map(classroom =>
+                (<Link key={classroom.id} to={`/cohorts/${cohort.id}/classrooms/${classroom.id}`}>{formatISOStringDate(classroom.day)}</Link>))}
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="caption"> Notify Slack </Typography>
+            <input
+              type="text"
+              onChange={this.onSlackChannelChange}
+              value={this.state.slackChannel}
+              placeholder="Enter Slack channel..."
+            />
+            <Button onClick={() => console.log(this.state.slackChannel)} color="primary">
+                Notify
+            </Button>
+          </div>
+        </CardContent>
+        <CardContent className="flex-grow-1">
+          <CalendarComponent
+            onDayClick={handleDayClick}
+            disabledDays={{before: new Date(cohort.startDate)}}
+            initialMonth={new Date(cohort.startDate)}
+            selectedDays={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
+          />
+        </CardContent>
+      </Card>
+    );
+  }
+}
 
 const CohortSceneComponent =
   ({

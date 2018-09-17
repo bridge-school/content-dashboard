@@ -2,6 +2,7 @@ import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
 import { setCohort, addClassroomToCohort } from '../../../firebaseconfig';
 import { groupBy } from 'lodash';
+import { push } from 'connected-react-router';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(
@@ -11,17 +12,14 @@ export const addCohortEpic = $action =>
       endDate: (new Date(payload.endDate)).toISOString()
     })),
     mergeMap(({ cohortName, moduleIds, startDate, endDate }) => setCohort(cohortName, moduleIds, startDate, endDate)),
-    map((cohort: any) => ({
-      type: TypeKeys.ROUTE_TO,
-      payload: `/cohort/${cohort.cohortName}`
-    }))
+    map((cohort: any) => push(`/cohorts/${cohort.id}`))
   );
 
 export const setCohortDataByRouteEpic = ($action) =>
   $action.ofType('@@router/LOCATION_CHANGE')
     .pipe(
-      filter((action: any) => action.payload.pathname.includes('/cohorts/')),
-      map((action: any) => ({ type: TypeKeys.SET_SELECTED_COHORT, payload: action.payload.pathname.split('/')[2] })),
+      filter((action: any) => action.payload.location.pathname.includes('/cohorts/')),
+      map((action: any) => ({ type: TypeKeys.SET_SELECTED_COHORT, payload: action.payload.location.pathname.split('/')[2] })),
   );
 
 export const setLocalstorageToken = ($action) =>

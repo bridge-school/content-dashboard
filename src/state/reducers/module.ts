@@ -87,7 +87,16 @@ const ModuleReducerMap: ModuleReducerMap = {
   },
 };
 
-const moduleReducer = (state: ModuleState = null, action: Action) => {
+const DEFAULT_MODULE_STATE: ModuleState = {
+  allModules: [],
+  modules: [],
+  timeline: [],
+  currentModuleID: null,
+  newCohortName: null,
+  newCohortStartDate: null
+}
+
+const moduleReducer = (state: ModuleState = DEFAULT_MODULE_STATE, action: Action) => {
   if (action && ModuleReducerMap.hasOwnProperty(action.type)) {
     return ModuleReducerMap[action.type](state, action);
   }

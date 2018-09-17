@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { History } from 'history';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
 import { Route } from 'react-router';
 
 import { CohortRoot, Home } from '@scenes';

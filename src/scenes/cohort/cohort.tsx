@@ -18,7 +18,7 @@ import {
 } from '../../helpers';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-
+import { formatModuleObjects } from '../../state/selectors';
 
 const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
   <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
@@ -37,7 +37,6 @@ const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
       />
     </CardContent>
 </Card>);
-
 
 const CohortSceneComponent =
   ({
@@ -93,8 +92,7 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
     classroomInEdit: state.cohort.classroomInEdit || {},
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
     cohortClassrooms: (state.cohort.allCohorts[ownProps.match.params.name] && state.cohort.allCohorts[ownProps.match.params.name].classrooms) ? convertObjectToValuesArray(state.cohort.allCohorts[ownProps.match.params.name].classrooms).filter(Boolean).sort(sortClassroomsByDate) : [],
-    selectedModuleList: (state.cohort.allCohorts[ownProps.match.params.name] || {moduleIds: []})
-      .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean),
+    selectedModuleList: formatModuleObjects(state, ownProps.match.params.name),
     defaultClassStartTime: state.cohort.defaultClassStartTime || "",
     defaultClassEndTime: state.cohort.defaultClassEndTime || "",
   };

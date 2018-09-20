@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ContentModule } from '../../constants';
 import { Card, CardContent, Typography } from '@material-ui/core';
 
-
 const SubSection = ({label, data, linkProp, labelProp, shouldLink = false}: 
   {linkProp?: string, labelProp?: string, label: string, data: string | any[], shouldLink?: boolean}) => (
   <div className="mb3">
@@ -23,7 +22,6 @@ const SubSection = ({label, data, linkProp, labelProp, shouldLink = false}:
       </Typography>
   </div>
 );
-
 
 export const ModuleComponent = ({module, cohortAssignments}: {module: ContentModule, cohortAssignments?: any[]}) => (
   <Card style={{width: '300px', height: '400px', margin: '15px'}}>

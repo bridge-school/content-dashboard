@@ -8,8 +8,7 @@ export const getIDsFromList = createSelector(
   (modules: ContentModule[]) => modules.map(mod => mod.id)
 );
 
-export const getCohortByID =
-  (state: RootReducerState, cohortID: string) => get(state, `cohort.allCohorts.${cohortID}`, {});
+export const getCohortByID = (state: RootReducerState, cohortID: string) => get(state, `cohort.allCohorts.${cohortID}`, {});
 
 export const getAllModules = (state: RootReducerState) => get(state, `module.allModules`, []);
 

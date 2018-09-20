@@ -5,6 +5,7 @@ import { ModuleComponent } from '../../../components/content-module/content-modu
 import { Route, RouteComponentProps, Switch } from 'react-router';
 import { formatDateStringWithoutTime, formatAmPmTime } from 'helpers';
 import { Link } from 'react-router-dom';
+import { formatModuleObjects } from '../../../state/selectors';
 
 export const ClassroomDetailComponent =
   ({
@@ -68,14 +69,13 @@ export const ClassroomStateful = connect((state: RootReducerState, ownProps: Rou
 
     const classroomModuleIds = classroomById.modules || [];
 
-    const cohortModules = (state.cohort.allCohorts[ownProps.match.params.name] || {moduleIds: []})
-    .moduleIds.map(id => state.module.allModules.find(m => m.id === id)).filter(Boolean);
+    const selectedModuleList = formatModuleObjects(state, ownProps.match.params.name);
 
   return {
     ...ownProps,
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
     selectedClassroom: classroomById,
-    classroomModules: cohortModules ? cohortModules.filter(module => classroomModuleIds.includes(module.id)) : [],
+    classroomModules: selectedModuleList ? selectedModuleList.filter(module => classroomModuleIds.includes(module.id)) : [],
   };
 }, {
 })(ClassroomDetailComponent);

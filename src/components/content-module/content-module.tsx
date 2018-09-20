@@ -37,7 +37,7 @@ export const ModuleComponent = ({module, cohortAssignments}: {module: ContentMod
             shouldLink={true} 
             linkProp='url' 
             labelProp='label' 
-            data={module.dependencies.map(mod => ({...mod, url: `/module/${mod.id}`}))} />)
+            data={module.dependencies.map((mod: any) => ({...mod, url: `/module/${mod.id}`}))} />)
         }
 
         { module.content &&

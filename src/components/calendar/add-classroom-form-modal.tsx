@@ -119,7 +119,7 @@ export const AddClassroomFormModal = ({
                     >
                         {availableModules.map(module => (
                         <MenuItem
-                            key={module.id}
+                            key={module.id + module.name}
                             value={module.id}
                             style={{
                             color:

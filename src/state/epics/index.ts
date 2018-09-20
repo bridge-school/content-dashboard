@@ -8,7 +8,8 @@ import {
   addModuleToNewCohort,
   removeModuleFromModuleList,
   addModuleToTimeline,
-  saveClassroomToCohort
+  saveClassroomToCohort,
+  getReplCohortData
 } from './cohort';
 
 const rootEpic = combineEpics(
@@ -22,6 +23,7 @@ const rootEpic = combineEpics(
   addModuleToNewCohort,
   removeModuleFromModuleList,
   addModuleToTimeline,
+  getReplCohortData,
   saveClassroomToCohort
 );
 

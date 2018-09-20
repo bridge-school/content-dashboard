@@ -3,6 +3,8 @@ import { TypeKeys } from '../../actions';
 import { setCohort, addClassroomToCohort } from '../../../firebaseconfig';
 import { groupBy } from 'lodash';
 import { push } from 'connected-react-router';
+import { ajax } from 'rxjs/ajax';
+import { combineLatest } from 'rxjs';
 
 export const addCohortEpic = $action =>
   $action.ofType(TypeKeys.CREATE_COHORT).pipe(
@@ -20,6 +22,16 @@ export const setCohortDataByRouteEpic = ($action) =>
     .pipe(
       filter((action: any) => action.payload.location.pathname.includes('/cohorts/')),
       map((action: any) => ({ type: TypeKeys.SET_SELECTED_COHORT, payload: action.payload.location.pathname.split('/')[2] })),
+  );
+
+export const getReplCohortData = ($action) =>
+  combineLatest($action.ofType('SET_SELECTED_COHORT'), $action.ofType('SET_ALL_COHORTS'))
+    .pipe(
+      map(([action, {payload}]) => payload[action.payload]),
+      mergeMap(({replClassroomID}) =>
+        ajax.get(`https://us-central1-bridge-content-dashboard.cloudfunctions.net/getReplCohortData?id=${replClassroomID}`)
+      ),
+      map(res => ({type: 'SET_REPL_COHORT_DATA', payload: res.response}))
   );
 
 export const setLocalstorageToken = ($action) =>

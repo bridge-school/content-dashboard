@@ -19,6 +19,7 @@ import {
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { formatModuleObjects } from '../../state/selectors';
+import { ReplCohortCard } from './replCohort.component';
 
 const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
   <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
@@ -49,7 +50,8 @@ const CohortSceneComponent =
      saveClassroom,
      defaultClassStartTime,
      defaultClassEndTime,
-     cohortClassrooms
+     cohortClassrooms,
+     replCohortData
    }) => (
     <React.Fragment>
       { selectedCohort ? <CohortCalendar
@@ -60,6 +62,9 @@ const CohortSceneComponent =
           updateClassroom({day: day.toISOString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
         }}
       /> : '...loading' }
+
+      <ReplCohortCard students={replCohortData.students || []} teachers={replCohortData.teachers || []} />
+
       <AddClassroomFormModal
         isOpen={classroomDialogIsOpen}
         onClose={() => {
@@ -77,7 +82,7 @@ const CohortSceneComponent =
       <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'center'}}>
         {selectedModuleList.map(mod => (
           <ModuleComponent
-            key={mod.id}
+            key={`mod_${mod.id}`}
             module={mod}
             cohortAssignments={selectedCohort.assignmentsGroupedByModule && selectedCohort.assignmentsGroupedByModule[mod.id]} />
         ))}
@@ -90,6 +95,7 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
     ...ownProps,
     classroomDialogIsOpen: state.cohort.classroomDialogIsOpen,
     classroomInEdit: state.cohort.classroomInEdit || {},
+    replCohortData: state.cohort.replCohortData,
     selectedCohort: state.cohort.allCohorts[ownProps.match.params.name],
     cohortClassrooms: (state.cohort.allCohorts[ownProps.match.params.name] && state.cohort.allCohorts[ownProps.match.params.name].classrooms) ? convertObjectToValuesArray(state.cohort.allCohorts[ownProps.match.params.name].classrooms).filter(Boolean).sort(sortClassroomsByDate) : [],
     selectedModuleList: formatModuleObjects(state, ownProps.match.params.name),

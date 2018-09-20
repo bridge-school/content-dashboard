@@ -22,7 +22,7 @@ export const getModuleObjectsByIds = createSelector(
   getAllModules,
   getCohortModuleIds,
   (modules: ContentModule[], cohortModuleIds: string[]) => 
-  cohortModuleIds.map(modId => modules.find(mod => mod.id === modId))
+  cohortModuleIds.map(modId => modules.find(mod => mod.id === modId)).filter(Boolean)
 );
 
 export const formatModuleObjects = createSelector(

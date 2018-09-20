@@ -77,12 +77,26 @@ function updateModules(updatedModules) {
         admin.database().ref('/modules').set(updatedModules, resolve);
     });
 }
-exports.getReplCohortData = functions.https.onRequest(() => {
-    return cors((req, res) => req.method === 'GET' && req.query.id ?
-        replLogin(functions.config().replit.username, functions.config().replit.password)
-            .then(cookie => replRequest('GET', cookie, `https://repl.it/data/classrooms/${req.query.id}`))
-            .then((res) => res.status(200).send(res))
-        : res.status(403).send('Forbidden!'));
+exports.getReplCohortData = functions.https.onRequest((req, res) => {
+    return cors(req, res, () => {
+        req.method === 'GET' && req.query.id ?
+            replLogin(functions.config().replit.username, functions.config().replit.password)
+                .then(cookie => Promise.all([
+                replRequest('GET', cookie, `https://repl.it/data/classrooms/${req.query.id}`),
+                replRequest('GET', cookie, `https://repl.it/data/classrooms/${req.query.id}/assignments`),
+                replRequest('GET', cookie, `https://repl.it/data/classrooms/${req.query.id}/teaching_assistants`),
+                replRequest('GET', cookie, `https://repl.it/data/teacher/classrooms/${req.query.id}/submissions`),
+                replRequest('GET', cookie, `https://repl.it/data/teacher/classrooms/${req.query.id}/students`),
+            ]))
+                .then((all) => res.status(200).send({
+                classroom: all[0],
+                assignments: all[1],
+                teachers: all[2],
+                submissions: all[3],
+                students: all[4]
+            }))
+            : res.status(403).send('Forbidden!');
+    });
 });
 function replLogin(username, password) {
     return rp({

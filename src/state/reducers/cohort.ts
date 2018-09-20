@@ -7,6 +7,7 @@ interface CohortState {
   classroomInEdit: any;
   defaultClassStartTime: string;
   defaultClassEndTime: string;
+  replCohortData: any;
 }
 
 export interface CohortReducerState {
@@ -26,6 +27,9 @@ const CohortReducerMap = {
   [TypeKeys.UPDATE_EDIT_CLASSROOM]: (state, action) => {
     return { ...state, classroomInEdit: action.payload };
   },
+  SET_REPL_COHORT_DATA: (state, action) => {
+    return { ...state, replCohortData: action.payload };
+  },
 };
 
 const cohortDefaultState = { 
@@ -35,6 +39,7 @@ const cohortDefaultState = {
   classroomInEdit: null,
   defaultClassStartTime: '18:30',
   defaultClassEndTime: '21:30',
+  replCohortData: {},
 }
 
 const cohortReducer = (state = cohortDefaultState, action: Action) => {

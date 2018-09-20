@@ -3,23 +3,14 @@ import { createStore, applyMiddleware, compose, Middleware } from 'redux';
 import { History } from 'history';
 import createHistory from 'history/createBrowserHistory';
 import { createLogger } from 'redux-logger';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware, connectRouter } from 'connected-react-router';
 
 import { rootReducer } from './reducers';
-import { classModules } from '../scenes/home/home.content';
-import { ModuleState } from './reducers/module';
 import { epicMiddleware } from './epics';
 
-const isDevelopment = process.env.NODE_ENV === 'development';
+export const appHistory: History = createHistory();
 
-export const INITIAL_MODULE_STATE: ModuleState = {
-    allModules: classModules,
-    modules: classModules,
-    timeline: [],
-    currentModuleID: '',
-    newCohortName: '',
-    newCohortStartDate: ''
-};
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const configureStore = (routerHistory: History) => {
     const logger: Middleware = createLogger({ collapsed: true });
@@ -36,11 +27,7 @@ const configureStore = (routerHistory: History) => {
     const composeEnhancers = isDevelopment && (<any> window).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
     return createStore(
-        rootReducer,
-        {
-            router: null,
-            module: INITIAL_MODULE_STATE
-        },
+        connectRouter(appHistory)(rootReducer),
         composeEnhancers(
             applyMiddleware(
             ...middlewares,
@@ -49,5 +36,4 @@ const configureStore = (routerHistory: History) => {
     );
 };
 
-export const appHistory: History = createHistory();
 export const reduxStoreInstance = configureStore(appHistory);

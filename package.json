@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^1.5.1",
+    "connected-react-router": "^4.4.1",
     "dotenv": "^5.0.1",
     "firebase": "^4.12.1",
     "firebase-admin": "^5.12.1",
@@ -23,7 +24,6 @@
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-router-redux": "^5.0.0-alpha.9",
     "react-scripts-ts": "2.14.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
@@ -52,7 +52,6 @@
     "@types/react-dom": "^16.0.4",
     "@types/react-redux": "^5.0.15",
     "@types/react-router": "^4.0.23",
-    "@types/react-router-redux": "^5.0.13",
     "@types/react-test-renderer": "^16.0.1",
     "@types/redux": "^3.6.31",
     "@types/redux-logger": "^3.0.5",

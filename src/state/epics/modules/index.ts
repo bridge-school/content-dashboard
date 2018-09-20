@@ -16,8 +16,8 @@ export const getModulesEpic = () =>
 export const setSelectedModuleFromRoute = ($action) =>
   $action.ofType('@@router/LOCATION_CHANGE')
     .pipe(
-      filter((action: any) => action.payload.pathname.includes('/module/')),
-      map((action: any) => ({ type: TypeKeys.SET_CURRENT_MODULE, payload: action.payload.pathname.split('/')[2] })),
+      filter((action: any) => action.payload.location.pathname.includes('/module/')),
+      map((action: any) => ({ type: TypeKeys.SET_CURRENT_MODULE, payload: action.payload.location.pathname.split('/')[2] })),
     );
 
 export const editModuleEpic = ($action) =>

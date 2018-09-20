@@ -1,8 +1,9 @@
 import * as firebase from 'firebase';
-import { Observable, fromEvent } from 'rxjs/index';
+import { Observable, fromEvent, from } from 'rxjs/index';
 import { filter, map } from 'rxjs/internal/operators';
 import { ContentModule } from '../constants';
 import { reduxStoreInstance } from '../state/store';
+import { database } from 'firebase-admin';
 
 // after reading a bit about this, makes the most sense to keep this in the client side code, and will just eventually
 // create a whitelist of domains
@@ -46,24 +47,22 @@ Observable.create(obs => {
 // todo: update to use completion callback
 // https://firebase.google.com/docs/database/web/read-and-write#add_a_completion_callback
 export const setCohort = (cohortName, moduleIds, startDate, endDate) => {
-  return Observable.create(obs => {
-    ((firebase as any).database().ref(`/cohort`) as any)
-      .push(
-        {
+  return from(((firebase as any).database().ref(`/cohort`) as any)
+    .push(
+      {
         cohortName,
         moduleIds,
         startDate,
         endDate,
-        },
-        () => {
-        obs.next({
-          cohortName,
-          moduleIds,
-          startDate,
-          endDate,
-        });
-      });
-  });
+      }
+    )).pipe(
+      map((saveRef: database.Reference) => ({
+        id: saveRef.key,
+        cohortName,
+        moduleIds,
+        startDate,
+        endDate,
+      })));
 };
 
 fromEvent((firebase as any).database().ref(`/cohort/`) as any, 'value').pipe(

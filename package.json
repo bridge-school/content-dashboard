@@ -2,9 +2,6 @@
   "name": "content-dashboard",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "8.x.x"
-  },
   "dependencies": {
     "@material-ui/core": "^1.5.1",
     "connected-react-router": "^4.4.1",

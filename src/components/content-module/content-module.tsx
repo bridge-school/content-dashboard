@@ -2,10 +2,10 @@ import * as React from 'react';
 import { ContentModule } from '../../constants';
 import { Card, CardContent, Typography } from '@material-ui/core';
 
-
-const SubSection = ({label, data, shouldLink = false}: {label: string, data: string | any[], shouldLink?: boolean}) => (
-  <div>
-    <Typography variant="subheading">{label}</Typography>
+const SubSection = ({label, data, linkProp, labelProp, shouldLink = false}: 
+  {linkProp?: string, labelProp?: string, label: string, data: string | any[], shouldLink?: boolean}) => (
+  <div className="mb3">
+    <Typography variant="subheading" className="mb2">{label}</Typography>
     <Typography variant="body1" className="truncate">
       {
         !Boolean(data) ?
@@ -13,10 +13,10 @@ const SubSection = ({label, data, shouldLink = false}: {label: string, data: str
         Array.isArray(data) && data.length ?
           data.map((item, i) =>
             shouldLink ?
-              <a key={item + i} href={item} target="_blank">{item}</a> :
-              <span key={item + i}>{item}</span>) :
+              <a key={label + i} href={linkProp ? item[linkProp] : item} target="_blank" className="db">{labelProp ? item[labelProp] : item}</a> :
+              <span className="db" key={label + i}>{item}</span>) :
           shouldLink ?
-            <a href={data as string} target="_blank">{data}</a> :
+            <a href={data as string} target="_blank" className="db">{data}</a> :
             data
       }
       </Typography>
@@ -30,13 +30,27 @@ export const ModuleComponent = ({module, cohortAssignments}: {module: ContentMod
           <Typography variant="title"> {module.name} </Typography>
           <Typography variant="caption"> Complexity: {module.complexity} </Typography>
         </div>
+        
+        { module.dependencies && Boolean(module.dependencies.length) &&
+          (<SubSection 
+            label="Dependencies" 
+            shouldLink={true} 
+            linkProp='url' 
+            labelProp='label' 
+            data={module.dependencies.map(mod => ({...mod, url: `/module/${mod.id}`}))} />)
+        }
 
-        <SubSection label="Dependencies" data={module.dependencies ? module.dependencies : []} />
-        <SubSection label="Content" data={module.content} shouldLink={true} />
-        <SubSection label="Challenges"
-                    shouldLink={true}
-                    data={cohortAssignments ? cohortAssignments.map(assignment => `https://repl.it/teacher/assignments/${assignment.id}`) : module.challenges ? module.challenges : []}
-        />
+        { module.content &&
+          (<SubSection label="Content" data={module.content} shouldLink={true} />)
+        }
+
+        { module.challenges &&
+          (<SubSection label="Challenges"
+                      shouldLink={true}
+                      data={cohortAssignments ? cohortAssignments.map(assignment => `https://repl.it/teacher/assignments/${assignment.id}`) : module.challenges ? module.challenges : []}
+          />)
+        }
+
         {/*<SubSection label="Homework"*/}
                     {/*data={*/}
                       {/*cohortAssignments ?*/}
@@ -44,8 +58,14 @@ export const ModuleComponent = ({module, cohortAssignments}: {module: ContentMod
                         {/*module.homework || []*/}
                     {/*}*/}
                     {/*shouldLink={true} />*/}
-        <SubSection label="Slides" data={module.slides} shouldLink={true}
-        />
-        <SubSection label="Extras" shouldLink={true}  data={module.extras ? module.extras : []} />
+
+        { module.slides &&
+          (<SubSection label="Slides" data={module.slides} shouldLink={true}/>)
+        }
+        
+        { module.extras &&
+          (<SubSection label="Extras" shouldLink={true}  data={module.extras ? module.extras : []} />)
+        }
+
       </CardContent>
   </Card>);

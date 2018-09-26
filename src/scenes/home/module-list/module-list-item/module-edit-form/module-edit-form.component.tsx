@@ -1,59 +1,65 @@
 import * as React from 'react';
 import { ContentModule } from '../../../../../constants';
+import { Field, reduxForm, WrappedFieldInputProps } from 'redux-form';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-interface TextFieldGroupProps {
-  fieldName: string; 
-  fieldList: string[];
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
-  onClick: React.MouseEventHandler<HTMLElement>;
-}
+const renderField = ({
+  defaultValue,
+  input,
+  ...rest
+}: {defaultValue: string, input?: WrappedFieldInputProps}) => (
+  <TextField
+    autoFocus={true}
+    margin="dense"
+    type="text"
+    fullWidth={true}
+    defaultValue={defaultValue}
+    {...input}
+    {...rest}
+  />
+)
 
-const TextFieldGroup = ({ fieldName, fieldList, onChange, onClick }: TextFieldGroupProps) => {
+const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
+
+export const EditForm = (props) => {
+  const { currentModule } = props;
   return (
-    <div>
+    <form>
       {
-        fieldList && fieldList.map((value, index) => {
+        textFields.map((prop, index) => {
           return (
-            <TextField
-              autoFocus={true}
+            <Field
+              name={prop}
+              component={renderField}
+              defaultValue={String(currentModule[prop])}
               key={index}
-              data-index={index}
-              id={`${fieldName}-${index}`}
-              name={fieldName}
-              defaultValue={value}
-              inputProps={{'data-index': index}}
-              label={fieldName}
-              margin="dense"
-              type="text"
-              fullWidth={true}
-              onChange={onChange}
             />
           );
         })
       }
-      {
-        fieldList && (
-        <Button
-          variant="contained" 
-          color="primary"
-          size="small"
-          onClick={onClick}
-        >
-          Add link
-        </Button>
-        )
-      }
-    </div>
+    </form>
   );
-};
+}
 
+export default reduxForm({
+  form: 'editForm' // a unique identifier for this form
+  // add validation functions here
+})(EditForm)
+
+/// TODO: Split it into two components
+
+
+/**
+ * 
+ * The EditFormModal contain the Editform that is wrapped in reduxForm
+ * The EditFormModal pass props to Editform
+ * 
+ * **/
 interface FormDialogProps {
   id: string;
   modules: ContentModule[];
@@ -65,9 +71,7 @@ interface FormDialogState {
   currentModule: ContentModule;
   currentModuleIndex: number;
 }
-
-// todo: update to use redux form
-export class EditForm extends React.Component<FormDialogProps, FormDialogState> {
+export class EditFormModal extends React.Component<FormDialogProps, FormDialogState> {
   state = {
     open: false,
     currentModule: this.props.modules.find(mod => mod.id === this.props.id),
@@ -121,8 +125,6 @@ export class EditForm extends React.Component<FormDialogProps, FormDialogState> 
   }
 
   render() {
-    const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
-    const textFieldGroups = ['extras', 'challenges'];
     return (
       <div>
         <Button 
@@ -140,47 +142,10 @@ export class EditForm extends React.Component<FormDialogProps, FormDialogState> 
         >
           <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
           <DialogContent>
-            <form>
-              {
-                textFields.map((prop, index) => {
-                  return (
-                    <TextField
-                      key={index}
-                      autoFocus={true}
-                      defaultValue={String(this.state.currentModule[prop])}
-                      margin="dense"
-                      id={prop}
-                      label={prop}
-                      type="text"
-                      onChange={(e) => this.updateTextFieldInputValue(e)}
-                      fullWidth={true}
-                    />
-                  );
-                })
-              }
-              {
-                textFieldGroups.map((prop, index) => {
-                  return (
-                    <TextFieldGroup 
-                      key={index}
-                      fieldName={prop} 
-                      fieldList={this.state.currentModule[prop]} 
-                      onChange={(e) => this.updateTextFieldGroupValue(e)}
-                      onClick={(e) => this.addNewFormField(prop)}
-                    />
-                  );
-                })
-              }
-            </form>
+            <EditForm 
+              currentModule={this.state.currentModule}
+            />
           </DialogContent>
-          <DialogActions>
-            <Button onClick={this.toggleModal} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={(e) => this.handleModuleUpdate(e)} color="primary">
-              Submit
-            </Button>
-          </DialogActions>
         </Dialog>
       </div>
     );

@@ -3,7 +3,7 @@ import { combineReducers, Reducer } from 'redux';
 import { ModuleReducer, ModuleReducerState } from './module';
 import { authReducer } from './auth';
 import { CohortReducer, CohortReducerState } from './cohort';
-import { reducer as formReducer } from 'redux-form'
+import { reducer as formReducer } from 'redux-form';
 
 export type RootReducerState =
     & ModuleReducerState 

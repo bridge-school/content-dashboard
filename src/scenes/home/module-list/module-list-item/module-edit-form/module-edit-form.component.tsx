@@ -46,10 +46,10 @@ export const EditForm = (props) => {
   );
 }
 
-export default reduxForm({
+export const ReduxEditForm = reduxForm({
   form: 'editForm' // a unique identifier for this form
   // add validation functions here
-})(EditForm)
+})(EditForm) as any;
 
 /// TODO: Split it into two components
 
@@ -63,7 +63,6 @@ export default reduxForm({
 interface FormDialogProps {
   id: string;
   modules: ContentModule[];
-  onEdit: any;
 }
 
 interface FormDialogState {
@@ -120,7 +119,6 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
 
   handleModuleUpdate = (e) => {
     e.preventDefault();
-    this.props.onEdit(this.state.currentModule, this.state.currentModuleIndex);
     this.toggleModal();
   }
 
@@ -142,7 +140,7 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
         >
           <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
           <DialogContent>
-            <EditForm 
+            <ReduxEditForm 
               currentModule={this.state.currentModule}
             />
           </DialogContent>

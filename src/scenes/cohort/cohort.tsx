@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as moment from 'moment';
 import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
@@ -39,6 +40,12 @@ const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
     </CardContent>
 </Card>);
 
+const getSelectedClass = (allClasses, selectedDay) => {
+  return allClasses
+    .map(classroom => ({...classroom, day: moment(classroom.day).toISOString()}))
+    .filter(classroom => classroom.day === selectedDay);
+};
+
 const CohortSceneComponent =
   ({
      selectedCohort,
@@ -58,8 +65,13 @@ const CohortSceneComponent =
         classrooms={cohortClassrooms}
         cohort={selectedCohort}
         handleDayClick={(day) => {
+          const selectedClass = getSelectedClass(cohortClassrooms, day.toISOString());
           toggleDialog(true);
-          updateClassroom({day: day.toISOString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
+          selectedClass.length > 0 ? updateClassroom(selectedClass[0]) : updateClassroom({
+            day: day.toISOString(),
+            endTime: defaultClassEndTime,
+            startTime: defaultClassStartTime,
+          });
         }}
       /> : '...loading' }
 

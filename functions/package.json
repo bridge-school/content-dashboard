@@ -12,6 +12,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "@slack/client": "^4.6.0",
     "cors": "^2.8.4",
     "firebase-admin": "~5.12.1",
     "firebase-functions": "^1.0.3",

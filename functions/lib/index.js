@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const rp = require("request-promise");
+const client_1 = require("@slack/client");
 const cors = require('cors')({
     origin: true,
 });
@@ -97,6 +98,12 @@ exports.getReplCohortData = functions.https.onRequest((req, res) => {
             }))
             : res.status(403).send('Forbidden!');
     });
+});
+exports.notifySlackChannel = functions.https.onRequest((req, res) => {
+    const slackWebhook = new client_1.IncomingWebhook(functions.config().slack.url);
+    return cors(req, res, () => req.method === 'GET' ?
+        slackWebhook.send('Hello from function land!', (error, slackResponse) => !error ? res.sendStatus(200) : res.sendStatus(500))
+        : res.status(403).send('Forbidden!'));
 });
 function replLogin(username, password) {
     return rp({

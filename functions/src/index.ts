@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as rp from 'request-promise';
+import { IncomingWebhook } from '@slack/client';
 
 const cors = require('cors')({
   origin: true,
@@ -135,6 +136,14 @@ exports.getReplCohortData = functions.https.onRequest((req, res) => {
           }))
         : res.status(403).send('Forbidden!')
   });
+});
+
+exports.notifySlackChannel = functions.https.onRequest((req, res) => {
+    const slackWebhook = new IncomingWebhook(functions.config().slack.url);
+
+    return cors(req, res, () => req.method === 'GET' ?
+      slackWebhook.send('Hello from function land!', (error, slackResponse) => !error ? res.sendStatus(200) : res.sendStatus(500))
+      : res.status(403).send('Forbidden!'));
 });
 
 

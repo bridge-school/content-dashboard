@@ -36,6 +36,19 @@ export const ClassroomDetailComponent =
                 { selectedClassroom.endTime ? formatAmPmTime(selectedClassroom.endTime) : "" }
             </p>
 
+          <div className="flex">
+            <div style={{marginRight: '40px'}}>
+              <span className="b">Teachers</span>
+              {selectedClassroom.teachers ? selectedClassroom.teachers.map((teacher) => <div key={teacher}>{teacher}</div>) : ''}
+            </div>
+
+            <div>
+              <span className="b">Tas</span>
+              {selectedClassroom.tas ? selectedClassroom.tas.map((ta) => <div key={ta}>{ta}</div>) : ''}
+            </div>
+          </div>
+
+
             { selectedClassroom.notes &&
                 (
                     <p>

@@ -13,6 +13,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import { formatDateStringWithoutTime } from '../../helpers';
+import ChipInput from 'material-ui-chip-input';
+
 
 export const AddClassroomFormModal = ({
         isOpen, 
@@ -22,7 +24,7 @@ export const AddClassroomFormModal = ({
         updateClassroom,
         onSave,
         defaultStartTime,
-        defaultEndTime
+        defaultEndTime,
     }) => {
     return (
         <Dialog
@@ -133,6 +135,26 @@ export const AddClassroomFormModal = ({
                         ))}
                     </Select>
                 </FormControl >
+
+                <FormControl style={{width: '100%', marginTop: '10p'}}>
+                  <ChipInput
+                    id="teacher-list"
+                    label="Teachers"
+                    value={classroom.teachers || []}
+                    onAdd={(teacher) => updateClassroom({...classroom, teachers: (classroom.teachers || []).concat(teacher)})}
+                    onDelete={(chip, index) => updateClassroom({...classroom, teachers: (classroom.teachers || []).filter((t, i) => i !== index)})}
+                  />
+                </FormControl>
+
+                <FormControl style={{width: '100%', marginTop: '10px'}}>
+                  <ChipInput
+                    id="ta-list"
+                    label="Teacher Assistants"
+                    value={classroom.tas || []}
+                    onAdd={(ta) => updateClassroom({...classroom, tas: (classroom.tas || []).concat(ta)})}
+                    onDelete={(chip, index) => updateClassroom({...classroom, tas: (classroom.tas || []).filter((t, i) => i !== index)})}
+                  />
+                </FormControl>
 
                 {/* ADDITIONAL NOTES */}
                 <FormControl style={{width: '100%'}}>

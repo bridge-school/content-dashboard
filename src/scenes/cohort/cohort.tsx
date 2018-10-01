@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as moment from 'moment';
 import { connect } from 'react-redux';
 import { RootReducerState } from '../../state/reducers';
 import { ModuleComponent } from '../../components/content-module/content-module';
@@ -16,7 +15,8 @@ import {
 import { 
   convertObjectToValuesArray, 
   sortClassroomsByDate,
-  formatISOStringDate,  
+  formatISOStringDate,
+  getSelectedClassroom
 } from '../../helpers';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -41,12 +41,6 @@ const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
     </CardContent>
 </Card>);
 
-const getSelectedClass = (allClasses, selectedDay) => {
-  return allClasses
-    .map(classroom => ({...classroom, day: moment(classroom.day).toISOString()}))
-    .filter(classroom => classroom.day === selectedDay);
-};
-
 const CohortSceneComponent =
   ({
      selectedCohort,
@@ -67,9 +61,9 @@ const CohortSceneComponent =
         classrooms={cohortClassrooms}
         cohort={selectedCohort}
         handleDayClick={(day) => {
-          const selectedClass = getSelectedClass(cohortClassrooms, day.toISOString());
+          const selectedClassroom = getSelectedClassroom(cohortClassrooms, day.toISOString());
           toggleDialog(true);
-          selectedClass.length > 0 ? updateClassroom(selectedClass[0]) : updateClassroom({
+          selectedClassroom.length > 0 ? updateClassroom(selectedClassroom[0]) : updateClassroom({
             day: day.toISOString(),
             endTime: defaultClassEndTime,
             startTime: defaultClassStartTime,

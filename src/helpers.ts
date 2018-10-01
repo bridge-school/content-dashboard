@@ -34,3 +34,9 @@ export const formatAmPmTime = (timeString) => {
 export const sortClassroomsByDate = (classroomA, classroomB) => (classroomA.day < classroomB.day) ? -1 : ((classroomA.day > classroomB.day) ? 1 : 0);
 
 export const formatISOStringDate = (isoString) => moment(isoString).format("dddd, MMMM Do, YYYY");
+
+export const getSelectedClassroom = (allClasses, selectedDay) => {
+    return allClasses
+        .map(classroom => ({...classroom, day: moment(classroom.day).toISOString()}))
+        .filter(classroom => classroom.day === selectedDay);
+};

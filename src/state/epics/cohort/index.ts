@@ -1,6 +1,6 @@
 import { filter, map, mergeMap } from 'rxjs/internal/operators';
 import { TypeKeys } from '../../actions';
-import { setCohort, addClassroomToCohort } from '../../../firebaseconfig';
+import { setCohort, addClassroomToCohort, updateClassroomToCohort } from '../../../firebaseconfig';
 import { groupBy } from 'lodash';
 import { push } from 'connected-react-router';
 import { ajax } from 'rxjs/ajax';
@@ -82,3 +82,10 @@ export const saveClassroomToCohort = ($action) =>
         mergeMap((action: any) => addClassroomToCohort(action.payload.cohortId, action.payload.classroom)),
         map(() => ({type: 'FAKE_SUCCESS_ADD_CLASSROOM'}))
       );
+
+export const saveUpdatedClassroomToCohort = ($action) =>
+      $action.ofType(TypeKeys.SAVE_UPDATED_CLASSROOM_TO_COHORT)
+        .pipe(
+          mergeMap((action: any) => updateClassroomToCohort(action.payload.cohortId, action.payload.classroomId, action.payload.classroom)),
+          map(() => ({type: 'FAKE_SUCCESS_UPDATE_CLASSROOM'}))
+        );

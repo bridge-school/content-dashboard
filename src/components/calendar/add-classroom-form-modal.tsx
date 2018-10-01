@@ -35,7 +35,7 @@ export const AddClassroomFormModal = ({
                 root: 'add-classroom-dialog',
             }}
         >
-            <DialogTitle id="form-dialog-title">Create Classroom</DialogTitle>
+            <DialogTitle id="form-dialog-title">{classroom.id ? 'Edit Classroom' : 'Create Classroom'}</DialogTitle>
             <DialogContent>
                 <DialogContentText
                     classes={{
@@ -178,10 +178,10 @@ export const AddClassroomFormModal = ({
 
                 {/* SAVE CLASSROOM BUTTON */}
                 <Button onClick={() => {
-                    onSave(classroom);
+                    onSave(classroom.id, classroom);
                     onClose();
                 }} color="primary">
-                    Add Classroom
+                    {classroom.id ? 'Edit Classroom' : 'Add Classroom'}
                 </Button>
 
             </DialogActions>

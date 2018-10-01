@@ -83,3 +83,15 @@ export const addClassroomToCohort = (cohortId, classroom) => {
       });
   });
 };
+
+export const updateClassroomToCohort = (cohortId, classroomId, classroom) => {
+
+  return Observable.create(obs => {
+    ((firebase as any).database().ref(`/cohort/${cohortId}/classrooms/${classroomId}`) as any)
+      .update(
+        classroom,
+        () => {
+        obs.next('update classroom success!');
+      });
+  });
+};

@@ -36,3 +36,8 @@ export const saveClassroomToCohort = (cohortId, classroom) => {
     payload: {cohortId, classroom}
   })
 };
+
+export const saveUpdatedClassroomToCohort = (cohortId, classroomId, classroom) => ({
+  type: TypeKeys.SAVE_UPDATED_CLASSROOM_TO_COHORT,
+  payload: {cohortId, classroomId, classroom}
+});

@@ -1,6 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import * as rp from 'request-promise';
+import * as moment from 'moment';
 import { IncomingWebhook } from '@slack/client';
 
 const cors = require('cors')({
@@ -138,11 +139,27 @@ exports.getReplCohortData = functions.https.onRequest((req, res) => {
   });
 });
 
+const findUpcomingClassesOrderedByAscendingDate = (cohort) =>
+  Object.keys(cohort.classrooms)
+    .map(key => cohort.classrooms[key])
+    .filter(classroom => moment().isBefore(moment(classroom.day)))
+    .sort((a, b) => moment(a.day).isBefore(moment(b.day)) ? -1 : 1);
+
 exports.notifySlackChannel = functions.https.onRequest((req, res) => {
     const slackWebhook = new IncomingWebhook(functions.config().slack.url);
 
-    return cors(req, res, () => req.method === 'GET' ?
-      slackWebhook.send('Hello from function land!', (error, slackResponse) => !error ? res.sendStatus(200) : res.sendStatus(500))
+    return cors(req, res, () => req.method === 'GET' && req.query.cohortID ?
+      admin.database().ref(`/cohort/${req.query.cohortID}`).once('value', (snapshot) => {
+        if (!snapshot.exists()) { return res.sendStatus(404); }
+
+        const cohort = snapshot.val();
+        const upcomingClassesOrderedByAscendingDate = findUpcomingClassesOrderedByAscendingDate(cohort);
+        const [ upcomingClass ] = upcomingClassesOrderedByAscendingDate;
+
+        return res.json(upcomingClass);
+
+      // slackWebhook.send('Hello from function land!', (error, slackResponse) => !error ? res.sendStatus(200) : res.sendStatus(500))
+      })
       : res.status(403).send('Forbidden!'));
 });
 

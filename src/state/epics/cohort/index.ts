@@ -93,7 +93,7 @@ export const saveUpdatedClassroomToCohort = ($action) =>
 export const notifySlackWithUpcomingClassDetails = ($action) =>
     $action.ofType(TypeKeys.NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS)
       .pipe(
-        mergeMap(({cohortId, slackChannel}) =>
+        mergeMap(({payload: {cohortId, slackChannel}}) =>
           ajax.get(`https://us-central1-bridge-content-dashboard.cloudfunctions.net/notifySlackChannel?cohortID=${cohortId}&slackChannel=${slackChannel}`)
         ),
         map(() => ({type: 'FAKE_SUCCESS_NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS'}))

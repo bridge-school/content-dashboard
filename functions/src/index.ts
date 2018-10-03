@@ -148,7 +148,7 @@ const findUpcomingClassesOrderedByAscendingDate = (cohort) =>
 exports.notifySlackChannel = functions.https.onRequest((req, res) => {
     const slackWebhook = new IncomingWebhook(functions.config().slack.url);
 
-    return cors(req, res, () => req.method === 'GET' && req.query.cohortID ?
+    return cors(req, res, () => req.method === 'GET' && req.query.cohortID && req.query.slackChannel ?
       admin.database().ref(`/cohort/${req.query.cohortID}`).once('value', (snapshot) => {
         if (!snapshot.exists()) { return res.sendStatus(404); }
 
@@ -156,9 +156,15 @@ exports.notifySlackChannel = functions.https.onRequest((req, res) => {
         const upcomingClassesOrderedByAscendingDate = findUpcomingClassesOrderedByAscendingDate(cohort);
         const [ upcomingClass ] = upcomingClassesOrderedByAscendingDate;
 
-        return res.json(upcomingClass);
+        const message = [
+          'Hey! 👋',
+          `You attempted to send a message to ${req.query.slackChannel}`,
+          `Your selected cohort is "${cohort.cohortName}"`,
+          `The next class is ${moment(upcomingClass.day).format('MMM Do')} at ${upcomingClass.startTime} until ${upcomingClass.endTime}`,
+          'Have fun! 🎉'
+        ].reduce((acc, line) => `${acc}${line}\n`, '');
 
-      // slackWebhook.send('Hello from function land!', (error, slackResponse) => !error ? res.sendStatus(200) : res.sendStatus(500))
+        slackWebhook.send(message, error => !error ? res.sendStatus(200) : res.sendStatus(500))
       })
       : res.status(403).send('Forbidden!'));
 });

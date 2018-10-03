@@ -76,7 +76,7 @@ export const addModuleToTimeline = ($action) =>
       map((timeline) => ({type: 'UPDATE_TIMELINE', payload: timeline}))
     );
 
-export const saveClassroomToCohort = ($action) => 
+export const saveClassroomToCohort = ($action) =>
     $action.ofType(TypeKeys.SAVE_CLASSROOM_TO_COHORT)
       .pipe(
         mergeMap((action: any) => addClassroomToCohort(action.payload.cohortId, action.payload.classroom)),
@@ -89,3 +89,12 @@ export const saveUpdatedClassroomToCohort = ($action) =>
           mergeMap((action: any) => updateClassroomToCohort(action.payload.cohortId, action.payload.classroomId, action.payload.classroom)),
           map(() => ({type: 'FAKE_SUCCESS_UPDATE_CLASSROOM'}))
         );
+
+export const notifySlackWithUpcomingClassDetails = ($action) =>
+    $action.ofType(TypeKeys.NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS)
+      .pipe(
+        mergeMap(({cohortId, slackChannel}) =>
+          ajax.get(`https://us-central1-bridge-content-dashboard.cloudfunctions.net/notifySlackChannel?cohortID=${cohortId}&slackChannel=${slackChannel}`)
+        ),
+        map(() => ({type: 'FAKE_SUCCESS_NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS'}))
+      );

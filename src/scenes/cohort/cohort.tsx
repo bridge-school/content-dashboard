@@ -10,7 +10,8 @@ import {
   toggleCohortClassroomDialog,
   updateClassroomInEdit,
   saveClassroomToCohort,
-  saveUpdatedClassroomToCohort
+  saveUpdatedClassroomToCohort,
+  notifySlackWithUpcomingClassDetails
 } from '../../state/actions/cohortActions';
 import {
   convertObjectToValuesArray,
@@ -26,7 +27,8 @@ import { ReplCohortCard } from './replCohort.component';
 interface CohortCalendarProps {
   cohort: any,
   classrooms: any[],
-  handleDayClick: (day: any) => void
+  handleDayClick: (day: any) => void,
+  handleNotifyClick: (cohortID: string, slackChannel: string) => void,
 }
 
 interface CohortCalendarState {
@@ -66,7 +68,7 @@ class CohortCalendar extends React.Component<CohortCalendarProps, CohortCalendar
               value={this.state.slackChannel}
               placeholder="Enter Slack channel..."
             />
-            <Button onClick={() => console.log(this.state.slackChannel)} color="primary">
+            <Button onClick={() => this.props.handleNotifyClick(this.props.cohort.id, this.state.slackChannel)} color="primary">
                 Notify
             </Button>
           </div>
@@ -97,7 +99,8 @@ const CohortSceneComponent =
      defaultClassStartTime,
      defaultClassEndTime,
      cohortClassrooms,
-     replCohortData
+     replCohortData,
+     notifySlack
    }) => (
     <React.Fragment>
       { selectedCohort ? <CohortCalendar
@@ -112,6 +115,7 @@ const CohortSceneComponent =
             startTime: defaultClassStartTime,
           });
         }}
+        handleNotifyClick ={notifySlack}
       /> : '...loading' }
 
       <ReplCohortCard students={replCohortData.students || []} teachers={replCohortData.teachers || []} />
@@ -159,7 +163,8 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
   toggleDialog: toggleCohortClassroomDialog,
   updateClassroom: updateClassroomInEdit,
   saveClassroom: saveClassroomToCohort,
-  saveUpdatedClassroom: saveUpdatedClassroomToCohort
+  saveUpdatedClassroom: saveUpdatedClassroomToCohort,
+  notifySlack: notifySlackWithUpcomingClassDetails
 })(CohortSceneComponent);
 
 export const CohortScene = ({match}) => (

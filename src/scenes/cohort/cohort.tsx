@@ -35,7 +35,8 @@ const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
     </CardContent>
     <CardContent className="flex-grow-1">
       <CalendarComponent
-        handleDayClick={handleDayClick}
+        onDayClick={handleDayClick}
+        disabledDays={{before: new Date(cohort.startDate)}}
         selectedDates={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
       />
     </CardContent>

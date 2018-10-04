@@ -9,12 +9,14 @@ import { AddClassroomFormModal } from '../../components/calendar/add-classroom-f
 import {
   toggleCohortClassroomDialog,
   updateClassroomInEdit,
-  saveClassroomToCohort
+  saveClassroomToCohort,
+  saveUpdatedClassroomToCohort
 } from '../../state/actions/cohortActions';
 import { 
   convertObjectToValuesArray, 
   sortClassroomsByDate,
-  formatISOStringDate,  
+  formatISOStringDate,
+  getSelectedClassroom
 } from '../../helpers';
 import { Card, CardContent, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -48,6 +50,7 @@ const CohortSceneComponent =
      classroomInEdit,
      updateClassroom,
      saveClassroom,
+     saveUpdatedClassroom,
      defaultClassStartTime,
      defaultClassEndTime,
      cohortClassrooms,
@@ -58,8 +61,13 @@ const CohortSceneComponent =
         classrooms={cohortClassrooms}
         cohort={selectedCohort}
         handleDayClick={(day) => {
+          const selectedClassroom = getSelectedClassroom(cohortClassrooms, day.toISOString());
           toggleDialog(true);
-          updateClassroom({day: day.toISOString(), startTime: defaultClassStartTime, endTime: defaultClassEndTime});
+          selectedClassroom.length > 0 ? updateClassroom(selectedClassroom[0]) : updateClassroom({
+            day: day.toISOString(),
+            endTime: defaultClassEndTime,
+            startTime: defaultClassStartTime,
+          });
         }}
       /> : '...loading' }
 
@@ -72,7 +80,9 @@ const CohortSceneComponent =
           updateClassroom(null);
         }
         }
-        onSave={(classroom) => saveClassroom(selectedCohort.id, classroom)}
+        onSave={(classroomId, classroom) => {
+          classroomId ? saveUpdatedClassroom(selectedCohort.id, classroomId, classroom) : saveClassroom(selectedCohort.id, classroom);
+        }}
         availableModules={selectedModuleList}
         classroom={classroomInEdit}
         updateClassroom={updateClassroom}
@@ -105,7 +115,8 @@ export const CohortStateful = connect((state: RootReducerState, ownProps: RouteC
 }, {
   toggleDialog: toggleCohortClassroomDialog,
   updateClassroom: updateClassroomInEdit,
-  saveClassroom: saveClassroomToCohort
+  saveClassroom: saveClassroomToCohort,
+  saveUpdatedClassroom: saveUpdatedClassroomToCohort
 })(CohortSceneComponent);
 
 export const CohortScene = ({match}) => (

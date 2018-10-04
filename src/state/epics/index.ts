@@ -9,6 +9,7 @@ import {
   removeModuleFromModuleList,
   addModuleToTimeline,
   saveClassroomToCohort,
+  saveUpdatedClassroomToCohort,
   getReplCohortData
 } from './cohort';
 
@@ -24,7 +25,8 @@ const rootEpic = combineEpics(
   removeModuleFromModuleList,
   addModuleToTimeline,
   getReplCohortData,
-  saveClassroomToCohort
+  saveClassroomToCohort,
+  saveUpdatedClassroomToCohort
 );
 
 export const epicMiddleware = createEpicMiddleware(rootEpic);

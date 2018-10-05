@@ -37,7 +37,8 @@ const CohortCalendar = ({cohort, handleDayClick, classrooms = []}) => (
       <CalendarComponent
         onDayClick={handleDayClick}
         disabledDays={{before: new Date(cohort.startDate)}}
-        selectedDates={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
+        initialMonth={new Date(cohort.startDate)}
+        selectedDays={convertObjectToValuesArray(cohort.classrooms || {}).map((classroom) => new Date(classroom.day))}
       />
     </CardContent>
 </Card>);

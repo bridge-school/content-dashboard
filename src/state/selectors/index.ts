@@ -25,6 +25,40 @@ export const getModuleObjectsByIds = createSelector(
   cohortModuleIds.map(modId => modules.find(mod => mod.id === modId)).filter(Boolean)
 );
 
+export const getClassroomByID = createSelector(
+  getCohortByID,
+  (state, cohortID, classroomID) => classroomID,
+  ((cohort, classroomID) => get(cohort, `classrooms.${classroomID}`, null)
+  ));
+
+export const getClassroomModules = createSelector(
+  getClassroomByID,
+  getAllModules,
+  (classroom, allModules) =>
+    get(classroom, 'modules', []).map(id => allModules.find(module => module.id === id)).filter(Boolean));
+
+export const getClassroomsAsSortedByDateArray = createSelector(
+  getCohortByID,
+  (cohort) => {
+    return Object.keys(get(cohort, 'classrooms', {})).map(classroomID => ({...get(cohort, `classrooms.${classroomID}`, {}), id: classroomID}))
+      .sort((c1, c2) => c2.startDate < c1.startDate ? -1 : 1 )
+  }
+);
+
+const getIndexOfClassroomFromSortedDateList = createSelector(
+  getClassroomsAsSortedByDateArray,
+  (state, cohortID, classroomID) => classroomID,
+  (classroomList, id) => classroomList.map(c => c.id).indexOf(id)
+);
+
+export const getClassroomIDFromSelectedClassroomID = createSelector(
+  getClassroomsAsSortedByDateArray,
+  getIndexOfClassroomFromSortedDateList,
+  (state, cohortID, classroomID, indexModifier) => indexModifier,
+  ((classrooms, classroomIndex, indexModifier) =>
+    classroomIndex !== -1 && classrooms[classroomIndex + indexModifier] ? classrooms[classroomIndex + indexModifier].id : null
+  ));
+
 export const formatModuleObjects = createSelector(
   getModuleObjectsByIds,
   getAllModules,

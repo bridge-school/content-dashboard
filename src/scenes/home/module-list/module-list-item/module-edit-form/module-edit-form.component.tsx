@@ -1,6 +1,8 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { ContentModule } from '../../../../../constants';
 import { Field, reduxForm, WrappedFieldInputProps } from 'redux-form';
+import { UpdateModule } from '../../../../../state/actions/editModule';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -8,17 +10,20 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+
+
+
 const renderField = ({
-  defaultValue,
   input,
   ...rest
-}: {defaultValue: string, input?: WrappedFieldInputProps}) => (
+}: {input?: WrappedFieldInputProps}) => (
   <TextField
     autoFocus={true}
     margin="dense"
     type="text"
     fullWidth={true}
-    defaultValue={defaultValue}
+    label={input.name}
+    onChange={value => input.onChange(value)}
     {...input}
     {...rest}
   />
@@ -27,31 +32,51 @@ const renderField = ({
 const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
 
 export const EditForm = (props) => {
-  const { currentModule } = props;
+  console.log(props);
+
   return (
-    <form>
+    <form onSubmit={(e) => {
+      e.preventDefault();
+      console.log('form is', props.updatedFormValues, props.id);
+      console.log(props.submitUpdatedModule);
+      // props.submitUpdatedModule(props.updatedFormValues, props.id)}
+      }>
       {
-        textFields.map((prop, index) => {
+        textFields.map((fieldname, index) => {
           return (
-            <Field
-              name={prop}
-              component={renderField}
-              defaultValue={String(currentModule[prop])}
-              key={index}
-            />
+            <React.Fragment key={index}>
+              <Field
+                name={fieldname}
+                component={renderField}
+              />
+            </React.Fragment>
           );
         })
       }
+      <Button variant="contained" color="primary" type="submit" disabled={props.pristine || props.submitting}>
+        Submit
+      </Button>
+      <Button variant="contained" color="secondary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
+        Undo Changes
+      </Button>
     </form>
   );
 }
 
-export const ReduxEditForm = reduxForm({
+export const ReduxEditFormFragment = reduxForm({
   form: 'editForm' // a unique identifier for this form
   // add validation functions here
 })(EditForm) as any;
 
-/// TODO: Split it into two components
+export const ReduxEditForm = connect(
+  (state: any, ownProps: any) => ({
+    initialValues: state.module.modules.find(mod => mod.id === ownProps.id),
+    updatedFormValues: state.form.editForm
+  }), 
+  {
+    submitUpdatedModule: UpdateModule,
+  }
+)(ReduxEditFormFragment); 
 
 
 /**
@@ -67,53 +92,17 @@ interface FormDialogProps {
 
 interface FormDialogState {
   open: boolean;
-  currentModule: ContentModule;
-  currentModuleIndex: number;
+  // currentModule: ContentModule;
+  // currentModuleIndex: number;
 }
 export class EditFormModal extends React.Component<FormDialogProps, FormDialogState> {
   state = {
     open: false,
-    currentModule: this.props.modules.find(mod => mod.id === this.props.id),
-    currentModuleIndex: this.props.modules.map(mod => mod.id).indexOf(this.props.id)
   };
 
   toggleModal = () => {
     this.setState({ 
       open: !this.state.open 
-    });
-  }
-
-  updateTextFieldInputValue = ({target: {id, value}}) => {
-    const textFieldValue = isNaN(value) ? value.trim() : parseInt(value, 10);
-    this.setState({
-      currentModule: {
-        ...this.state.currentModule,
-        [id]: textFieldValue
-      }
-    });
-  }
-
-  updateTextFieldGroupValue = (e) => {
-    const {target: {name, value}} = e;
-    const index = e.target.getAttribute('data-index');
-    this.setState({
-      currentModule: {
-        ...this.state.currentModule,
-        [name]: [
-          ...this.state.currentModule[name].slice(0, index), 
-          value.trim(), 
-          ...this.state.currentModule[name].slice(index + 1)
-        ]
-      }
-    });
-  }
-
-  addNewFormField = (id: string) => {
-    this.setState({
-      currentModule: {
-        ...this.state.currentModule,
-        [id]: this.state.currentModule[id].concat('') 
-      }
     });
   }
 
@@ -141,7 +130,7 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
           <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
           <DialogContent>
             <ReduxEditForm 
-              currentModule={this.state.currentModule}
+             id={this.props.id}
             />
           </DialogContent>
         </Dialog>

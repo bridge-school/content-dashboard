@@ -1,8 +1,5 @@
 version: 2
 jobs:
-  dependencies:
-    pre:
-    - npm install -g firebase-tools
   build:
     docker:
       - image: circleci/node:carbon
@@ -23,7 +20,8 @@ jobs:
           command: npm run test:coverage
       - run:
           name: Build Application
-          commands:
-            - npm run build
-            - firebase use default
-            - firebase deploy --only functions
+          command: |
+            npm install -g firebase-tools
+            npm run build
+            firebase use default
+            firebase deploy --only functions

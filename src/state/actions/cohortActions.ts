@@ -41,3 +41,10 @@ export const saveUpdatedClassroomToCohort = (cohortId, classroomId, classroom) =
   type: TypeKeys.SAVE_UPDATED_CLASSROOM_TO_COHORT,
   payload: {cohortId, classroomId, classroom}
 });
+
+export const notifySlackWithUpcomingClassDetails = (cohortId, slackChannel) => {
+  return ({
+    type: TypeKeys.NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS,
+    payload: {cohortId, slackChannel}
+  })
+};

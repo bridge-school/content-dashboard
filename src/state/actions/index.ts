@@ -19,24 +19,25 @@ export enum TypeKeys {
   TOGGLE_COHORT_CLASSROOM_DIALOG = 'TOGGLE_COHORT_CLASSROOM_DIALOG',
   UPDATE_EDIT_CLASSROOM = 'UPDATE_EDIT_CLASSROOM',
   SAVE_CLASSROOM_TO_COHORT = 'SAVE_CLASSROOM_TO_COHORT',
-  SAVE_UPDATED_CLASSROOM_TO_COHORT = "SAVE_UPDATED_CLASSROOM_TO_COHORT"
+  SAVE_UPDATED_CLASSROOM_TO_COHORT = "SAVE_UPDATED_CLASSROOM_TO_COHORT",
+  NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS = 'NOTIFY_SLACK_WITH_UPCOMING_CLASS_DETAILS'
 }
 
 export type StringAction = { type: string, payload: string };
 export type BooleanAction = { type: string, payload: boolean };
 export type StringActionCreator = (...args: any[]) => StringAction;
 
-export type ActionWithPayload<T> = {type: TypeKeys, payload: T};
+export type ActionWithPayload<T> = { type: TypeKeys, payload: T };
 
 type ActionTypes = {
-    type: TypeKeys
+  type: TypeKeys
 };
 
 export type Payload = {
-    payload: DRAG_MODULE.DragModulePayload
-    | DROP_MODULE.DropModulePayload
-    | GET_MODULES.GetModulePayload
-    | INSERT_MODULE_IN_TIMELINE.InsertModuleInTimelinePayload
+  payload: DRAG_MODULE.DragModulePayload
+  | DROP_MODULE.DropModulePayload
+  | GET_MODULES.GetModulePayload
+  | INSERT_MODULE_IN_TIMELINE.InsertModuleInTimelinePayload
 };
 
 export type Action = ActionTypes & Payload;

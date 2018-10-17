@@ -22,5 +22,5 @@ jobs:
           name: Build Application
           command: |
             npm run build
-            firebase use default
-            firebase deploy --only functions
+            npx firebase use default
+            npx firebase deploy --only functions

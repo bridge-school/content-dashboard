@@ -20,7 +20,11 @@ jobs:
           command: npm run test:coverage
       - run:
           name: Build Application
+          command: npm run build
+      - run:
+          name: Deploy Firebase Functions
+          working_directory: ~/repo/functions
           command: |
-            npm run build
+            npm i
             npx firebase use default
             npx firebase deploy --only functions

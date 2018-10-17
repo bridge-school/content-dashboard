@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 
 import { RootReducerState } from '../../../state/reducers';
-import { classModules } from '../home.content';
 import { ModuleListItem } from './module-list-item/module-list-item.component';
 import { ContentModule } from '../../../constants';
 import { UpdateModule } from '../../../state/actions/editModule';
@@ -44,7 +43,7 @@ const ModuleList: React.SFC<Props> = ({
 const ConnectedModuleList = connect(
   (state: RootReducerState, ownProps: Props) => ({
     timeline: get(state, 'module.timeline', []),
-    modules: get(state, 'module.modules', classModules),
+    modules: get(state, 'module.modules', []),
     ...ownProps
   }),
   {

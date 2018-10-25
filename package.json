@@ -58,6 +58,7 @@
     "@types/redux-logger": "^3.0.5",
     "@types/redux-mock-store": "0.0.13",
     "@types/webpack-env": "^1.13.5",
+    "firebase-tools": "^5.1.1",
     "jest-cli": "^20.0.4",
     "react-dnd-test-backend": "^2.6.0",
     "react-test-renderer": "^16.3.1",

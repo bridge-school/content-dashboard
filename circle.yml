@@ -21,3 +21,10 @@ jobs:
       - run:
           name: Build Application
           command: npm run build
+      - run:
+          name: Deploy Firebase Functions
+          working_directory: ~/repo/functions
+          command: |
+            npm i
+            npx firebase use default
+            npx firebase deploy --only functions

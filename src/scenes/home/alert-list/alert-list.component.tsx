@@ -8,8 +8,6 @@ import { get, difference, isEmpty } from 'lodash';
 import { RootReducerState } from '../../../state/reducers';
 import { Action } from '../../../state/actions';
 
-import { classModules } from '../home.content';
-
 import { Alert } from './alert-list.content';
 import { AlertListItem } from './alert-list-item/alert-list-item.component';
 
@@ -43,7 +41,7 @@ const AlertList = ({
 );
 
 const selectTimeline = state => get(state, 'module.timeline', []);
-const selectAllModules = state => get(state, 'module.allModules', classModules);
+const selectAllModules = state => get(state, 'module.allModules', []);
 
 const selectAlerts = createSelector(
     selectTimeline,

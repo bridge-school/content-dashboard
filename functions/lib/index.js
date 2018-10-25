@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const rp = require("request-promise");
+const moment = require("moment");
+const client_1 = require("@slack/client");
 const cors = require('cors')({
     origin: true,
 });
@@ -97,6 +99,32 @@ exports.getReplCohortData = functions.https.onRequest((req, res) => {
             }))
             : res.status(403).send('Forbidden!');
     });
+});
+const findUpcomingClassesOrderedByAscendingDate = (cohort) => Object.keys(cohort.classrooms)
+    .map(key => cohort.classrooms[key])
+    .filter(classroom => moment().isBefore(moment(classroom.day)))
+    .sort((a, b) => moment(a.day).isBefore(moment(b.day)) ? -1 : 1);
+exports.notifySlackChannel = functions.https.onRequest((req, res) => {
+    const slackClient = new client_1.WebClient(functions.config().slack.authToken);
+    return cors(req, res, () => req.method === 'POST' && req.query.cohortID && req.query.slackChannel ?
+        admin.database().ref(`/cohort/${req.query.cohortID}`).once('value', (snapshot) => {
+            if (!snapshot.exists()) {
+                return res.sendStatus(404);
+            }
+            const cohort = snapshot.val();
+            const upcomingClassesOrderedByAscendingDate = findUpcomingClassesOrderedByAscendingDate(cohort);
+            const [upcomingClass] = upcomingClassesOrderedByAscendingDate;
+            const message = [
+                'Hey! 👋',
+                `Your selected cohort is "${cohort.cohortName}"`,
+                `The next class is ${moment(upcomingClass.day).format('MMM Do')} at ${upcomingClass.startTime} until ${upcomingClass.endTime}`,
+                'Have fun! 🎉'
+            ].reduce((acc, line) => `${acc}${line}\n`, '');
+            return slackClient.chat.postMessage({ channel: req.query.slackChannel, as_user: false, text: message })
+                .then(() => res.sendStatus(200))
+                .catch(() => res.sendStatus(500));
+        })
+        : res.status(403).send('Forbidden!'));
 });
 function replLogin(username, password) {
     return rp({

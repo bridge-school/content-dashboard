@@ -10,7 +10,8 @@ import {
   addModuleToTimeline,
   saveClassroomToCohort,
   saveUpdatedClassroomToCohort,
-  getReplCohortData
+  getReplCohortData,
+  notifySlackWithUpcomingClassDetails
 } from './cohort';
 
 const rootEpic = combineEpics(
@@ -26,7 +27,8 @@ const rootEpic = combineEpics(
   addModuleToTimeline,
   getReplCohortData,
   saveClassroomToCohort,
-  saveUpdatedClassroomToCohort
+  saveUpdatedClassroomToCohort,
+  notifySlackWithUpcomingClassDetails
 );
 
 export const epicMiddleware = createEpicMiddleware(rootEpic);

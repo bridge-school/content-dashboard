@@ -26,6 +26,7 @@ const ModuleList: React.SFC<Props> = ({
       modules.map((module: ContentModule, index: number) => (
         <ModuleListItem
           key={index}
+          index={index}
           onDrop={handleDrop}
           id={module.id}
           name={module.name}

@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { DialogActions } from '@material-ui/core';
 
 
 
@@ -32,33 +33,34 @@ const renderField = ({
 const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
 
 export const EditForm = (props) => {
-  console.log(props);
-
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
-      console.log('form is', props.updatedFormValues, props.id);
-      console.log(props.submitUpdatedModule);
-      // props.submitUpdatedModule(props.updatedFormValues, props.id)}
-      }>
-      {
-        textFields.map((fieldname, index) => {
-          return (
-            <React.Fragment key={index}>
-              <Field
-                name={fieldname}
-                component={renderField}
-              />
-            </React.Fragment>
-          );
-        })
-      }
-      <Button variant="contained" color="primary" type="submit" disabled={props.pristine || props.submitting}>
-        Submit
-      </Button>
-      <Button variant="contained" color="secondary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
-        Undo Changes
-      </Button>
+      // pass in updated form value and the edited module index
+      // props.submitUpdatedModule(props.updatedFormValues.values, props.currentModuleIndex);
+    }}>
+      <DialogContent>
+        {
+          textFields.map((fieldname, index) => {
+            return (
+              <React.Fragment key={index}>
+                <Field
+                  name={fieldname}
+                  component={renderField}
+                />
+              </React.Fragment>
+            );
+          })
+        }
+      </DialogContent>
+      <DialogActions>
+        <Button color="primary" type="submit" disabled={props.pristine || props.submitting}>
+          Submit
+        </Button>
+        <Button color="secondary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
+          Undo Changes
+        </Button>
+      </DialogActions>
     </form>
   );
 }
@@ -71,7 +73,8 @@ export const ReduxEditFormFragment = reduxForm({
 export const ReduxEditForm = connect(
   (state: any, ownProps: any) => ({
     initialValues: state.module.modules.find(mod => mod.id === ownProps.id),
-    updatedFormValues: state.form.editForm
+    updatedFormValues: state.form.editForm,
+    currentModuleIndex: ownProps.index
   }), 
   {
     submitUpdatedModule: UpdateModule,
@@ -88,6 +91,7 @@ export const ReduxEditForm = connect(
 interface FormDialogProps {
   id: string;
   modules: ContentModule[];
+  index: number;
 }
 
 interface FormDialogState {
@@ -128,11 +132,9 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
-          <DialogContent>
             <ReduxEditForm 
              id={this.props.id}
             />
-          </DialogContent>
         </Dialog>
       </div>
     );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ContentModule } from '../../../../../constants';
-import { Field, reduxForm, WrappedFieldInputProps } from 'redux-form';
+import { Field, reduxForm, WrappedFieldInputProps, WrappedFieldMetaProps } from 'redux-form';
 import { UpdateModule } from '../../../../../state/actions/editModule';
 
 import Button from '@material-ui/core/Button';
@@ -11,40 +11,58 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { DialogActions } from '@material-ui/core';
 
-
-
+const required = value => value ? undefined : 'Required'
+const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
 
 const renderTextField = ({
   input,
+  meta,
   ...rest
-}: {input?: WrappedFieldInputProps}) => (
-  <TextField
-    autoFocus={true}
-    margin="dense"
-    type="text"
-    fullWidth={true}
-    label={input.name}
-    onChange={value => input.onChange(value)}
-    {...input}
-    {...rest}
-  />
-);
+}: {
+  input?: WrappedFieldInputProps,
+  meta?: WrappedFieldMetaProps
+  }) => {
+    return (
+    <React.Fragment>
+      <TextField
+        autoFocus={true}
+        margin="dense"
+        type="text"
+        fullWidth={true}
+        label={input.name}
+        onChange={value => input.onChange(value)}
+        {...input}
+        {...rest}
+      />
+      {meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
+    </React.Fragment> 
+    );
+  };
 
-const renderNumberField = ({
-  input,
-  ...rest
-}: {input?: WrappedFieldInputProps}) => (
-  <TextField
-    autoFocus={true}
-    margin="dense"
-    type="number"
-    fullWidth={true}
-    label={input.name}
-    onChange={value => input.onChange(value)}
-    {...input}
-    {...rest}
-  />
-)
+  const renderNumberField = ({
+    input,
+    meta,
+    ...rest
+  }: {
+    input?: WrappedFieldInputProps,
+    meta?: WrappedFieldMetaProps
+    }) => {
+      return (
+      <React.Fragment>
+        <TextField
+          autoFocus={true}
+          margin="dense"
+          type="number"
+          fullWidth={true}
+          label={input.name}
+          onChange={value => input.onChange(value)}
+          {...input}
+          {...rest}
+        />
+        {meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
+      </React.Fragment> 
+      );
+    };
 
 const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
 
@@ -65,6 +83,7 @@ export const EditForm = (props) => {
                     name={fieldname}
                     parse={value => parseInt(value, 10)}
                     component={renderNumberField}
+                    validate={[ required, number ]}
                   />
                 </React.Fragment>
               );
@@ -74,6 +93,7 @@ export const EditForm = (props) => {
                   <Field
                     name={fieldname}
                     component={renderTextField}
+                    validate={[ required ]}
                   />
                 </React.Fragment>
               );
@@ -82,7 +102,7 @@ export const EditForm = (props) => {
         }
       </DialogContent>
       <DialogActions>
-        <Button color="primary" type="submit" disabled={props.pristine || props.submitting}>
+        <Button color="primary" type="submit" disabled={props.error || props.pristine || props.submitting}>
           Submit
         </Button>
         <Button color="secondary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>

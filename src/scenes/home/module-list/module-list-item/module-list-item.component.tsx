@@ -15,7 +15,6 @@ import { EditFormModal } from './module-edit-form/module-edit-form.component';
 
 interface Props {
   id: string;
-  index: number;
   name: string;
   complexity: 1 | 2 | 3 | 4 | 5;
   onEdit?: Function;
@@ -27,7 +26,7 @@ interface Props {
 
 type ListItemDragDescriptor = Pick<Props, 'id'>;
 
-const ModuleListItem: React.SFC<Props> = ({ id, index, name, complexity, connectDragSource, modules }: Props) => {
+const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSource, modules }: Props) => {
   const complexityClass = `bg-${getComplexityColor(complexity)}`;
 
   return connectDragSource(
@@ -42,7 +41,6 @@ const ModuleListItem: React.SFC<Props> = ({ id, index, name, complexity, connect
         <EditFormModal
           id={id}
           modules={modules}
-          index={index}
         />
       </div>
     </div>

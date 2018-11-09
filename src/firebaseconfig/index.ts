@@ -39,9 +39,9 @@ export const modulesFirebase$ = fromEvent((firebase as any).database().ref('/mod
   map((snapshot): ContentModule =>  snapshot.val())
 );
 
-export const updateModuleFirebase = (moduleID, moduleValue) => 
+export const updateModuleFirebase = (moduleIndex: number, moduleValue) => 
 Observable.create(obs => {
-  firebase.database().ref(`/modules/${moduleID}`).set(moduleValue, () => obs.next('Success'));
+  firebase.database().ref(`/modules/${moduleIndex}`).set(moduleValue, () => obs.next('Success'));
 });
 
 // todo: update to use completion callback

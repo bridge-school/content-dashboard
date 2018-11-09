@@ -14,7 +14,7 @@ import { DialogActions } from '@material-ui/core';
 
 
 
-const renderField = ({
+const renderTextField = ({
   input,
   ...rest
 }: {input?: WrappedFieldInputProps}) => (
@@ -22,6 +22,22 @@ const renderField = ({
     autoFocus={true}
     margin="dense"
     type="text"
+    fullWidth={true}
+    label={input.name}
+    onChange={value => input.onChange(value)}
+    {...input}
+    {...rest}
+  />
+);
+
+const renderNumberField = ({
+  input,
+  ...rest
+}: {input?: WrappedFieldInputProps}) => (
+  <TextField
+    autoFocus={true}
+    margin="dense"
+    type="number"
     fullWidth={true}
     label={input.name}
     onChange={value => input.onChange(value)}
@@ -37,19 +53,31 @@ export const EditForm = (props) => {
     <form onSubmit={(e) => {
       e.preventDefault();
       // pass in updated form value and the edited module index
-      // props.submitUpdatedModule(props.updatedFormValues.values, props.currentModuleIndex);
+      props.submitUpdatedModule(props.updatedFormValues.values, props.currentModuleIndex);
     }}>
       <DialogContent>
         {
           textFields.map((fieldname, index) => {
-            return (
-              <React.Fragment key={index}>
-                <Field
-                  name={fieldname}
-                  component={renderField}
-                />
-              </React.Fragment>
-            );
+            if (fieldname === 'complexity') {
+              return (
+                <React.Fragment key={index}>
+                  <Field
+                    name={fieldname}
+                    parse={value => parseInt(value, 10)}
+                    component={renderNumberField}
+                  />
+                </React.Fragment>
+              );
+            } else {
+              return (
+                <React.Fragment key={index}>
+                  <Field
+                    name={fieldname}
+                    component={renderTextField}
+                  />
+                </React.Fragment>
+              );
+            }
           })
         }
       </DialogContent>
@@ -72,9 +100,9 @@ export const ReduxEditFormFragment = reduxForm({
 
 export const ReduxEditForm = connect(
   (state: any, ownProps: any) => ({
+    currentModuleIndex: state.module.modules.findIndex(mod => mod.id === ownProps.id),
     initialValues: state.module.modules.find(mod => mod.id === ownProps.id),
     updatedFormValues: state.form.editForm,
-    currentModuleIndex: ownProps.index
   }), 
   {
     submitUpdatedModule: UpdateModule,
@@ -91,7 +119,6 @@ export const ReduxEditForm = connect(
 interface FormDialogProps {
   id: string;
   modules: ContentModule[];
-  index: number;
 }
 
 interface FormDialogState {

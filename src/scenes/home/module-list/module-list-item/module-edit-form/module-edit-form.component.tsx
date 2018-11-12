@@ -12,8 +12,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { DialogActions } from '@material-ui/core';
 
-const required = value => value ? undefined : 'Required';
-const number = value => value && isNaN(Number(value)) ? 'Must be a number between 1 to 5' : undefined;
+const required = value => Boolean(value) ? undefined : 'Required';
+const isValidNumber = value => value && !isNaN(value) && (value < 0 || value >= 5) ? 'Must be a number between 1 to 5' : undefined;
+const formattedTitle = title => title.charAt(0).toUpperCase() + title.slice(1);
 
 const DeleteButton = withStyles({
   root: {
@@ -30,20 +31,14 @@ const CustomDialogContent = withStyles({
     paddingRight: '2rem',
     paddingTop: 0,
     paddingBottom: 0
-  },
-  label: {
-    textTransform: 'capitalize',
-  },
+  }
 })(DialogContent);
 
 const CustomDialogActions = withStyles({
   root: {
     paddingBottom: '2rem',
     paddingRight: '1.5rem'
-  },
-  label: {
-    textTransform: 'capitalize',
-  },
+  }
 })(DialogActions);
 
 const renderTextField = ({
@@ -62,7 +57,7 @@ const renderTextField = ({
         margin="dense"
         type="text"
         fullWidth={true}
-        label={input.name.slice(0, 1).toUpperCase() + input.name.slice(1)}
+        label={formattedTitle(input.name)}
         onChange={value => input.onChange(value)}
         helperText={meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
         {...input}
@@ -80,28 +75,31 @@ const renderTextField = ({
     }) => {
       return (
       <div className="mv3">
-        {
-          fields.map((field, index) => (
-            <div className="flex items-end mv1" key={index}>
-              <Field
-                name={field}
-                component={renderTextField}
-              />
-              <DeleteButton
-                onClick={() => fields.remove(index)}
-                variant="outlined" color="secondary" aria-label="Remove Item"
-              >
-                Delete
-              </DeleteButton>
-            </div>
-          ))
-        }
+      <div className="flex justify-between items-start">
+        <strong>{ formattedTitle(fields.name) }</strong>
         <Button
           onClick={() => fields.push()}
           variant="contained" color="primary" aria-label="Add New Item"
         >
           Add Link
         </Button>
+      </div>
+          {
+            fields.map((field, index) => (
+              <div className="flex items-end mv1" key={index}>
+                <Field
+                  name={field}
+                  component={renderTextField}
+                />
+                <DeleteButton
+                  onClick={() => fields.remove(index)}
+                  variant="outlined" color="secondary" aria-label="Remove Item"
+                >
+                  Delete
+                </DeleteButton>
+              </div>
+            ))
+          }
       </div>)
     };
 
@@ -121,7 +119,7 @@ const renderTextField = ({
           margin="dense"
           type="number"
           fullWidth={true}
-          label={input.name.slice(0, 1).toUpperCase() + input.name.slice(1)}
+          label={formattedTitle(input.name)}
           onChange={value => input.onChange((value))}
           helperText={meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
           {...input}
@@ -135,6 +133,7 @@ export const EditForm = (props) => {
     <form onSubmit={(e) => {
       e.preventDefault();
       props.submitUpdatedModule(props.updatedFormValues.values, props.currentModuleIndex);
+      props.toggleModal();
     }}>
       <CustomDialogContent>
         <Field
@@ -146,7 +145,7 @@ export const EditForm = (props) => {
           name="complexity"
           parse={value => parseInt(value, 10)}
           component={renderNumberField}
-          validate={[ required, number ]}
+          validate={[ required, isValidNumber ]}
         />
         <Field
           name="content"
@@ -172,6 +171,9 @@ export const EditForm = (props) => {
         </Button>
         <Button variant="contained" color="primary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
           Undo Changes
+        </Button>
+        <Button onClick={() => props.toggleModal()} variant="outlined" type="button">
+          X Close
         </Button>
       </CustomDialogActions>
     </form>
@@ -208,8 +210,6 @@ interface FormDialogProps {
 
 interface FormDialogState {
   open: boolean;
-  // currentModule: ContentModule;
-  // currentModuleIndex: number;
 }
 export class EditFormModal extends React.Component<FormDialogProps, FormDialogState> {
   state = {
@@ -246,6 +246,7 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
           <DialogTitle id="form-dialog-title" style={{ paddingTop: '2rem', paddingBottom: 0 }}>Edit Module</DialogTitle>
             <ReduxEditForm 
              id={this.props.id}
+             toggleModal={this.toggleModal}
             />
         </Dialog>
       </div>

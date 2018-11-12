@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { ContentModule } from '../../../../../constants';
-import { Field, reduxForm, WrappedFieldInputProps, WrappedFieldMetaProps } from 'redux-form';
+import { Field, FieldArray, reduxForm, WrappedFieldInputProps, WrappedFieldMetaProps } from 'redux-form';
 import { UpdateModule } from '../../../../../state/actions/editModule';
 
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -11,8 +12,39 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { DialogActions } from '@material-ui/core';
 
-const required = value => value ? undefined : 'Required'
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
+const required = value => value ? undefined : 'Required';
+const number = value => value && isNaN(Number(value)) ? 'Must be a number between 1 to 5' : undefined;
+
+const DeleteButton = withStyles({
+  root: {
+    marginLeft: '0.4rem'
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+})(Button);
+
+const CustomDialogContent = withStyles({
+  root: {
+    paddingLeft: '2rem',
+    paddingRight: '2rem',
+    paddingTop: 0,
+    paddingBottom: 0
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+})(DialogContent);
+
+const CustomDialogActions = withStyles({
+  root: {
+    paddingBottom: '2rem',
+    paddingRight: '1.5rem'
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+})(DialogActions);
 
 const renderTextField = ({
   input,
@@ -23,21 +55,55 @@ const renderTextField = ({
   meta?: WrappedFieldMetaProps
   }) => {
     return (
-    <React.Fragment>
       <TextField
+        required
+        error={!!meta.error}
         autoFocus={true}
         margin="dense"
         type="text"
         fullWidth={true}
-        label={input.name}
+        label={input.name.slice(0, 1).toUpperCase() + input.name.slice(1)}
         onChange={value => input.onChange(value)}
+        helperText={meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
         {...input}
         {...rest}
       />
-      {meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
-    </React.Fragment> 
     );
   };
+
+  const renderTextFieldGroup = ({
+    fields,
+    meta,
+  }: {
+    fields?: any,
+    meta?: WrappedFieldMetaProps
+    }) => {
+      return (
+      <div className="mv3">
+        {
+          fields.map((field, index) => (
+            <div className="flex items-end mv1" key={index}>
+              <Field
+                name={field}
+                component={renderTextField}
+              />
+              <DeleteButton
+                onClick={() => fields.remove(index)}
+                variant="outlined" color="secondary" aria-label="Remove Item"
+              >
+                Delete
+              </DeleteButton>
+            </div>
+          ))
+        }
+        <Button
+          onClick={() => fields.push()}
+          variant="contained" color="primary" aria-label="Add New Item"
+        >
+          Add Link
+        </Button>
+      </div>)
+    };
 
   const renderNumberField = ({
     input,
@@ -48,67 +114,66 @@ const renderTextField = ({
     meta?: WrappedFieldMetaProps
     }) => {
       return (
-      <React.Fragment>
         <TextField
+          required
+          error={!!meta.error}
           autoFocus={true}
           margin="dense"
           type="number"
           fullWidth={true}
-          label={input.name}
-          onChange={value => input.onChange(value)}
+          label={input.name.slice(0, 1).toUpperCase() + input.name.slice(1)}
+          onChange={value => input.onChange((value))}
+          helperText={meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
           {...input}
           {...rest}
         />
-        {meta.touched && ((meta.error && <span>{meta.error}</span>) || (meta.warning && <span>{meta.warning}</span>))}
-      </React.Fragment> 
       );
     };
-
-const textFields = ['name', 'complexity', 'content', 'homework', 'slides'];
 
 export const EditForm = (props) => {
   return (
     <form onSubmit={(e) => {
       e.preventDefault();
-      // pass in updated form value and the edited module index
       props.submitUpdatedModule(props.updatedFormValues.values, props.currentModuleIndex);
     }}>
-      <DialogContent>
-        {
-          textFields.map((fieldname, index) => {
-            if (fieldname === 'complexity') {
-              return (
-                <React.Fragment key={index}>
-                  <Field
-                    name={fieldname}
-                    parse={value => parseInt(value, 10)}
-                    component={renderNumberField}
-                    validate={[ required, number ]}
-                  />
-                </React.Fragment>
-              );
-            } else {
-              return (
-                <React.Fragment key={index}>
-                  <Field
-                    name={fieldname}
-                    component={renderTextField}
-                    validate={[ required ]}
-                  />
-                </React.Fragment>
-              );
-            }
-          })
-        }
-      </DialogContent>
-      <DialogActions>
-        <Button color="primary" type="submit" disabled={props.error || props.pristine || props.submitting}>
+      <CustomDialogContent>
+        <Field
+          name="name"
+          component={renderTextField}
+          validate={[ required ]}
+        />
+        <Field
+          name="complexity"
+          parse={value => parseInt(value, 10)}
+          component={renderNumberField}
+          validate={[ required, number ]}
+        />
+        <Field
+          name="content"
+          component={renderTextField}
+          validate={[ required ]}
+        />
+        <Field
+          name="homework"
+          component={renderTextField}
+          validate={[ required ]}
+        />
+        <Field
+          name="slides"
+          component={renderTextField}
+          validate={[ required ]}
+        />
+        <FieldArray name="extras" component={renderTextFieldGroup} />
+        <FieldArray name="challenges" component={renderTextFieldGroup} />
+      </CustomDialogContent>
+      <CustomDialogActions>
+        <Button variant="outlined" color="primary" type="submit" disabled={props.pristine || props.submitting}>
           Submit
         </Button>
-        <Button color="secondary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
+        <Button variant="contained" color="primary" type="button" disabled={props.pristine || props.submitting} onClick={props.reset}>
           Undo Changes
         </Button>
-      </DialogActions>
+      </CustomDialogActions>
     </form>
   );
 }
@@ -178,7 +243,7 @@ export class EditFormModal extends React.Component<FormDialogProps, FormDialogSt
           onClose={this.toggleModal}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">Edit Module</DialogTitle>
+          <DialogTitle id="form-dialog-title" style={{ paddingTop: '2rem', paddingBottom: 0 }}>Edit Module</DialogTitle>
             <ReduxEditForm 
              id={this.props.id}
             />

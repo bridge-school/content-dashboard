@@ -1,15 +1,35 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  frontend_executor:
     docker:
       - image: circleci/node:carbon
     working_directory: ~/repo
+  functions:
+    docker:
+      - image: circleci/node:carbon
+    working_directory: ~/repo/functions
+
+commands:
+  deploy_frontend:
+    description: "Deploys the frontend to staging or prod"
+    parameters:
+      env:
+        type: string
+        default: "staging"
+    steps:
+      - run: npx firebase use default
+      - run: npx firebase deploy --only hosting:<< env >>
+
+jobs:
+  build_frontend:
+    executor: frontend_executor
     steps:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
       - run: npm install
       - save_cache:
           paths:
@@ -21,10 +41,15 @@ jobs:
       - run:
           name: Build Application
           command: npm run build
-      - run:
-          name: Deploy Firebase Functions
-          working_directory: ~/repo/functions
-          command: |
-            npm i
-            npx firebase use default
-            npx firebase deploy --only functions
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - build
+    deploy_frontend:
+      parameters:
+        env:
+          type: string
+          default: "staging"
+      executor: frontend_executor
+      steps:
+        - deploy_frontend << parameters.env >>

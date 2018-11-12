@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "bridge-content-dashboard"
+    "staging": "bridge-content-dashboard-3e9e7",
+    "prod": "bridge-content-dashboard"
   }
 }

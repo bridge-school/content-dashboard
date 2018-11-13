@@ -1,17 +1,6 @@
 {
   "projects": {
-    "default": "bridge-content-dashboard"
+    "stage": "bridge-content-dashboard-stage",
+    "prod": "bridge-content-dashboard"
   },
-  "targets": {
-    "bridge-content-dashboard": {
-      "hosting": {
-        "staging": [
-          "bridge-content-dashboard-stage"
-        ],
-        "prod": [
-          "bridge-content-dashboard"
-        ]
-      }
-    }
-  }
 }

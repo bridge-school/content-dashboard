@@ -15,11 +15,23 @@ commands:
     description: "Deploys the frontend to staging or prod"
     parameters:
       env:
-        type: string
+        type: enum
+        enum: ["staging", "production"]
         default: "staging"
     steps:
       - run: npx firebase use default
       - run: npx firebase deploy --only hosting:<< env >>
+
+  deploy_functions:
+    description: "Deploys the cloud functions to staging or prod"
+    parameters:
+      env:
+        type: enum
+        enum: ["staging", "production"]
+        default: "staging"
+    steps:
+      - run: npx firebase use default
+      - run: npx firebase deploy --only functions:<< env >>
 
 jobs:
   build_frontend:
@@ -48,7 +60,8 @@ jobs:
     deploy_frontend:
       parameters:
         env:
-          type: string
+          type: enum
+          enum: ["staging", "production"]
           default: "staging"
       executor: frontend_executor
       steps:

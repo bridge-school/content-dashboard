@@ -138,7 +138,7 @@ export const AddClassroomFormModal = ({
 
                 <FormControl style={{width: '100%', marginTop: '10p'}}>
                   <ChipInput
-                    // id="teacher-list"
+                    id="teacher-list"
                     label="Teachers"
                     value={classroom.teachers || []}
                     onAdd={(teacher) => updateClassroom({...classroom, teachers: (classroom.teachers || []).concat(teacher)})}
@@ -148,7 +148,7 @@ export const AddClassroomFormModal = ({
 
                 <FormControl style={{width: '100%', marginTop: '10px'}}>
                   <ChipInput
-                    // id="ta-list"
+                    id="ta-list"
                     label="Teacher Assistants"
                     value={classroom.tas || []}
                     onAdd={(ta) => updateClassroom({...classroom, tas: (classroom.tas || []).concat(ta)})}

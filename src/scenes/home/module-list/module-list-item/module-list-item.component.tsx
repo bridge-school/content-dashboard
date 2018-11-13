@@ -11,7 +11,7 @@ import {
 import { ItemTypes } from '../../../../constants';
 import { getComplexityColor } from '../../../../utils';
 
-import { EditForm } from './module-edit-form/module-edit-form.component';
+import { EditFormModal } from './module-edit-form/module-edit-form.component';
 
 interface Props {
   id: string;
@@ -26,7 +26,7 @@ interface Props {
 
 type ListItemDragDescriptor = Pick<Props, 'id'>;
 
-const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSource, onEdit, modules }: Props) => {
+const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSource, modules }: Props) => {
   const complexityClass = `bg-${getComplexityColor(complexity)}`;
 
   return connectDragSource(
@@ -38,9 +38,8 @@ const ModuleListItem: React.SFC<Props> = ({ id, name, complexity, connectDragSou
         >
           <h4 className="ma0 white">{complexity}</h4>
         </div>
-        <EditForm
+        <EditFormModal
           id={id}
-          onEdit={onEdit}
           modules={modules}
         />
       </div>

@@ -5,6 +5,7 @@ executors:
     docker:
       - image: circleci/node:carbon
     working_directory: ~/repo
+
   functions:
     docker:
       - image: circleci/node:carbon
@@ -36,6 +37,11 @@ commands:
 jobs:
   build_frontend:
     executor: frontend_executor
+    parameters:
+      build_command:
+        type: enum
+        enum: ["build", "build:prod"]
+        default: "build"
     steps:
       - checkout
       - restore_cache:
@@ -52,7 +58,7 @@ jobs:
           command: npm run test:coverage
       - run:
           name: Build Application
-          command: npm run build
+          command: npm run << parameters.build_command >>
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
@@ -66,3 +72,38 @@ jobs:
       executor: frontend_executor
       steps:
         - deploy_frontend << parameters.env >>
+
+workflows:
+  frontend_staging:
+    jobs:
+      - build_frontend:
+        filters:
+          branches:
+            only:
+              - master
+      - deploy_frontend:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_frontend
+  frontend_prod:
+    jobs:
+      - build_frontend:
+        filters:
+          branches:
+            only:
+              - /release-.*/
+        parameters:
+          build_command: "build:prod"
+      - deploy_frontend:
+        filters:
+          branches:
+            only:
+              - /release-.*/
+        parameters:
+          env: "production"
+
+
+  functions_staging:

@@ -35,6 +35,7 @@
   "scripts": {
     "start": "node -r dotenv/config ./node_modules/.bin/react-scripts-ts start dotenv_config_path='.env'",
     "build": "react-scripts-ts build",
+    "build:prod": "REACT_APP_PROD=true react-scripts-ts build",
     "test": "jest -c jest.config.json",
     "test:coverage": "npm run test --coverage",
     "view:coverage": "npx lite-server -c ./tests/coverage.config.json",

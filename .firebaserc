@@ -1,6 +1,6 @@
 {
   "projects": {
     "stage": "bridge-content-dashboard-stage",
-    "prod": "bridge-content-dashboard"
-  },
+    "prod": "bridge-content-dashboard",
+  }
 }

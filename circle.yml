@@ -5,7 +5,7 @@ executors:
     docker:
       - image: circleci/node:carbon
     working_directory: ~/repo
-  functions:
+  functions_executor:
     docker:
       - image: circleci/node:carbon
     working_directory: ~/repo/functions
@@ -19,8 +19,8 @@ commands:
         enum: ["staging", "production"]
         default: "staging"
     steps:
-      - run: npx firebase use default
-      - run: npx firebase deploy --only hosting:<< env >>
+      - run: npx firebase use << paramters.env >>
+      - run: npx firebase deploy --only hosting
 
   deploy_functions:
     description: "Deploys the cloud functions to staging or prod"
@@ -30,8 +30,8 @@ commands:
         enum: ["staging", "production"]
         default: "staging"
     steps:
-      - run: npx firebase use default
-      - run: npx firebase deploy --only functions:<< env >>
+      - run: npx firebase use def<< parameters.env >>
+      - run: npx firebase deploy --only functions
 
 jobs:
   build_frontend:
@@ -57,6 +57,26 @@ jobs:
           root: /home/circleci/project
           paths:
             - build
+  build_functions:
+    executor: functions_executor
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build Application
+          command: npm run build
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - build
     deploy_frontend:
       parameters:
         env:
@@ -66,3 +86,12 @@ jobs:
       executor: frontend_executor
       steps:
         - deploy_frontend << parameters.env >>
+    deploy_functions:
+      parameters:
+        env:
+          type: enum
+          enum: ["staging", "production"]
+          default: "staging"
+      executor: functions_executor
+      steps:
+        - deploy_functions << parameters.env >>

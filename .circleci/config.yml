@@ -114,6 +114,13 @@ jobs:
           resource: "functions"
 
 workflows:
+  build_and_test:
+    jobs:
+      - build_frontend:
+          filters:
+            branches:
+              only:
+                - /pull\/.*/
   frontend_staging:
     jobs:
       - build_frontend:

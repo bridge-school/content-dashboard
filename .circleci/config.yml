@@ -1,0 +1,184 @@
+version: 2.1
+
+executors:
+  frontend_executor:
+    docker:
+      - image: circleci/node:carbon
+    working_directory: /home/circleci/project
+  functions_executor:
+    docker:
+      - image: circleci/node:carbon
+    working_directory: /home/circleci/project/functions
+
+commands:
+  deploy_firebase:
+    description: "Deploys firebase resource to staging or prod"
+    parameters:
+      env:
+        type: enum
+        enum: ["staging", "production"]
+        default: "staging"
+      resource:
+        type: enum
+        enum: ["hosting", "functions"]
+    steps:
+      - run: npx firebase use << parameters.env >>
+      - run: npx firebase deploy --only << parameters.resource >>
+
+jobs:
+  build_frontend:
+    executor: frontend_executor
+    parameters:
+      build_command:
+        type: enum
+        enum: ["build", "build:prod"]
+        default: "build"
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Run Test Suite
+          command: npm run test:coverage
+      - run:
+          name: Build Application
+          command: npm run << parameters.build_command >>
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - node_modules
+            - build
+            - firebase.json
+            - .firebaserc
+
+  build_functions:
+    executor: functions_executor
+    steps:
+      - checkout:
+          path: /home/circleci/project
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build Application
+          command: npm run build
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - functions/lib
+            - functions/node_modules
+            - functions/package.json
+            - node_modules
+            - firebase.json
+            - .firebaserc
+
+  deploy_frontend:
+    executor: frontend_executor
+    parameters:
+      env:
+        type: enum
+        enum: ["staging", "production"]
+        default: "staging"
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - deploy_firebase:
+          env: << parameters.env >>
+          resource: "hosting"
+
+  deploy_functions:
+    executor: functions_executor
+    parameters:
+      env:
+        type: enum
+        enum: ["staging", "production"]
+        default: "staging"
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project
+      - deploy_firebase:
+          env: << parameters.env >>
+          resource: "functions"
+
+workflows:
+  build_and_test:
+    jobs:
+      - build_frontend:
+          filters:
+            branches:
+              only:
+                - /pull\/.*/
+  frontend_staging:
+    jobs:
+      - build_frontend:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_frontend:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_frontend
+
+  frontend_prod:
+    jobs:
+      - build_frontend:
+          filters:
+            branches:
+              only:
+                - /release-.*/
+          build_command: "build:prod"
+      - deploy_frontend:
+          requires:
+            - build_frontend
+          filters:
+            branches:
+              only:
+                - /release-.*/
+          env: "production"
+
+  functions_staging:
+    jobs:
+      - build_functions:
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_functions:
+          requires:
+            - build_functions
+          filters:
+            branches:
+              only:
+                - master
+  functions_prod:
+    jobs:
+      - build_functions:
+          filters:
+            branches:
+              only:
+                - /release-.*/
+      - deploy_functions:
+          env: "production"
+          requires:
+            - build_functions
+          filters:
+            branches:
+              only:
+                - /release-.*/

@@ -53,7 +53,7 @@ class CohortCalendar extends React.Component<CohortCalendarProps, CohortCalendar
       <Card style={{minWidth: '65%', minHeight: '360px', height: '360px', display: 'flex', alignItems: 'center'}}>
         <CardContent style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}} className="flex-grow-1 h-100">
           <div>
-            <Typography variant="title"> {cohort && cohort.cohortName} </Typography>
+            <Typography variant="h6"> {cohort && cohort.cohortName} </Typography>
             <Typography variant="caption"> Upcoming classes </Typography>
             <Typography variant="body1" className="flex flex-column" style={{display: 'flex'}}>
               {classrooms.map(classroom =>

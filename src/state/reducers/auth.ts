@@ -6,6 +6,12 @@ const AuthReducerMap = {
   }
 };
 
+export interface AuthState {
+  auth: {
+    loggedInUser: any
+  }
+}
+
 export const authReducer = (state = { loggedInUser: null }, action: Action) => {
   if (action && AuthReducerMap.hasOwnProperty(action.type)) {
     return AuthReducerMap[action.type](state, action);

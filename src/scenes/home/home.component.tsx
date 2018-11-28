@@ -6,12 +6,14 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContextProvider } from 'react-dnd';
 
 import { ModuleList } from './module-list/module-list.component';
-import { Timeline } from './timeline/timeline.component';
 import { connect } from 'react-redux';
 import { getIDsFromList } from '../../state/selectors';
 import { createCohort, setCohortName, setCohortStartDate } from '../../state/actions/cohortActions';
 import { StringActionCreator } from '../../state/actions';
 import { RootReducerState } from '../../state/reducers';
+import { CohortDesigner } from '../../components/cohort-designer/cohort-desginer.component';
+import { Timeline } from './timeline/timeline.component';
+import { Teacher } from '../../state/reducers/teacher';
 
 interface Props {
   createdTimelineIDs: any;
@@ -21,6 +23,7 @@ interface Props {
   setCohortStartDate: StringActionCreator;
   createCohort: any;
   user: any;
+  teachers: Teacher[];
 }
 
 const HomeApp: React.SFC<Props> = props => (
@@ -28,7 +31,7 @@ const HomeApp: React.SFC<Props> = props => (
     <SceneContainer className="flex-row">
       <ModuleList />
       {props.user ? <div className="flex-auto pv3 ph4 h-inherit">
-        <h2 className="f1 lh-title mt0 dark-gray">Create a Cohort</h2>
+        <CohortDesigner teachers={props.teachers} />
         <Timeline />
         {Boolean(props.createdTimelineIDs.length) &&
           <div>
@@ -62,7 +65,8 @@ export const Home = connect(
     createdTimelineIDs: getIDsFromList(state),
     newCohortName: state.module.newCohortName,
     newCohortStartDate: state.module.newCohortStartDate,
-    user: state.auth.loggedInUser
+    user: state.auth.loggedInUser,
+    teachers: state.teachers.teachers
   }),
   { setCohortName, setCohortStartDate, createCohort }
 )(HomeApp);

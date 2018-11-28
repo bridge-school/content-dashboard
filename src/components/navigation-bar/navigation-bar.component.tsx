@@ -15,13 +15,16 @@ export const NavigationBarComponent = props => (
     <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
       <span style={{display: 'flex', alignItems: 'center'}}>
         <Link to="/">
-        <Typography variant="title" color="inherit" noWrap>
+        <Typography variant="h6" color="inherit" noWrap>
           Bridge
         </Typography>
       </Link>
 
       <Link to="/cohorts">
         <Button>Cohort List</Button>
+      </Link>
+      <Link to="/teachers">
+        <Button>Teacher List</Button>
       </Link>
       </span>
       <span>

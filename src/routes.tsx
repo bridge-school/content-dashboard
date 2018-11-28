@@ -7,9 +7,11 @@ import { CohortRoot, Home } from '@scenes';
 import { NavigationBar } from '@components';
 import { ModuleScene } from './scenes/content-module/module';
 import { CssBaseline } from '@material-ui/core';
+import { TeacherScene } from './scenes/teacher-list/teacher-list-scene.component';
 
 interface Props {
   history: History;
+  isAuthenticated: boolean;
 }
 
 export const Routes: React.SFC<Props> = ({ history }: Props) => (
@@ -22,6 +24,7 @@ export const Routes: React.SFC<Props> = ({ history }: Props) => (
         <Route exact={true} path="/" component={Home} />
         <Route path="/cohorts/" component={CohortRoot} />
         <Route path="/module/:id" component={ModuleScene} />
+        <Route path="/teachers" component={TeacherScene} />
       </div>
     </div>
   </ConnectedRouter>

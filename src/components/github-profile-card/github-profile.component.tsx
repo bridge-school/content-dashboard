@@ -35,8 +35,8 @@ export const GithubProfileCard = withStyles(styles)
   <Card className={props.classes.card}>
     <div className={props.classes.details}>
       <CardContent className={props.classes.content}>
-        <Typography variant="headline">{props.user.displayName}</Typography>
-        <Typography variant="subheading" color="textSecondary">
+        <Typography variant="h5">{props.user.displayName}</Typography>
+        <Typography variant="subtitle1" color="textSecondary">
           {props.user.email}
         </Typography>
       </CardContent>

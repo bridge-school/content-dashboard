@@ -5,7 +5,7 @@ import { Card, CardContent, Typography } from '@material-ui/core';
 const SubSection = ({label, data, linkProp, labelProp, shouldLink = false}: 
   {linkProp?: string, labelProp?: string, label: string, data: string | any[], shouldLink?: boolean}) => (
   <div className="mb3">
-    <Typography variant="subheading" className="mb2">{label}</Typography>
+    <Typography variant="subtitle1" className="mb2">{label}</Typography>
     <Typography variant="body1" className="truncate">
       {
         !Boolean(data) ?
@@ -27,7 +27,7 @@ export const ModuleComponent = ({module, cohortAssignments}: {module: ContentMod
   <Card style={{width: '300px', height: '400px', margin: '15px'}}>
       <CardContent className="flex-grow-1">
         <div style={{marginBottom: '10px'}} >
-          <Typography variant="title"> {module.name} </Typography>
+          <Typography variant="h6"> {module.name} </Typography>
           <Typography variant="caption"> Complexity: {module.complexity} </Typography>
         </div>
         
